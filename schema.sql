@@ -1,3 +1,8 @@
+create database highfiveDB;
+create user 'highfive_dev'@'localhost' identified by '1111';
+grant all on highfiveDB.* to 'highfive_dev'@'localhost';
+flush privileges;
+
 use highfiveDB;
 
 CREATE TABLE users (
