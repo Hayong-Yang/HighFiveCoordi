@@ -1,0 +1,210 @@
+/* 기본 세팅 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  background-color: #f5f5f5;
+  color: #222;
+  line-height: 1.6;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 헤더 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background-color: #000;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  max-width: 1440px;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+}
+
+.name a {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+}
+
+.header__menu {
+  display: flex;
+  list-style: none;
+  gap: 24px;
+}
+
+.header__menu li a {
+  color: white;
+  font-size: 15px;
+  position: relative;
+  padding: 4px 0;
+}
+
+.header__menu li a::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0%;
+  height: 1px;
+  background-color: white;
+  transition: width 0.3s;
+}
+
+.header__menu li a:hover::after {
+  width: 100%;
+}
+
+/* 본문 */
+main {
+  padding-top: 80px;
+  padding: 80px 24px 40px;
+}
+
+/* 검은 배경 섹션 */
+#todayweather,
+#recommend {
+  background-color: #111;
+  color: white;
+  padding: 40px 24px;
+  margin-bottom: 24px;
+  /*border-radius: 8px;*/
+}
+
+/* 날씨 섹션 */
+.weather__title {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.weather__description {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.todayweather h3 {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.todayweather__description {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.todayweather__description p {
+  margin: 0;
+}
+
+/* article 섹션 */
+#article {
+  background-color: white;
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+  padding: 24px;
+  margin: 40px 0;
+  /* border-radius: 8px; */
+}
+
+.article_1,
+.article_2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 48%;
+}
+
+.article_1 img,
+.article_2 img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 12px;
+}
+
+.article__title {
+  font-size: 20px;
+  margin-bottom: 24px;
+}
+
+/* 핫픽 섹션 */
+#Hotpick {
+  background-color: white;
+  padding: 24px;
+  margin-bottom: 24px;
+  border-radius: 8px;
+}
+
+#Hotpick h3 {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+/* 공유하기 */
+#share {
+  padding: 24px;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+#share button {
+  background-color: #000;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+#share button:hover {
+  background-color: #333;
+}
+
+/* 푸터 */
+footer {
+  background-color: #000;
+  color: white;
+  padding: 40px 24px;
+}
+
+footer h3 {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+footer hr {
+  border: 0;
+  height: 1px;
+  background-color: #777777;
+  margin: 16px 0;
+}
+
+.contact__info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.copy {
+  margin: 16px 0;
+  color: white;
+}
