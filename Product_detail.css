@@ -119,6 +119,19 @@ main {
   background-color: white;
 }
 
+.arrow-up {
+  background-color: white;
+  position: fixed;
+  bottom: 3rem;
+  right: 3rem;
+  font-size: 3rem;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 100%;
+  text-align: center;
+  /*opacity: 0;*/
+}
+
 /* 푸터 */
 footer {
   background-color: #000;
@@ -148,4 +161,10 @@ footer hr {
 .copy {
   margin: 16px 0;
   color: white;
+}
+
+.icons {
+  width: 200px;
+  height: 50px;
+  margin: 25px 0;
 }
