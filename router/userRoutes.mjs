@@ -1,16 +1,14 @@
 import express from 'express';
 import {
   registerUser,
-  loginUser,
-  getUserById
+  loginUser
 } from '../controller/userController.mjs';
 
 const router = express.Router();
 // 회원가입
-router.post('/register', registerUser);
+router.post('/signUp', registerUser);
 // 로그인
-router.post('/login', loginUser);
+router.post('/logIn', loginUser);
 
-router.get('/:id', getUserById);
 
 export default router;

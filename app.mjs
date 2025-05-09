@@ -15,10 +15,9 @@ app.use(express.json()); // JSON 요청 처리
 app.use(express.urlencoded({ extended: true })); // 폼 데이터 처리
 
 // 라우터 연결
-app.use('/users', userRoutes);
-app.use('/products', productRoutes);
-app.use('/wishlists', wishlistRoutes);
-app.use('/ads', adRoutes);
+app.use('/auth', userRoutes);
+app.use('/product', productRoutes);
+app.use('/wish', wishlistRoutes);
 
 // 기본 라우터
 app.get('/', (req, res) => {

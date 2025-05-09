@@ -9,10 +9,6 @@ import {
 
 const router = express.Router();
 
-router.get('/', getAllProducts);
 router.get('/:id', getProductById);
-router.post('/', createProduct);
-router.put('/:id', updateProduct);
-router.delete('/:id', deleteProduct);
-
+router.get('/random',getProductByRandom)
 export default router;
