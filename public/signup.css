@@ -1,0 +1,172 @@
+/* 기본 세팅 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Noto Sans KR", sans-serif;
+    background-color: #f5f5f5;
+    color: #222;
+    line-height: 1.6;
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+/* 헤더 */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background-color: #000;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    max-width: 1440px;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+}
+
+.name a {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+}
+
+.header__menu {
+    display: flex;
+    list-style: none;
+    gap: 24px;
+}
+
+.header__menu li a {
+    color: white;
+    font-size: 15px;
+    position: relative;
+    padding: 4px 0;
+}
+
+.header__menu li a::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0%;
+    height: 1px;
+    background-color: white;
+    transition: width 0.3s;
+}
+
+.header__menu li a:hover::after {
+    width: 100%;
+}
+
+/*본문*/
+main {
+    padding: 80px 24px 100px;
+}
+
+.signup-container {
+    text-align: center;
+    margin-top: 100px;
+}
+
+.signup-container h2 {
+    margin-bottom: 30px;
+}
+
+.signup-form {
+    background: #dcdcdc;
+    padding: 30px;
+    max-width: 400px;
+    margin: 0 auto;
+    border-radius: 8px;
+}
+
+.form-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.signup-form input[type="text"],
+.signup-form input[type="password"],
+.signup-form input[type="email"],
+.signup-form input[type="tel"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 4px;
+}
+
+.signup-form button[type="button"] {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 70%;
+    background: black;
+    color: white;
+    border: none;
+    padding: 0, 10px;
+    cursor: pointer;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 12px;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* 푸터 */
+footer {
+    background-color: #000;
+    color: white;
+    padding: 40px 24px;
+}
+
+footer h3 {
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+
+footer hr {
+    border: 0;
+    height: 1px;
+    background-color: #777777;
+    margin: 16px 0;
+}
+
+.contact__info {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.copy {
+    margin: 16px 0;
+    color: white;
+}
+
+.icons {
+    width: 200px;
+    height: 50px;
+    margin: 25px 0;
+}
