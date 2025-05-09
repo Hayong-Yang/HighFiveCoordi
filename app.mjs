@@ -1,14 +1,13 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import userRoutes from './routes/userRoutes.mjs';
-import productRoutes from './routes/productRoutes.mjs';
-import wishlistRoutes from './routes/wishlistRoutes.mjs';
-import adRoutes from './routes/adRoutes.mjs';
+import userRoutes from './router/userRoutes.mjs';
+import productRoutes from './router/productRoutes.mjs';
+import wishlistRoutes from './router/wishlistRoutes.mjs';
 
 dotenv.config(); // .env 파일 로딩
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.HOST_PORT || 3000;
 
 // 미들웨어
 app.use(express.json()); // JSON 요청 처리
@@ -26,4 +25,5 @@ app.get('/', (req, res) => {
 
 // 서버 시작
 app.listen(PORT, () => {
-    console.log(`S서버가 포트 ${PORT}에서 실행 중`)})
+    console.log(`S서버가 포트 ${PORT}에서 실행 중`)
+})

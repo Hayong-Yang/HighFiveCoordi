@@ -1,4 +1,4 @@
-import db from '../db/database.mjs';
+import { db } from '../db/database.mjs';
 
 // 특정 유저의 찜 목록 조회
 export const getWishlistByUser = async (req, res) => {
