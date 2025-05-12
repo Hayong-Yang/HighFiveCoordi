@@ -1,4 +1,4 @@
-import db from '../db/database.mjs';
+import { db } from '../db/database.mjs';
 
 // 전체 상품 조회
 export const getAllProducts = async (req, res) => {
@@ -11,18 +11,30 @@ export const getAllProducts = async (req, res) => {
 };
 
 // 특정 상품 조회
-export const getProductById = async (req, res) => {
-  const productId = req.params.id;
+export const getProductById = async (request, response) => {
+  const productId = request.params.id;
   try {
     const [rows] = await db.execute('SELECT * FROM products WHERE id = ?', [productId]);
     if (rows.length === 0) {
-      return res.status(404).json({ message: '상품을 찾을 수 없습니다' });
+      return response.status(404).json({ message: '상품을 찾을 수 없습니다' });
     }
-    res.json(rows[0]);
+    response.json(rows[0]);
   } catch (err) {
-    res.status(500).json({ message: '상품 조회 실패', error: err.message });
+    response.status(500).json({ message: '상품 조회 실패', error: err.message });
   }
 };
+
+// 랜덤 상품 조회
+export const getProductByRandom = async (request, response) => {
+  try {
+    const [rows] = await db.execute('SELECT * FROM products ORDER BY RAND() LIMIT 1');
+    response.json(rows[0]);
+  } catch (err) {
+    response.status(500).json({ message: '랜덤 상품 조회 실패', error: err.message });
+  }
+};
+
+
 
 // 상품 등록
 export const createProduct = async (req, res) => {
