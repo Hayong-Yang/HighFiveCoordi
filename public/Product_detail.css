@@ -149,3 +149,9 @@ footer hr {
     margin: 16px 0;
     color: white;
 }
+
+.icons {
+    width: 200px;
+    height: 50px;
+    margin: 25px 0;
+}

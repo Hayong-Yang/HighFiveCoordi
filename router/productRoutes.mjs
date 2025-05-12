@@ -8,4 +8,5 @@ const router = express.Router();
 
 router.get("/:id", getProductById);
 router.get("/random", getProductByRandom);
+
 export default router;

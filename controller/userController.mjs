@@ -1,5 +1,6 @@
 import * as authRepository from "../data/auth.mjs";
-import bcrypt from "bcrypt";
+
+import * as bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { config } from "../config.mjs";
 
@@ -21,7 +22,6 @@ export async function signUp(request, response, next) {
             .json({ message: `${inputId}이 이미 있습니다.` });
     }
     const hashedPw = bcrypt.hashSync(inputPw, bcryptSaltRounds);
-
     const users = await authRepository.createUser(
         inputId,
         hashedPw,
