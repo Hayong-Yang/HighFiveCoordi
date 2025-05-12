@@ -1,4 +1,3 @@
-// 일단 수업시간에 한 것 복붙했습니다.
 import dotenv from "dotenv";
 
 dotenv.config();
