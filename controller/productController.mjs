@@ -23,7 +23,6 @@ export const getProductById = async (request, response) => {
     response.status(500).json({ message: '상품 조회 실패', error: err.message });
   }
 };
-
 // 랜덤 상품 조회
 export const getProductByRandom = async (request, response) => {
   try {
