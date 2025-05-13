@@ -91,12 +91,17 @@ export async function me(request, response, next) {
   response.status(200).json({ token: request.token, userId: user.userId });
 }
 
+// 메인 > 로그인으로 이동
+export async function toLogin(request, response, next) {
+  response.sendFile(path.resolve(__dirname, "../public/login.html"));
+}
+
+// 메인 > 위시리스트로 이동
+export async function toWishlist(request, response, next) {
+  response.sendFile(path.resolve(__dirname, "../public/wishlist.html"));
+}
+
 // 회원가입 창으로 이동
 export async function toSignUp(request, response, next) {
   response.sendFile(path.resolve(__dirname, "../public/signup.html"));
-}
-
-// 로그인 창으로 이동
-export async function toLogin(request, response, next) {
-  response.sendFile(path.resolve(__dirname, "../public/login.html"));
 }
