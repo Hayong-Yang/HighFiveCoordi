@@ -1,12 +1,15 @@
 import * as authRepository from "../data/auth.mjs";
-
 import * as bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { config } from "../config.mjs";
-
+import { fileURLToPath } from "url";
+import path from "path";
 const secretKey = config.jwt.secretKey;
 const bcryptSaltRounds = config.bcrypt.saltRounds;
 const jwtExpiresInDays = config.jwt.expiresInSec;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 async function createJwtToken(idx) {
     return jwt.sign({ idx }, secretKey, { expiresIn: jwtExpiresInDays });
@@ -67,4 +70,14 @@ export async function me(request, response, next) {
         return response.status(404).json({ message: "일치하는 사용자가 없음" });
     }
     response.status(200).json({ token: request.token, userId: user.userId });
+}
+
+// 메인 > 로그인으로 이동
+export async function toLogin(request, response, next) {
+    response.sendFile(path.resolve(__dirname, "../public/login.html"));
+}
+
+// 메인 > 위시리스트로 이동
+export async function toWishlist(request, response, next) {
+    response.sendFile(path.resolve(__dirname, "../public/wishlist.html"));
 }

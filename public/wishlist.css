@@ -70,6 +70,10 @@ a {
     width: 100%;
 }
 
+#headerLogin {
+    color: white;
+}
+
 /* 본문 */
 main {
     padding: 100px 24px;
