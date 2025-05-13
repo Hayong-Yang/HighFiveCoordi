@@ -65,5 +65,6 @@ values  (101, "HS STRIPE KNIT COLLAR SHIRT_NAVY", "top", 52200, "부드러운 �
         (503, "940UNST BASIC OUTLINE NEYYAN CHO", "etc", 35700, "내 부시시함은 스타일이야, 힙한 야구 모자.", "black", 2),
         (504, "RC B019 BLACK GLASS", "etc", 22710, "흰눈이 내리는 날 소박한 나의 소원은 이런 지적인 안경을 쓰고 나타나는 왕자님.", "black", 1);
 
-
 select * from products;
+select * from users;
+
