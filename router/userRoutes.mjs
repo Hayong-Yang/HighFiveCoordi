@@ -7,9 +7,9 @@ import {
     signUp,
     toSignUp,
     toLogin,
+    toWishlist,
     duplicateIdCheck,
 } from "../controller/userController.mjs";
-
 
 const router = express.Router();
 
@@ -63,5 +63,7 @@ router.post("/logIn", logIn);
 // 로그인 창으로 이동
 router.get("/logIn", toLogin);
 
+// 위시리스트로 이동
+router.get("/wishlist", toWishlist);
 
 export default router;
