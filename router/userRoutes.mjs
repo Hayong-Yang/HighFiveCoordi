@@ -10,6 +10,7 @@ import {
     duplicateIdCheck,
 } from "../controller/userController.mjs";
 
+
 const router = express.Router();
 
 // 로그인 validator
@@ -61,5 +62,6 @@ router.post("/logIn", logIn);
 
 // 로그인 창으로 이동
 router.get("/logIn", toLogin);
+
 
 export default router;
