@@ -15,14 +15,20 @@ async function createJwtToken(idx) {
     return jwt.sign({ idx }, secretKey, { expiresIn: jwtExpiresInDays });
 }
 
+// 회원가입 기능
 export async function signUp(request, response, next) {
-    const { inputId, inputPw, name, email, phone } = request.body;
-    // 회원 중복 체크
-    const found = await authRepository.findByUserId(inputId);
-    if (found) {
+    const { inputId, inputPw, name, email, phone, hiddenIdCheck, ischecked } =
+        request.body;
+    // 회원 중복 체크 여부
+    if (hiddenIdCheck !== "y") {
         return response
-            .status(409)
-            .json({ message: `${inputId}이 이미 있습니다.` });
+            .status(401)
+            .json({ message: "아이디 중복 확인을 해주세요" });
+    }
+    if (!ischecked) {
+        return response
+            .status(401)
+            .json({ message: "개인정보 수집 및 이용 동의가 필요합니다." });
     }
     const hashedPw = bcrypt.hashSync(inputPw, bcryptSaltRounds);
     const users = await authRepository.createUser(
@@ -38,7 +44,22 @@ export async function signUp(request, response, next) {
         response.status(201).json({ token, inputId });
     }
 }
+// 아이디 중복체크 기능
+export async function duplicateIdCheck(request, response, next) {
+    const { inputId } = request.body;
+    const found = await authRepository.findByUserId(inputId);
+    if (!inputId) {
+        return response.status(400).json({ message: `아이디를 입력해주세요.` });
+    }
+    if (found) {
+        return response
+            .status(409)
+            .json({ message: `${inputId}이 이미 있습니다.` });
+    }
+    response.status(200).json({ message: `${inputId}는 사용가능합니다.` });
+}
 
+// 로그인 기능
 export async function logIn(request, response, next) {
     const { inputId, inputPw } = request.body;
     const user = await authRepository.findByUserId(inputId);
@@ -80,4 +101,14 @@ export async function toLogin(request, response, next) {
 // 메인 > 위시리스트로 이동
 export async function toWishlist(request, response, next) {
     response.sendFile(path.resolve(__dirname, "../public/wishlist.html"));
+}
+
+// 회원가입 창으로 이동
+export async function toSignUp(request, response, next) {
+    response.sendFile(path.resolve(__dirname, "../public/signup.html"));
+}
+
+// 로그인 창으로 이동
+export async function toLogin(request, response, next) {
+    response.sendFile(path.resolve(__dirname, "../public/login.html"));
 }
