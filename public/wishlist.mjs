@@ -1,3 +1,5 @@
+let allItems = []; // 전체 상품 저장용 (필터링을 위해 필요)
+
 document.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem("token");
   const wishlist = document.getElementById("wishlistSection");
@@ -6,10 +8,22 @@ document.addEventListener("DOMContentLoaded", () => {
   if (token) {
     // 로그인 된 상태
     wishlist.style.display = "grid";
+    loadWishList(); // 로그인 상태면 위시리스트 로딩
   } else {
     // 로그인 안 된 상태
     emptyMsg.style.display = "block";
   }
+
+  // 카테고리 메뉴 클릭 이벤트 등록
+  const menuItems = document.querySelectorAll(".header__menu a");
+  menuItems.forEach((item) => {
+    item.addEventListener("click", (e) => {
+      e.preventDefault();
+      const selectedCategory = item.className; // all, top, bottom 등
+
+      renderFilteredList(selectedCategory);
+    });
+  });
 });
 
 async function loadWishList() {
@@ -22,16 +36,31 @@ async function loadWishList() {
     const result = await res.json();
 
     if (res.ok) {
-      const loadedItems = result.rows || result; // rows 안에 있거나 그냥 배열일 수도 있음
-      const wishlistSection = document.getElementById("wishlistSection");
+      allItems = result.rows || result;
+      renderFilteredList("all");
+    } else {
+      console.error(result.message);
+    }
+  } catch (err) {
+    console.error("Wishlist 불러오기 중 에러:", err);
+  }
+}
 
-      wishlistSection.innerHTML = ""; // 기존 카드 비우기
+function renderFilteredList(category) {
+  const wishlistSection = document.getElementById("wishlistSection");
+  wishlistSection.innerHTML = "";
 
-      loadedItems.forEach((item) => {
-        const card = document.createElement("div");
-        card.className = "product-card";
+  const filtered =
+    category === "all"
+      ? allItems
+      : allItems.filter((item) => item.category === category);
 
-        card.innerHTML = `
+  filtered.forEach((item) => {
+    const card = document.createElement("div");
+    card.className = "product-card";
+    card.setAttribute("data-category", item.category);
+
+    card.innerHTML = `
           <img src="${item.image_url}" alt="상품 이미지" />
           <div class="product-info">
             <p class="name">${item.name}</p>
@@ -40,23 +69,16 @@ async function loadWishList() {
           <button class="heart">♡</button>
         `;
 
-        wishlistSection.appendChild(card);
-      });
+    wishlistSection.appendChild(card);
+  });
 
-      // 하트 버튼 이벤트 재등록
-      const hearts = document.querySelectorAll(".heart");
-      hearts.forEach((heart) => {
-        heart.addEventListener("click", () => {
-          heart.classList.toggle("active");
-          heart.textContent = heart.classList.contains("active") ? "❤️" : "♡";
-        });
-      });
-    } else {
-      console.error(result.message);
-    }
-  } catch (err) {
-    console.error("Wishlist 불러오기 중 에러:", err);
-  }
+  const hearts = document.querySelectorAll(".heart");
+  hearts.forEach((heart) => {
+    heart.addEventListener("click", () => {
+      heart.classList.toggle("active");
+      heart.textContent = heart.classList.contains("active") ? "❤️" : "♡";
+    });
+  });
 }
 
 window.onload = loadWishList();

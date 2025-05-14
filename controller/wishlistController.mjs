@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename);
 // JSON API로 전체 상품 데이터 제공
 export const getProductsJSON = async (req, res) => {
   try {
-    const [rows] = await db.execute("SELECT * FROM products limit 6");
+    const [rows] = await db.execute("SELECT * FROM products");
     //console.log("보내는 결과: ", rows);
     res.status(200).json({ rows }); // JSON으로 응답
   } catch (err) {
