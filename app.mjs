@@ -29,10 +29,10 @@ app.use("/wish", wishlistRoutes);
 
 // 기본 라우터
 app.get("/", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "public/main.html"));
+  res.sendFile(path.resolve(__dirname, "public/main.html"));
 });
 
 // 서버 시작
 app.listen(config.host.port, () => {
-    console.log(`S서버가 포트 ${config.host.port}에서 실행 중`);
+  console.log(`S서버가 포트 ${config.host.port}에서 실행 중`);
 });
