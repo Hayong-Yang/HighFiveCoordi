@@ -63,10 +63,11 @@ export async function duplicateIdCheck(request, response, next) {
 export async function logIn(request, response, next) {
   const { inputId, inputPw } = request.body;
   const user = await authRepository.findByUserId(inputId);
+
   if (!user) {
-    response.status(401).json(`${inputId} 아이디를 찾을 수 없음`);
+    return response.status(401).json(`${inputId} 아이디를 찾을 수 없음`);
   }
-  const isValidPassword = await bcrypt.compare(inputPw, user.userPw);
+  const isValidPassword = await bcrypt.compare(inputPw, user.userpw);
   if (!isValidPassword) {
     return response.status(401).json({ message: "아이디 또는 비밀번호 확인" });
   }
@@ -104,4 +105,10 @@ export async function toWishlist(request, response, next) {
 // 회원가입 창으로 이동
 export async function toSignUp(request, response, next) {
   response.sendFile(path.resolve(__dirname, "../public/signup.html"));
+}
+
+// 로그아웃 기능 (토큰은 클라이언트가 삭제해야 함)
+export async function logOut(request, response, next) {
+  // 클라이언트 측에서 토큰 삭제를 맡기고, 메인 페이지로 리디렉션
+  response.redirect("/");
 }
