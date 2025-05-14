@@ -65,3 +65,40 @@ document
             resultDiv.textContent = `❌ ${data.message}`;
         }
     });
+
+// 비밀번호찾기 화면 보여주기
+document
+    .getElementById("showFindPassword")
+    .addEventListener("click", function (e) {
+        e.preventDefault();
+        document.getElementById("findPasswordForm").style.display = "block";
+    });
+// 비밀번호찾기 제출 처리
+document
+    .getElementById("findPassword")
+    .addEventListener("submit", async function (e) {
+        e.preventDefault();
+        const name = document.getElementById("pwName").value;
+        const phone = document.getElementById("pwPhone").value;
+
+        try {
+            const response = await fetch("/auth/find-password", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ name, phone }),
+            });
+
+            const data = await response.json();
+            const resultDiv = document.getElementById("pwResultMessage");
+
+            if (data.success) {
+                resultDiv.textContent = `✅ ${data.message}`;
+            } else {
+                resultDiv.textContent = `❌ ${data.message}`;
+            }
+        } catch (error) {
+            console.error("비밀번호 찾기 오류:", error);
+        }
+    });

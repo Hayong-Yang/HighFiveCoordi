@@ -41,7 +41,7 @@
             </form>
             <div class="find-info">
                 <a href="#" id="showFindId">아이디 찾기</a> |
-                <a href="#">비밀번호 찾기</a>
+                <a href="#" id="showFindPassword">비밀번호 찾기</a>
                 <div class="find-id-form" id="findIdForm" style="display: none">
                     <h3>아이디 찾기</h3>
                     <form id="findId">
@@ -58,6 +58,29 @@
                             required
                         />
                         <button type="submit">아이디 찾기</button>
+                    </form>
+                    <div id="resultMessage" class="result-message"></div>
+                </div>
+                <div
+                    class="find-password-form"
+                    id="findPasswordForm"
+                    style="display: none"
+                >
+                    <h3>비밀번호 찾기</h3>
+                    <form id="findPassword">
+                        <input
+                            type="text"
+                            id="pwName"
+                            placeholder="이름"
+                            required
+                        />
+                        <input
+                            type="tel"
+                            id="pwPhone"
+                            placeholder="전화번호"
+                            required
+                        />
+                        <button type="submit">인증번호 발송</button>
                     </form>
                     <div id="resultMessage" class="result-message"></div>
                 </div>
