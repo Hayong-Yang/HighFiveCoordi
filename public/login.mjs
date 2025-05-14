@@ -26,10 +26,10 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     console.error("로그인 중 오류 발생:", error);
   }
 });
-
+/*
 document.getElementById("logOut").addEventListener("click", function (e) {
   e.preventDefault();
   localStorage.removeItem("token");
   alert("로그아웃 되었습니다.");
   window.location.href = "/"; // 서버에 요청해서 메인 페이지로 리디렉션
-});
+});*/
