@@ -10,6 +10,8 @@ import {
     toWishlist,
     findId,
     duplicateIdCheck,
+    logOut,
+    findUserId,
 } from "../controller/userController.mjs";
 
 const router = express.Router();
@@ -64,10 +66,18 @@ router.post("/logIn", logIn);
 // 로그인 창으로 이동
 router.get("/logIn", toLogin);
 
+// 로그아웃 경로 추가
+router.get("/logout", logOut);
+
 // 위시리스트로 이동
 router.get("/wishlist", toWishlist);
 
+<<<<<<< HEAD
 // 아이디찾기로 이동
 router.get("/findId", findId);
+=======
+// 아이디 찾기 API
+router.post("/find-id", findUserId);
+>>>>>>> 666c29ff926c248967c639a3af560b34128ba298
 
 export default router;

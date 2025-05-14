@@ -1,3 +1,4 @@
+import db from "../db/database.mjs";
 import * as authRepository from "../data/auth.mjs";
 import * as bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -63,10 +64,11 @@ export async function duplicateIdCheck(request, response, next) {
 export async function logIn(request, response, next) {
     const { inputId, inputPw } = request.body;
     const user = await authRepository.findByUserId(inputId);
+
     if (!user) {
-        response.status(401).json(`${inputId} 아이디를 찾을 수 없음`);
+        return response.status(401).json(`${inputId} 아이디를 찾을 수 없음`);
     }
-    const isValidPassword = await bcrypt.compare(inputPw, user.userPw);
+    const isValidPassword = await bcrypt.compare(inputPw, user.userpw);
     if (!isValidPassword) {
         return response
             .status(401)
@@ -93,6 +95,30 @@ export async function me(request, response, next) {
     response.status(200).json({ token: request.token, userId: user.userId });
 }
 
+// 아이디 찾기
+export async function findUserId(request, response, next) {
+    const { name, email } = request.body;
+
+    try {
+        const [rows] = await db.execute(
+            "SELECT userid FROM users WHERE name = ? AND email = ?",
+            [name, email]
+        );
+
+        if (rows.length > 0) {
+            response.json({ success: true, user_id: rows[0].userid });
+        } else {
+            response.json({
+                success: false,
+                message: "일치하는 정보가 없습니다.",
+            });
+        }
+    } catch (err) {
+        console.error(err);
+        response.status(500).json({ success: false, message: "서버 오류" });
+    }
+}
+
 // 메인 > 로그인으로 이동
 export async function toLogin(request, response, next) {
     response.sendFile(path.resolve(__dirname, "../public/login.html"));
@@ -108,7 +134,14 @@ export async function toSignUp(request, response, next) {
     response.sendFile(path.resolve(__dirname, "../public/signup.html"));
 }
 
+<<<<<<< HEAD
 // 아이디찾기로 이동
 export async function findId(request, response, next) {
     response.sendFile(path.resolve(__dirname, "../public/findId.html"));
+=======
+// 로그아웃 기능 (토큰은 클라이언트가 삭제해야 함)
+export async function logOut(request, response, next) {
+    // 클라이언트 측에서 토큰 삭제를 맡기고, 메인 페이지로 리디렉션
+    response.redirect("/");
+>>>>>>> 666c29ff926c248967c639a3af560b34128ba298
 }

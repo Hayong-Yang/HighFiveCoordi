@@ -20,23 +20,75 @@
                     <li>
                         <a href="/auth/login" id="logIn">LogIn</a>
                     </li>
-                    <li>
-                        <a href="/auth/logout" id="logOut">LogOut</a>
-                    </li>
+                    <!--<li>
+            <a href="/auth/logout" id="logOut">LogOut</a>
+          </li>-->
                 </ul>
             </div>
         </header>
         <!-- test -->
         <main class="login-container">
             <h2>LOGIN</h2>
-            <form>
-                <input type="text" placeholder="ID" required />
-                <input type="password" placeholder="PASSWORD" required />
+            <form id="loginForm" class="loginForm">
+                <input id="inputId" type="text" placeholder="ID" required />
+                <input
+                    id="inputPw"
+                    type="password"
+                    placeholder="PASSWORD"
+                    required
+                />
                 <button type="submit" class="submit-btn">LOGIN</button>
             </form>
             <div class="find-info">
+<<<<<<< HEAD
                 <a href="/auth/findId">아이디 찾기</a> |
                 <a href="#">비밀번호 찾기</a>
+=======
+                <a href="#" id="showFindId">아이디 찾기</a> |
+                <a href="#" id="showFindPassword">비밀번호 찾기</a>
+                <div class="find-id-form" id="findIdForm" style="display: none">
+                    <h3>아이디 찾기</h3>
+                    <form id="findId">
+                        <input
+                            type="text"
+                            id="name"
+                            placeholder="이름"
+                            required
+                        />
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="이메일"
+                            required
+                        />
+                        <button type="submit">아이디 찾기</button>
+                    </form>
+                    <div id="resultMessage" class="result-message"></div>
+                </div>
+                <div
+                    class="find-password-form"
+                    id="findPasswordForm"
+                    style="display: none"
+                >
+                    <h3>비밀번호 찾기</h3>
+                    <form id="findPassword">
+                        <input
+                            type="text"
+                            id="pwName"
+                            placeholder="이름"
+                            required
+                        />
+                        <input
+                            type="tel"
+                            id="pwPhone"
+                            placeholder="전화번호"
+                            required
+                        />
+                        <button type="submit">인증번호 발송</button>
+                    </form>
+                    <div id="resultMessage" class="result-message"></div>
+                </div>
+>>>>>>> 666c29ff926c248967c639a3af560b34128ba298
             </div>
         </main>
 
