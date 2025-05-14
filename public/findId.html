@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <title>아이디 찾기</title>
+        <style>
+            body {
+                font-family: sans-serif;
+                margin: 30px;
+            }
+            input {
+                margin: 5px 0;
+                padding: 5px;
+                width: 200px;
+            }
+            button {
+                padding: 6px 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <h2>아이디 찾기</h2>
+        <label>이름: <input type="text" id="name" /></label><br />
+        <label>이메일: <input type="email" id="email" /></label><br />
+        <button onclick="findId()">아이디 찾기</button>
+        <p id="result" style="margin-top: 15px; font-weight: bold"></p>
+        <script defer src="./findId.mjs" type="module"></script>
+    </body>
+</html>

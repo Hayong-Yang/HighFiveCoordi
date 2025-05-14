@@ -107,3 +107,8 @@ export async function toWishlist(request, response, next) {
 export async function toSignUp(request, response, next) {
     response.sendFile(path.resolve(__dirname, "../public/signup.html"));
 }
+
+// 아이디찾기로 이동
+export async function findId(request, response, next) {
+    response.sendFile(path.resolve(__dirname, "../public/findId.html"));
+}

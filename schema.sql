@@ -68,3 +68,5 @@ values  (101, "HS STRIPE KNIT COLLAR SHIRT_NAVY", "top", 52200, "부드러운 �
 select * from products;
 select * from users;
 
+
+
