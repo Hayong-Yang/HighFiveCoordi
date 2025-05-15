@@ -7,7 +7,6 @@ import {
   signUp,
   toSignUp,
   toLogin,
-  toWishlist,
   duplicateIdCheck,
   logOut,
 } from "../controller/userController.mjs";
@@ -68,6 +67,6 @@ router.get("/logIn", toLogin);
 router.get("/logout", logOut);
 
 // 위시리스트로 이동
-router.get("/wishlist", toWishlist);
+// router.get("/wishlist", toWishlist);
 
 export default router;
