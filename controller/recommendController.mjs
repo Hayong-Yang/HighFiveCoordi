@@ -38,23 +38,23 @@ export async function recommendClothes(request, response, next) {
     const data = await res.json();
 
     const items = data.response.body.items.item;
-    const targetTime = recommendRepository.getTargetForecastTime(); // 예: "0600"
+    // const targetTime = recommendRepository.getTargetForecastTime(); // 예: "0600"
     const tmpItem = items.find(
-      (item) => item.category === "TMP" && item.baseTime === targetTime
+      (item) => item.category === "TMP" && item.baseTime === baseTime
     );
     const windItem = items.find(
-      (item) => item.category === "WSD" && item.baseTime === targetTime
+      (item) => item.category === "WSD" && item.baseTime === baseTime
     );
     const rainPercentItem = items.find(
-      (item) => item.category === "POP" && item.baseTime === targetTime
+      (item) => item.category === "POP" && item.baseTime === baseTime
     );
     // console.log("items:", items);
     // console.log("tmpItem:", tmpItem);
-    const realTemperatur = tmpItem.fcstValue; // 실제온도
+    const realTemperature = tmpItem.fcstValue; // 실제온도
     const WindSpeed = windItem.fcstValue; // 풍속
     const rainPercent = rainPercentItem.fcstValue; // 강수확률(%)
 
-    console.log("실제온도", realTemperatur);
+    console.log("실제온도", realTemperature);
     console.log("풍속", WindSpeed);
     console.log("강수확률(%)", rainPercent);
 
