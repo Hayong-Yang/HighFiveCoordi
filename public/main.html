@@ -11,7 +11,7 @@
   <body>
     <header class="header">
       <div class="name">
-        <a href="#Highfive">High Five</a>
+        <a href="/">High Five</a>
       </div>
 
       <div id="headerMenu">
@@ -40,14 +40,16 @@
         </p>
 
         <div id="todayweather">
-          <h3>Today's weather</h3>
-          <div class="input-container">
-            <label for="base_date">기준 날짜:</label>
+          <div class="weather-container">
+          <div class="weather_input">
+            <div class="form-row">
+            <label for="base_date">날짜 : </label>
             <input type="text" id="base_date" />
             <input type="hidden" id="base_date_hidden" />
+            </div>
 
-            <div class="time-box">
-              <label for="base_time">기준 시간:</label>
+              <div class="form-row">
+              <label for="base_time">시간 : </label>
               <select id="base_time">
                 <option value="0200">02:00</option>
                 <option value="0500">05:00</option>
@@ -60,10 +62,10 @@
               </select>
             </div>
 
-            <div class="city-box">
-              <label for="base_city">기준 도시:</label>
+            <div class="form-row">
+              <label for="base_city">지역 : </label>
               <select id="base_city" onchange="setCityLocation()">
-                <option value="도시 선택">도시 선택</option>
+                <option value="현위치">현위치</option>
                 <option value="서울">서울</option>
                 <option value="부산">부산</option>
                 <option value="대구">대구</option>
@@ -72,29 +74,29 @@
                 <option value="대전">대전</option>
                 <option value="울산">울산</option>
               </select>
-              <!--
-              <input type="text" id="city_name" />
-              <button onclick="setCityLocation()">도시로 설정</button>-->
             </div>
 
-            <div class="nx-ny">
-              <label for="nx">X:</label>
+            <div class="form-row row-nx-ny">
+              <div class="half">
+              <label for="nx">X : </label>
               <input type="text" id="nx" />
-
-              <label for="ny">Y:</label>
+            </div>
+            <div class="half">
+              <label for="ny">Y : </label>
               <input type="text" id="ny" />
             </div>
-
+            </div>
             <button id="doFetchDataButton">날씨 조회</button>
           </div>
-
+        
+          <div class="weather_result">
+              <h3>Today's weather</h3>
           <div id="errorMessage"></div>
 
           <div id="result">
-            <div id="skySummary" class="sky-summary"></div>
             <ul id="responseData" class="response-data"></ul>
           </div>
-        </div>
+          </div>
       </section>
 
       <section id="recommend">
@@ -114,6 +116,7 @@
             <p>광고</p>
             <p>광고 상세 설명</p>
           </div>
+        </div>
         </div>
       </section>
 
