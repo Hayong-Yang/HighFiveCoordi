@@ -71,34 +71,39 @@ function getLocation() {
   }
 }
 
-// 날씨 데이터 조회 및 화면 출력 함수
-function fetchData() {
-  // 입력 필드에서 사용자가 선택하거나 자동 설정된 값을 가져옴
-  const baseDate = document.getElementById("base_date").value.replace(/-/g, ""); // 'YYYY-MM-DD' 형식을 'YYYYMMDD'로 변환
-  const baseTime = document.getElementById("base_time").value; // 기준 시간 (예: '0500', '0800' 등)
-  const nx = document.getElementById("nx").value; // 격자 X좌표 (위도 기반)
-  const ny = document.getElementById("ny").value; // 격자 Y좌표 (경도 기반)
+document.getElementById("doFetchDataButton").addEventListener(
+  "click",
 
-  // 입력값 유효성 확인
-  if (!baseDate || !nx || !ny) {
-    // 인풋 중 값이 한개라도 비면
-    alert("모든 값을 입력해주세요.");
-    return;
-  }
+  // 날씨 데이터 조회 및 화면 출력 함수
+  function fetchData() {
+    // 입력 필드에서 사용자가 선택하거나 자동 설정된 값을 가져옴
+    const baseDate = document
+      .getElementById("base_date")
+      .value.replace(/-/g, ""); // 'YYYY-MM-DD' 형식을 'YYYYMMDD'로 변환
+    const baseTime = document.getElementById("base_time").value; // 기준 시간 (예: '0500', '0800' 등)
+    const nx = document.getElementById("nx").value; // 격자 X좌표 (위도 기반)
+    const ny = document.getElementById("ny").value; // 격자 Y좌표 (경도 기반)
 
-  // 기상청 API로 URL 생성
-  const url =
-    `https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?` +
-    `serviceKey=${encodeURIComponent(serviceKey)}` +
-    `&base_date=${baseDate}&base_time=${baseTime}` +
-    `&nx=${nx}&ny=${ny}&numOfRows=10&dataType=JSON`;
+    // 입력값 유효성 확인
+    if (!baseDate || !nx || !ny) {
+      // 인풋 중 값이 한개라도 비면
+      alert("모든 값을 입력해주세요.");
+      return;
+    }
 
-  // API 요청
-  fetch(url) // 생성된 URL 로 데이터 요청
-    .then((response) => response.json()) // fetch에서 응답 받고 실행 -> response : 전체 응답 객체 | .json() 응답 받은 객체를 JSON 데이터로 변환
-    .then((data) => {
-      // 변환된 데이터를 가지고 작업
-      /* 조건식
+    // 기상청 API로 URL 생성
+    const url =
+      `https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?` +
+      `serviceKey=${encodeURIComponent(serviceKey)}` +
+      `&base_date=${baseDate}&base_time=${baseTime}` +
+      `&nx=${nx}&ny=${ny}&numOfRows=10&dataType=JSON`;
+
+    // API 요청
+    fetch(url) // 생성된 URL 로 데이터 요청
+      .then((response) => response.json()) // fetch에서 응답 받고 실행 -> response : 전체 응답 객체 | .json() 응답 받은 객체를 JSON 데이터로 변환
+      .then((data) => {
+        // 변환된 데이터를 가지고 작업
+        /* 조건식
 			!data.response
 			→ response가 아예 없으면 (응답이 없거나 null이면)
 			!data.response.body
@@ -108,36 +113,41 @@ function fetchData() {
 
 			이 중 하나라도 true 라면 데이터 없다고 판단해서 실행
 			*/
-      if (!data.response || !data.response.body || !data.response.body.items) {
-        document.getElementById("errorMessage").textContent =
-          "데이터가 없습니다.";
+        if (
+          !data.response ||
+          !data.response.body ||
+          !data.response.body.items
+        ) {
+          document.getElementById("errorMessage").textContent =
+            "데이터가 없습니다.";
+          document.getElementById("errorMessage").style.display = "block"; // 에러 나타내기
+          document.getElementById("responseData").innerHTML = ""; // 이전 데이터 제거
+          document.getElementById("result").style.display = "none"; // 결과 숨기기
+          return;
+        }
+        // 전체 흐름은 API에서 받아온 날씨 데이터를 필터링 후 가공
+        const items = data.response.body.items.item; // 데이터가 시간대별로 추가
+        const filtered = items.filter((item) => item.fcstDate === baseDate); // 그중에서 선택한 날짜(baseDate) 와 같은 데이터만 찾음. 즉, 오늘 날짜에 해당하는 예보만 필터링
+        const formatted = formatWeatherData(filtered, baseDate, baseTime); // 필터링된 데이터들을 formatWeatherData() 함수로 넘겨서 알기 쉬운 정보로 데이터 변환
+        document.getElementById("responseData").innerHTML = formatted; // 변환된 HTML을 페이지 리스트에 넣어줌. (ul > li로 추가됨)
+        document.getElementById("result").style.display = "block";
+        document.getElementById("errorMessage").textContent = ""; // 에러가 아닌 정상 호출 되면 에러텍스트 지우기
+        document.getElementById("errorMessage").style.display = "none"; // 에러 메세지 숨기기
+      })
+      .catch((error) => {
+        // .then 에서 에러가 나면 실행 (네트워크 문제, API 호출 실패 등)
+        console.error("API 호출 오류:", error); // 디버깅 용도
+        document.getElementById(
+          "errorMessage"
+        ).textContent = `오류가 발생했습니다: ${
+          error.message || "네트워크 또는 서버 문제"
+        }`;
         document.getElementById("errorMessage").style.display = "block"; // 에러 나타내기
         document.getElementById("responseData").innerHTML = ""; // 이전 데이터 제거
         document.getElementById("result").style.display = "none"; // 결과 숨기기
-        return;
-      }
-      // 전체 흐름은 API에서 받아온 날씨 데이터를 필터링 후 가공
-      const items = data.response.body.items.item; // 데이터가 시간대별로 추가
-      const filtered = items.filter((item) => item.fcstDate === baseDate); // 그중에서 선택한 날짜(baseDate) 와 같은 데이터만 찾음. 즉, 오늘 날짜에 해당하는 예보만 필터링
-      const formatted = formatWeatherData(filtered, baseDate, baseTime); // 필터링된 데이터들을 formatWeatherData() 함수로 넘겨서 알기 쉬운 정보로 데이터 변환
-      document.getElementById("responseData").innerHTML = formatted; // 변환된 HTML을 페이지 리스트에 넣어줌. (ul > li로 추가됨)
-      document.getElementById("result").style.display = "block";
-      document.getElementById("errorMessage").textContent = ""; // 에러가 아닌 정상 호출 되면 에러텍스트 지우기
-      document.getElementById("errorMessage").style.display = "none"; // 에러 메세지 숨기기
-    })
-    .catch((error) => {
-      // .then 에서 에러가 나면 실행 (네트워크 문제, API 호출 실패 등)
-      console.error("API 호출 오류:", error); // 디버깅 용도
-      document.getElementById(
-        "errorMessage"
-      ).textContent = `오류가 발생했습니다: ${
-        error.message || "네트워크 또는 서버 문제"
-      }`;
-      document.getElementById("errorMessage").style.display = "block"; // 에러 나타내기
-      document.getElementById("responseData").innerHTML = ""; // 이전 데이터 제거
-      document.getElementById("result").style.display = "none"; // 결과 숨기기
-    });
-}
+      });
+  }
+);
 
 const cityToGrid = {
   서울: { nx: 60, ny: 127 },

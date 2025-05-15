@@ -7,10 +7,8 @@ import {
     signUp,
     toSignUp,
     toLogin,
-    toWishlist,
     duplicateIdCheck,
     logOut,
-    findUserId,
 } from "../controller/userController.mjs";
 
 const router = express.Router();
@@ -69,7 +67,7 @@ router.get("/logIn", toLogin);
 router.get("/logout", logOut);
 
 // 위시리스트로 이동
-router.get("/wishlist", toWishlist);
+// router.get("/wishlist", toWishlist);
 
 // 아이디 찾기 API
 router.post("/find-id", findUserId);
