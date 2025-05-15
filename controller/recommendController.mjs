@@ -12,6 +12,7 @@ const jwtExpiresInDays = config.jwt.expiresInSec;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// 날씨 조회하면 옷 추천화면을 띄우는 기능
 export async function recommendClothes(request, response, next) {
   try {
     const serviceKey =
@@ -50,6 +51,13 @@ export async function recommendClothes(request, response, next) {
     );
     // console.log("items:", items);
     // console.log("tmpItem:", tmpItem);
+
+    if (!tmpItem) {
+      return response
+        .status(404)
+        .json({ error: "TMP 항목을 찾을 수 없습니다." });
+    }
+
     const realTemperature = tmpItem.fcstValue; // 실제온도
     const WindSpeed = windItem.fcstValue; // 풍속
     const rainPercent = rainPercentItem.fcstValue; // 강수확률(%)
@@ -58,13 +66,19 @@ export async function recommendClothes(request, response, next) {
     console.log("풍속", WindSpeed);
     console.log("강수확률(%)", rainPercent);
 
-    if (!tmpItem) {
-      return response
-        .status(404)
-        .json({ error: "TMP 항목을 찾을 수 없습니다." });
-    }
+    // 체감온도 계산, 날씨 level 도출
+    // 체감온도와 날씨 level을 클라이언트로 보낸 후 전역변수 설정하기!!!!!  -> 아래 reloadClothes 함수에서 날씨 level 받아오기!
+
+    // 옷 추천 알고리즘 적용.
   } catch (err) {
     console.error(err);
     response.status(500).json({ error: "날씨 데이터를 불러오는 중 오류 발생" });
   }
+}
+
+// 사용자가 색상적용하기 누르면 옷 추천화면을 새롭게 띄우는 기능
+export async function reloadClothes(request, response, next) {
+  const { topColor, bottomColor } = request.body;
+  // 날씨 level 전역변수에서 받아오기.
+  console.log("상의색상:", topColor, "하의 색상:", bottomColor);
 }
