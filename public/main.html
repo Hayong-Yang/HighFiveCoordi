@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Main Page</title>
     <link rel="stylesheet" href="/main.css" />
+    <script defer src="/weather.js"></script>
     <script defer type="text/javascript" src="/main.mjs"></script>
   </head>
   <body>
@@ -84,7 +85,7 @@
               <input type="text" id="ny" />
             </div>
 
-            <button onclick="fetchData()">날씨 조회</button>
+            <button id="doFetchDataButton">날씨 조회</button>
           </div>
 
           <div id="errorMessage"></div>

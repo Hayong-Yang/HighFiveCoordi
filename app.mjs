@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import userRoutes from "./router/userRoutes.mjs";
 import productRoutes from "./router/productRoutes.mjs";
 import wishlistRoutes from "./router/wishlistRoutes.mjs";
+import recommendRoutes from "./router/recommendRoutes.mjs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { config } from "./config.mjs";
@@ -26,6 +27,7 @@ app.use(express.urlencoded({ extended: true })); // 폼 데이터 처리
 app.use("/auth", userRoutes);
 app.use("/product", productRoutes);
 app.use("/wish", wishlistRoutes);
+app.use("/recommend", recommendRoutes);
 
 // 기본 라우터
 app.get("/", (req, res) => {

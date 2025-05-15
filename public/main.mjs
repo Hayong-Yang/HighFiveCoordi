@@ -40,3 +40,32 @@ if (token) {
   logInBtn.style.display = "inline";
   logOutBtn.style.display = "none";
 }
+
+// POST: main.html에서 날씨 API 설정값 보내고, 추천 옷을 결과로 받아오는 기능
+document
+  .getElementById("doFetchDataButton")
+  .addEventListener("click", async function getRecommendedClothes() {
+    const baseDate = document
+      .getElementById("base_date")
+      .value.replace(/-/g, ""); // 'YYYY-MM-DD' 형식을 'YYYYMMDD'로 변환
+    const baseTime = document.getElementById("base_time").value; // 기준 시간 (예: '0500', '0800' 등)
+    const nx = document.getElementById("nx").value; // 격자 X좌표 (위도 기반)
+    const ny = document.getElementById("ny").value; // 격자 Y좌표 (경도 기반)
+
+    const res = await fetch("/recommend", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nx: nx,
+        ny: ny,
+        baseDate: baseDate,
+        baseTime: baseTime,
+      }),
+    });
+    const result = await res.json();
+    if (res.ok) {
+      console.log(result);
+    } else {
+      console.log(result);
+    }
+  });
