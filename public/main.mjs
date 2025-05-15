@@ -11,7 +11,7 @@ document.getElementById("logIn").addEventListener("click", () => {
 // 메인 > 위시리스트 이동
 document.getElementById("Wishlist").addEventListener("click", (event) => {
   event.preventDefault();
-  window.location.href = "/auth/Wishlist";
+  window.location.href = "/wish";
 });
 
 document.getElementById("logOut").addEventListener("click", function (e) {

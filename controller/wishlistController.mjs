@@ -1,4 +1,25 @@
 import { db } from "../db/database.mjs";
+import { fileURLToPath } from "url";
+import path from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// JSON API로 전체 상품 데이터 제공
+export const getProductsJSON = async (req, res) => {
+  try {
+    const [rows] = await db.execute("SELECT * FROM products");
+    //console.log("보내는 결과: ", rows);
+    res.status(200).json({ rows }); // JSON으로 응답
+  } catch (err) {
+    res.status(400).json({ message: "상품 불러오기 실패" });
+  }
+};
+
+// 메인 > 위시리스트로 이동
+export async function toWishlist(request, response, next) {
+  response.sendFile(path.resolve(__dirname, "../public/wishlist.html"));
+}
 
 // 특정 유저의 찜 목록 조회
 export const getWishlistByUser = async (req, res) => {
