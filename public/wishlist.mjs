@@ -88,16 +88,41 @@ function renderCustomList(list) {
             <p class="name">${item.name}</p>
             <p class="price">${item.price.toLocaleString()}원</p>
           </div>
-          <button class="heart">♡</button>
+          <button class="heart active" data-product-id="${item.idx}">❤️</button>
         `;
 
     wishlistSection.appendChild(card);
   });
 
   wishlistSection.querySelectorAll(".heart").forEach((heart) => {
-    heart.addEventListener("click", () => {
-      heart.classList.toggle("active");
-      heart.textContent = heart.classList.contains("active") ? "❤️" : "♡";
+    heart.addEventListener("click", async () => {
+      const productId = heart.dataset.productId;
+
+      if (heart.classList.contains("active")) {
+        // UI 업데이트
+        heart.classList.remove("active");
+        heart.textContent = "♡";
+
+        // 서버에 위시리스트 삭제 요청
+        try {
+          const res = await fetch(`/wish/wishlist/${productId}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+          });
+
+          if (res.ok) {
+            // 성공 시 해당 아이템 제거
+            allItems = allItems.filter(
+              (item) => item.idx !== parseInt(productId)
+            );
+            renderFilteredList(currentCategory); // 현재 카테고리 다시 그리기
+          } else {
+            console.error("삭제 실패", await res.json());
+          }
+        } catch (err) {
+          console.error("서버 통신 에러", err);
+        }
+      }
     });
   });
 }

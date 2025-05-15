@@ -16,6 +16,23 @@ export const getProductsJSON = async (req, res) => {
   }
 };
 
+export const deleteProductsJSON = async (req, res) => {
+  const productIdx = req.params.idx; // URL 파라미터
+
+  try {
+    const [result] = await db.execute("DELETE FROM products WHERE idx = ?", [
+      productIdx,
+    ]);
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "상품을 찾을 수 없습니다." });
+    }
+    res.status(200).json({ message: "상품 삭제 완료", idx: productIdx });
+  } catch (err) {
+    console.error("상품 삭제 오류:", err);
+    res.status(500).json({ message: "상품 삭제 실패", error: err.message });
+  }
+};
+
 // 메인 > 위시리스트로 이동
 export async function toWishlist(request, response, next) {
   response.sendFile(path.resolve(__dirname, "../public/wishlist.html"));
