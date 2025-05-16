@@ -1,4 +1,3 @@
-// 일단 수업시간에 한 것 복붙했습니다.
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -29,4 +28,6 @@ export const config = {
     database: required("DB_DATABASE"),
     port: required("DB_PORT"),
   },
+  weatherAPI: { servicekey: required("WEATHER_API_SERVICE_KEY") },
 };
+

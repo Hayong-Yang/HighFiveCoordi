@@ -1,60 +1,159 @@
-import * as bcrypt from "bcrypt"
-import jwt from "jsonwebtoken"
-import db from '../db/database.mjs';
+import db from "../db/database.mjs";
+import * as authRepository from "../data/auth.mjs";
+import * as bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { config } from "../config.mjs";
+import { fileURLToPath } from "url";
+import path from "path";
+import pkg from "coolsms-node-sdk";
 
-// 회원가입
-exports.register = async (req, res) => {
-  const { userid, userpw, name, gender, email, phone, address } = req.body;
-  try {
-    const hashedPw = await bcrypt.hash(userpw, 10);
+const secretKey = config.jwt.secretKey;
+const bcryptSaltRounds = config.bcrypt.saltRounds;
+const jwtExpiresInDays = config.jwt.expiresInSec;
 
-    const [result] = await db.execute(
-      `INSERT INTO user (userid, userpw, name, gender, email, phone)
-       VALUES (?, ?, ?, ?, ?, ?)`,
-      [userid, hashedPw, name, gender, email, phone]
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+async function createJwtToken(idx) {
+    return jwt.sign({ idx }, secretKey, { expiresIn: jwtExpiresInDays });
+}
+
+// 회원가입 기능
+export async function signUp(request, response, next) {
+    const { inputId, inputPw, name, email, phone, hiddenIdCheck, ischecked } =
+        request.body;
+    // 회원 중복 체크 여부
+    if (hiddenIdCheck !== "y") {
+        return response
+            .status(401)
+            .json({ message: "아이디 중복 확인을 해주세요" });
+    }
+    if (!ischecked) {
+        return response
+            .status(401)
+            .json({ message: "개인정보 수집 및 이용 동의가 필요합니다." });
+    }
+    const hashedPw = bcrypt.hashSync(inputPw, bcryptSaltRounds);
+    const users = await authRepository.createUser(
+        inputId,
+        hashedPw,
+        name,
+        email,
+        phone
     );
+    const token = await createJwtToken(users.idx);
+    console.log(token);
+    if (users) {
+        response.status(201).json({ token, inputId });
+    }
+}
+// 아이디 중복체크 기능
+export async function duplicateIdCheck(request, response, next) {
+    const { inputId } = request.body;
+    const found = await authRepository.findByUserId(inputId);
+    if (!inputId) {
+        return response.status(400).json({ message: `아이디를 입력해주세요.` });
+    }
+    if (found) {
+        return response
+            .status(409)
+            .json({ message: `${inputId}이 이미 있습니다.` });
+    }
+    response.status(200).json({ message: `${inputId}는 사용가능합니다.` });
+}
 
-    res.status(201).json({ message: '회원가입 성공', userId: result.insertId });
-  } catch (err) {
-    if (err.code === 'ER_DUP_ENTRY') {
-      res.status(400).json({ message: '이미 존재하는 아이디 또는 이메일입니다.' });
+// 로그인 기능
+export async function logIn(request, response, next) {
+    const { inputId, inputPw } = request.body;
+    const user = await authRepository.findByUserId(inputId);
+
+    if (!user) {
+        return response.status(401).json(`${inputId} 아이디를 찾을 수 없음`);
+    }
+    const isValidPassword = await bcrypt.compare(inputPw, user.userpw);
+    if (!isValidPassword) {
+        return response
+            .status(401)
+            .json({ message: "아이디 또는 비밀번호 확인" });
+    }
+    const token = await createJwtToken(user.idx);
+    response.status(200).json({ token, inputId });
+}
+
+export async function verify(request, response, next) {
+    const id = request.id;
+    if (id) {
+        response.status(200).json(id);
     } else {
-      res.status(500).json({ message: '서버 오류', error: err.message });
+        response.status(401).json({ message: "사용자 인증 실패" });
     }
-  }
-};
+}
 
-// 로그인
-exports.login = async (req, res) => {
-  const { userid, userpw } = req.body;
-  try {
-    const [rows] = await db.execute(`SELECT * FROM user WHERE userid = ?`, [userid]);
-    const user = rows[0];
-
-    if (!user) return res.status(401).json({ message: '아이디 또는 비밀번호가 올바르지 않습니다.' });
-
-    const isMatch = await bcrypt.compare(userpw, user.userpw);
-    if (!isMatch) return res.status(401).json({ message: '아이디 또는 비밀번호가 올바르지 않습니다.' });
-
-    const token = jwt.sign({ id: user.idx, userid: user.userid }, process.env.JWT_SECRET, {
-        expiresIn: '1h',
-    });
-
-    res.json({ message: '로그인 성공', token });
-    } catch (err) {
-    res.status(500).json({ message: '서버 오류', error: err.message });
+export async function me(request, response, next) {
+    const user = await authRepository.findById(request.id);
+    if (!user) {
+        return response.status(404).json({ message: "일치하는 사용자가 없음" });
     }
-};
+    response.status(200).json({ token: request.token, userId: user.userId });
+}
 
-// 유저 정보 조회
-exports.getProfile = async (req, res) => {
-  const userId = req.user.id; // 토큰에서 가져온 사용자 ID
+// 아이디 찾기
+export async function findUserId(request, response, next) {
+    const { name, email } = request.body;
+
     try {
-    const [rows] = await db.execute(`SELECT idx, userid, name, gender, email, phone, address, regdate FROM user WHERE idx = ?`, [userId]);
-    if (rows.length === 0) return res.status(404).json({ message: '사용자 정보가 없습니다.' });
+        const [rows] = await db.execute(
+            "SELECT userid FROM users WHERE name = ? AND email = ?",
+            [name, email]
+        );
 
-    res.json(rows[0]);
+        if (rows.length > 0) {
+            response.json({ success: true, user_id: rows[0].userid });
+        } else {
+            response.json({
+                success: false,
+                message: "일치하는 정보가 없습니다.",
+            });
+        }
     } catch (err) {
-    res.status(500).json({ message: '서버 오류', error: err.message });
+        console.error(err);
+        response.status(500).json({ success: false, message: "서버 오류" });
     }
-};
+}
+
+// 비밀번호 찾기
+const Coolsms = pkg.default;
+
+const messageService = new Coolsms(
+    process.env.apiKey_pw,
+    process.env.apiSecret_pw
+);
+
+async function sendSMS() {
+    try {
+        const result = await sendSMS({
+            to: pwPhone, // 수신자 번호
+            from: process.env.senderNumber, // 발신번호
+            text: "인증번호 1234",
+        });
+        console.log("✅ 문자 전송 성공:", result);
+    } catch (error) {
+        console.error("❌ 문자 전송 오류:", error);
+    }
+}
+
+// 메인 > 로그인으로 이동
+export async function toLogin(request, response, next) {
+    response.sendFile(path.resolve(__dirname, "../public/login.html"));
+}
+
+// 회원가입 창으로 이동
+export async function toSignUp(request, response, next) {
+    response.sendFile(path.resolve(__dirname, "../public/signup.html"));
+}
+
+// 로그아웃 기능 (토큰은 클라이언트가 삭제해야 함)
+export async function logOut(request, response, next) {
+    // 클라이언트 측에서 토큰 삭제를 맡기고, 메인 페이지로 리디렉션
+    response.redirect("/");
+}
