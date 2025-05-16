@@ -4,22 +4,26 @@ import { config } from "../config.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
 import * as recommendRepository from "../data/recommend.mjs";
-import { calculateWindChill } from "../util/weatherUtils.mjs";
 
 
 const secretKey = config.jwt.secretKey;
 const bcryptSaltRounds = config.bcrypt.saltRounds;
 const jwtExpiresInDays = config.jwt.expiresInSec;
+const weatherApiServiceKey = config.weatherAPI.servicekey;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+
+// async function getWeatherBasedRecommendations(level) {
+//   const categories = ["top", "pants", "outer", "shoes", "etc"];
+//   const results = {};
+
 // 날씨 조회하면 옷 추천화면을 띄우는 기능
 export async function recommendClothes(request, response, next) {
   try {
-    const serviceKey = "API_KEY";
+    const serviceKey = weatherApiServiceKey;
     const { nx, ny, baseDate, baseTime } = request.body;
-
     const url =
       `https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?` +
       `serviceKey=${encodeURIComponent(serviceKey)}` +
@@ -28,9 +32,7 @@ export async function recommendClothes(request, response, next) {
 
     const res = await fetch(url);
     const data = await res.json();
-
     const items = data.response.body.items.item;
-
     const tmpItem = items.find(
       (item) => item.category === "TMP" && item.baseTime === baseTime
     );
@@ -50,10 +52,13 @@ export async function recommendClothes(request, response, next) {
     const realTemperature = tmpItem.fcstValue;
     const windSpeed = windItem.fcstValue;
     const rainPercent = rainPercentItem.fcstValue;
-
-    const feltTemperature = calculateWindChill(realTemperature, windSpeed);
-
-    return response.status(200).json({
+    const feltTemperature = recommendRepository.calculateWindChill(realTemperature, windSpeed);
+    const level= recommendRepository.getTempLevel(feltTemperature);
+    
+  const recommendedResult = await getRecommendations({ topHue, bottomHue, level });
+ console.log(recommendedResult)
+  return response.status(200).json({
+    recommendedResult,
       temperature: parseFloat(realTemperature),
       windSpeed: parseFloat(windSpeed),
       rainPercent: parseFloat(rainPercent),
@@ -65,6 +70,7 @@ export async function recommendClothes(request, response, next) {
     response.status(500).json({ error: "날씨 데이터를 불러오는 중 오류 발생" });
   }
 }
+
 
 // 사용자가 색상적용하기 누르면 옷 추천화면을 새롭게 띄우는 기능
 export async function reloadClothes(request, response, next) {
