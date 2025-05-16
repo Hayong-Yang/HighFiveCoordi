@@ -5,7 +5,6 @@ import { fileURLToPath } from "url";
 import path from "path";
 import * as recommendRepository from "../data/recommend.mjs";
 
-
 const secretKey = config.jwt.secretKey;
 const bcryptSaltRounds = config.bcrypt.saltRounds;
 const jwtExpiresInDays = config.jwt.expiresInSec;
@@ -64,7 +63,6 @@ export async function recommendClothes(request, response, next) {
       rainPercent: parseFloat(rainPercent),
       feltTemperature: feltTemperature,
     });
-
   } catch (err) {
     console.error(err);
     response.status(500).json({ error: "날씨 데이터를 불러오는 중 오류 발생" });
