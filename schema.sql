@@ -66,3 +66,5 @@ values  (101, "HS STRIPE KNIT COLLAR SHIRT_NAVY", "top", 52200, "부드러운 �
         (504, "RC B019 BLACK GLASS", "etc", 22710, "흰눈이 내리는 날 소박한 나의 소원은 이런 지적인 안경을 쓰고 나타나는 왕자님.", "black", 1);
 
 select * from products;
+select * from users;
+
