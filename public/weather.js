@@ -104,15 +104,15 @@ document.getElementById("doFetchDataButton").addEventListener(
       .then((data) => {
         // 변환된 데이터를 가지고 작업
         /* 조건식
-			!data.response
-			→ response가 아예 없으면 (응답이 없거나 null이면)
-			!data.response.body
-			→ response는 있지만 그 안에 body가 없으면 (잘못된 구조일 경우)
-			!data.response.body.items
-			→ body는 있지만 진짜 날씨 데이터(items)가 없으면
+         !data.response
+         → response가 아예 없으면 (응답이 없거나 null이면)
+         !data.response.body
+         → response는 있지만 그 안에 body가 없으면 (잘못된 구조일 경우)
+         !data.response.body.items
+         → body는 있지만 진짜 날씨 데이터(items)가 없으면
 
-			이 중 하나라도 true 라면 데이터 없다고 판단해서 실행
-			*/
+         이 중 하나라도 true 라면 데이터 없다고 판단해서 실행
+         */
         if (
           !data.response ||
           !data.response.body ||

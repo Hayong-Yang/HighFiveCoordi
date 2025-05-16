@@ -30,3 +30,4 @@ export const config = {
   },
   weatherAPI: { servicekey: required("WEATHER_API_SERVICE_KEY") },
 };
+
