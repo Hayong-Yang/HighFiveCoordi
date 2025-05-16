@@ -122,3 +122,44 @@ document
       console.log(result);
     }
   });
+
+// 옷 색상 적용 기능
+document
+  .getElementById("apply-btn")
+  .addEventListener("click", async function applyColors() {
+    // 상의 색상
+    const topColor = document.getElementById("topColorPicker").value;
+    const topSvg = document.getElementById("top-svg");
+    const topRects = topSvg.querySelectorAll("rect");
+
+    topRects.forEach((rect) => {
+      // 목 부분은 fill:none이므로 제외
+      if (rect.getAttribute("fill") !== "none") {
+        rect.setAttribute("fill", topColor);
+      }
+    });
+
+    // 하의 색상
+    const bottomColor = document.getElementById("bottomColorPicker").value;
+    const bottomSvg = document.getElementById("bottom-svg");
+    const bottomRects = bottomSvg.querySelectorAll("rect");
+
+    bottomRects.forEach((rect) => {
+      rect.setAttribute("fill", bottomColor);
+    });
+
+    // POST: 적용하기 버튼 누르면 사용자가 선택한 색상 rgb값을 바탕으로 옷 추천화면이 새로고침 되는 기능
+    const topColorPicker = document.getElementById("topColorPicker").value;
+    const bottomColorPicker =
+      document.getElementById("bottomColorPicker").value;
+    console.log("상의색상:", topColorPicker, "하의 색상:", bottomColorPicker);
+
+    const res = await fetch("/recommend/reloadByColor", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        topColor: topColorPicker,
+        bottomColor: bottomColorPicker,
+      }),
+    });
+  });

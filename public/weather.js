@@ -92,6 +92,7 @@ function showNoData() {
   $responseData.innerHTML = "";
 }
 
+
 function fetchData() {
   const baseDate = $baseDate.value.replace(/-/g, "");
   const baseTime = $baseTime.value;

@@ -77,9 +77,9 @@ main {
 }
 
 /* 검은 배경 섹션 */
-#todayweather,
-#recommend {
+#todayweather {
   background-color: #111;
+  color: white;
   padding: 40px 24px;
   margin-bottom: 24px;
   /*border-radius: 8px;*/
@@ -95,6 +95,7 @@ main {
   font-size: 16px;
   margin-bottom: 20px;
 }
+
 
 /* 전체 컨테이너 설정 */
 .weather-container {
@@ -346,6 +347,212 @@ main {
     transform: translateY(0);
     opacity: 1;
   }
+=======
+.todayweather h3 {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.todayweather__description {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.todayweather__description p {
+  margin: 0;
+}
+
+/* 옷 추천 섹션 */
+#recommend {
+  background-color: #111;
+  padding: 40px 24px;
+  margin-bottom: 24px;
+  /*border-radius: 8px;*/
+  display: flex;
+  flex-direction: row;
+  height: 800px;
+}
+#recommendations {
+  flex: 7;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+  border-right: 1px solid #ccc;
+  background-color: #f9f9f9;
+}
+
+#filterSection {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+}
+
+/* 기존 category 스타일 유지 */
+.left-col,
+.right-col {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 10px;
+}
+
+.category {
+  background-color: #f0f0f0;
+  border: 1px solid #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+/* 크기 비율 설정 */
+.etc {
+  height: 25%;
+}
+.top,
+.pants {
+  height: 35%;
+}
+.outer {
+  height: 48.5%;
+}
+.shoes {
+  height: 48%;
+}
+
+/* filterSection 내부 요소 간단 스타일 */
+#personalColor,
+#custom {
+  flex: 1;
+  background-color: #e0e0e0;
+  border: 1px solid #aaa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+#personalColor {
+  flex: 4;
+}
+
+#custom {
+  flex: 6;
+  margin-bottom: 15px;
+  padding: 5px;
+  max-width: 600px; /* 이거 제한하고 싶으면 유지 */
+  width: 100%; /* 추가 */
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* 공통 버튼 스타일 */
+.circle-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  background-color: #f5f5f5;
+  font-size: 32px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: auto 10px;
+  padding: 0; /* 내부 간격 제거 */
+  line-height: 1; /* 줄간격 조절 */
+}
+.arrow-button:hover {
+  background-color: #f9f9f9;
+}
+
+/* 왼쪽/오른쪽 버튼 위치 지정 */
+.left-btn {
+  align-self: center;
+}
+.right-btn {
+  align-self: center;
+}
+
+/* 옷 색상 선택 섹션 */
+.custom-container {
+  background: #f0f0f0;
+  border-radius: 5px;
+  padding: 40px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.top-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 15px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 8px;
+
+  padding: 10px 40px;
+}
+.pants-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 15px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 8px;
+
+  padding: 10px 40px;
+}
+
+.color-label {
+  min-width: 70px;
+  font-weight: 600;
+}
+
+input[type="color"] {
+  width: 70px;
+  height: 32px;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  background: none;
+  /* -webkit-appearance: none; */
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+  border-radius: 6px;
+}
+
+.button-row {
+  text-align: center;
+}
+
+#apply-btn {
+  background-color: #999999;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 10px;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#apply-btn:hover {
+  background-color: #6d6d6d;
 }
 
 /* article 섹션 */
