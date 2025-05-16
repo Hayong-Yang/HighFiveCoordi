@@ -100,7 +100,7 @@ main {
 .weather-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 5rem;
   max-width: 1200px;
   margin: 0 auto;
   padding: 1rem;
@@ -113,7 +113,11 @@ main {
   order: 1;
   flex: 2;
   min-width: 300px;
-  background: #cdcdcd;
+  background: linear-gradient(
+    to bottom,
+    #f0f8ff,
+    #e6f2ff
+  ); /* 밝은 하늘톤 그라디언트 */
   padding: 2rem;
   border-radius: 1rem;
   display: flex;
@@ -122,6 +126,7 @@ main {
   justify-content: flex-start;
   text-align: center;
   min-height: 380px; /* 높이 확보 */
+  box-shadow: 0 0 10px rgba(0, 100, 255, 0.1); /* 약간의 푸른 그림자 */
 }
 
 .weather_result h3 {
@@ -136,13 +141,18 @@ main {
   order: 2;
   flex: 1;
   min-width: 280px;
-  background: #cdcdcd;
+  background: linear-gradient(
+    to bottom,
+    #f0f8ff,
+    #e6f2ff
+  ); /* 밝은 하늘톤 그라디언트 */
   padding: 2rem;
   border-radius: 1rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
   min-height: 380px; /* 높이 확보 */
+  box-shadow: 0 0 10px rgba(0, 100, 255, 0.1); /* 약간의 푸른 그림자 */
 }
 
 /* 입력 요소 스타일 */
@@ -222,7 +232,7 @@ main {
   list-style: none;
 }
 .response-data .data-list {
-  background-color: #fff;
+  background-color: rgba(135, 206, 250, 0.4); /* 연한 하늘색 + 반투명 */
   padding: 1.5rem;
   border-radius: 0.8rem;
   box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.08);
