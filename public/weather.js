@@ -148,6 +148,12 @@ const cityToGrid = {
 
 function setCityLocation() {
   const city = document.getElementById("base_city").value;
+
+  if (city === "현위치") {
+    getLocation();
+    return;
+  }
+
   const grid = cityToGrid[city];
 
   if (grid) {
