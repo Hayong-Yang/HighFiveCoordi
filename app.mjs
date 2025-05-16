@@ -27,7 +27,6 @@ app.use(express.urlencoded({ extended: true })); // 폼 데이터 처리
 app.use("/auth", userRoutes);
 app.use("/product", productRoutes);
 app.use("/wish", wishlistRoutes);
-app.use("/api", userRoutes); // /api.find-id로 요청됨
 app.use("/recommend", recommendRoutes);
 
 // 기본 라우터

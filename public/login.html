@@ -4,31 +4,23 @@
         <meta charset="UTF-8" />
         <title>High Five - 로그인</title>
         <link rel="stylesheet" href="/login.css" />
-        <script defer type="text/javascript" src="/login.mjs"></script>
+        <script defer type="module" src="/login.mjs"></script>
     </head>
     <body>
         <header class="header">
-            <div class="name">
-                <a href="/">High Five</a>
-            </div>
-
+            <div class="name"><a href="/">High Five</a></div>
             <div id="headerMenu">
                 <ul class="header__menu">
-                    <li>
-                        <a href="/auth/signup" id="signUp">SignUp</a>
-                    </li>
-                    <li>
-                        <a href="/auth/login" id="logIn">LogIn</a>
-                    </li>
-                    <!--<li>
-            <a href="/auth/logout" id="logOut">LogOut</a>
-          </li>-->
+                    <li><a href="/auth/signup" id="signUp">SignUp</a></li>
+                    <li><a href="/auth/login" id="logIn">LogIn</a></li>
                 </ul>
             </div>
         </header>
-        <!-- test -->
+
         <main class="login-container">
             <h2>LOGIN</h2>
+
+            <!-- 로그인 -->
             <form id="loginForm" class="loginForm">
                 <input id="inputId" type="text" placeholder="ID" required />
                 <input
@@ -39,9 +31,12 @@
                 />
                 <button type="submit" class="submit-btn">LOGIN</button>
             </form>
+
             <div class="find-info">
                 <a href="#" id="showFindId">아이디 찾기</a> |
                 <a href="#" id="showFindPassword">비밀번호 찾기</a>
+
+                <!-- 아이디 찾기 -->
                 <div class="find-id-form" id="findIdForm" style="display: none">
                     <h3>아이디 찾기</h3>
                     <form id="findId">
@@ -61,6 +56,9 @@
                     </form>
                     <div id="resultMessage" class="result-message"></div>
                 </div>
+                </div>
+
+                <!-- 비밀번호 찾기 -->
                 <div
                     class="find-password-form"
                     id="findPasswordForm"
@@ -70,8 +68,8 @@
                     <form id="findPassword">
                         <input
                             type="text"
-                            id="pwName"
-                            placeholder="이름"
+                            id="pwId"
+                            placeholder="아이디"
                             required
                         />
                         <input
@@ -82,6 +80,30 @@
                         />
                         <button type="submit">인증번호 발송</button>
                     </form>
+
+                    <!-- 인증번호 입력 -->
+                    <div id="verifySection" style="display: none">
+                        <input
+                            type="text"
+                            id="verifyCode"
+                            placeholder="인증번호 입력"
+                        />
+                        <button id="verifyBtn">인증번호 확인</button>
+                    </div>
+
+                    <!-- 비밀번호 재설정 -->
+                    <div id="resetPasswordSection" style="display: none">
+                        <form id="resetPasswordForm">
+                            <input
+                                type="password"
+                                id="newPassword"
+                                placeholder="새 비밀번호"
+                                required
+                            />
+                            <button type="submit">비밀번호 변경</button>
+                        </form>
+                    </div>
+
                     <div id="resultMessage" class="result-message"></div>
                 </div>
             </div>

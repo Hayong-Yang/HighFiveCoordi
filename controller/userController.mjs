@@ -5,6 +5,8 @@ import jwt from "jsonwebtoken";
 import { config } from "../config.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
+import pkg from "coolsms-node-sdk";
+
 const secretKey = config.jwt.secretKey;
 const bcryptSaltRounds = config.bcrypt.saltRounds;
 const jwtExpiresInDays = config.jwt.expiresInSec;
@@ -116,6 +118,27 @@ export async function findUserId(request, response, next) {
     } catch (err) {
         console.error(err);
         response.status(500).json({ success: false, message: "서버 오류" });
+    }
+}
+
+// 비밀번호 찾기
+const Coolsms = pkg.default;
+
+const messageService = new Coolsms(
+    process.env.apiKey_pw,
+    process.env.apiSecret_pw
+);
+
+async function sendSMS() {
+    try {
+        const result = await sendSMS({
+            to: pwPhone, // 수신자 번호
+            from: process.env.senderNumber, // 발신번호
+            text: "인증번호 1234",
+        });
+        console.log("✅ 문자 전송 성공:", result);
+    } catch (error) {
+        console.error("❌ 문자 전송 오류:", error);
     }
 }
 
