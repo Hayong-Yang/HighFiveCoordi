@@ -6,10 +6,10 @@ import path from "path";
 import * as recommendRepository from "../data/recommend.mjs";
 import { calculateWindChill } from "../util/weatherUtils.mjs";
 
-
 const secretKey = config.jwt.secretKey;
 const bcryptSaltRounds = config.bcrypt.saltRounds;
 const jwtExpiresInDays = config.jwt.expiresInSec;
+const weatherApiServiceKey = config.weatherAPI.servicekey;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,7 +17,7 @@ const __dirname = path.dirname(__filename);
 // 날씨 조회하면 옷 추천화면을 띄우는 기능
 export async function recommendClothes(request, response, next) {
   try {
-    const serviceKey = "API_KEY";
+    const serviceKey = weatherApiServiceKey;
     const { nx, ny, baseDate, baseTime } = request.body;
 
     const url =
@@ -59,7 +59,6 @@ export async function recommendClothes(request, response, next) {
       rainPercent: parseFloat(rainPercent),
       feltTemperature: feltTemperature,
     });
-
   } catch (err) {
     console.error(err);
     response.status(500).json({ error: "날씨 데이터를 불러오는 중 오류 발생" });
