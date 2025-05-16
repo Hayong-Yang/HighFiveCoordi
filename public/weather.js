@@ -2,6 +2,16 @@
 const serviceKey =
   "NUqg9iZg+R57kpL1qrF1tst+AG3VXF5LAecO+CNKVMPmo34670TTUOan29Sq5DgB6/UXYTHmJOsUHoUp0CuKQw==";
 
+const $baseDate = document.getElementById("base_date");
+const $baseTime = document.getElementById("base_time");
+const $nx = document.getElementById("nx");
+const $ny = document.getElementById("ny");
+const $responseData = document.getElementById("responseData");
+const $errorMessage = document.getElementById("errorMessage");
+const $noDataMessage = document.getElementById("noDataMessage");
+const $resultBox = document.getElementById("result");
+const $fetchBtn = document.getElementById("doFetchDataButton");
+
 // 위도/경도를 '기상청 좌표계'로 변환하는 함수
 function dfs_xy_conv(lat, lon) {
   const RE = 6371.00877;
@@ -71,71 +81,59 @@ function getLocation() {
   }
 }
 
-document.getElementById("doFetchDataButton").addEventListener(
-  "click",
+function resetMsg() {
+  $errorMessage.style.display = "none";
+  $noDataMessage.style.display = "none";
+  $resultBox.style.display = "none";
+}
+function showNoData() {
+  resetMsg();
+  $noDataMessage.style.display = "block";
+  $responseData.innerHTML = "";
+}
 
-  // 날씨 데이터 조회 및 화면 출력 함수
-  function fetchData() {
-    // 입력 필드에서 사용자가 선택하거나 자동 설정된 값을 가져옴
-    const baseDate = document
-      .getElementById("base_date")
-      .value.replace(/-/g, ""); // 'YYYY-MM-DD' 형식을 'YYYYMMDD'로 변환
-    const baseTime = document.getElementById("base_time").value; // 기준 시간 (예: '0500', '0800' 등)
-    const nx = document.getElementById("nx").value; // 격자 X좌표 (위도 기반)
-    const ny = document.getElementById("ny").value; // 격자 Y좌표 (경도 기반)
+function fetchData() {
+  const baseDate = $baseDate.value.replace(/-/g, "");
+  const baseTime = $baseTime.value;
+  const nx = $nx.value.trim();
+  const ny = $ny.value.trim();
 
-    // 입력값 유효성 확인
-    if (!baseDate || !nx || !ny) {
-      // 인풋 중 값이 한개라도 비면
-      alert("모든 값을 입력해주세요.");
-      return;
-    }
-
-    // 기상청 API로 URL 생성
-    const url =
-      `https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?` +
-      `serviceKey=${encodeURIComponent(serviceKey)}` +
-      `&base_date=${baseDate}&base_time=${baseTime}` +
-      `&nx=${nx}&ny=${ny}&numOfRows=10&dataType=JSON`;
-
-    // API 요청
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        if (
-          !data.response ||
-          !data.response.body ||
-          !data.response.body.items
-        ) {
-          document.getElementById("errorMessage").textContent =
-            "데이터가 없습니다.";
-          document.getElementById("errorMessage").style.display = "block";
-          document.getElementById("responseData").innerHTML = "";
-          document.getElementById("result").style.display = "none";
-          return;
-        }
-
-        const items = data.response.body.items.item;
-        const filtered = items.filter((item) => item.fcstDate === baseDate);
-        const formatted = formatWeatherData(filtered, baseDate, baseTime);
-        document.getElementById("responseData").innerHTML = formatted;
-        document.getElementById("result").style.display = "block";
-        document.getElementById("errorMessage").textContent = "";
-        document.getElementById("errorMessage").style.display = "none";
-      })
-      .catch((error) => {
-        console.error("API 호출 오류:", error);
-        document.getElementById(
-          "errorMessage"
-        ).textContent = `오류가 발생했습니다: ${
-          error.message || "네트워크 또는 서버 문제"
-        }`;
-        document.getElementById("errorMessage").style.display = "block";
-        document.getElementById("responseData").innerHTML = "";
-        document.getElementById("result").style.display = "none";
-      });
+  if (!baseDate || !nx || !ny) {
+    alert("모든 값을 입력해주세요.");
+    return;
   }
-);
+
+  resetMsg();
+
+  // 기상청 API로 URL 생성
+  const url =
+    `https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?` +
+    `serviceKey=${encodeURIComponent(serviceKey)}` +
+    `&base_date=${baseDate}&base_time=${baseTime}` +
+    `&nx=${nx}&ny=${ny}&numOfRows=10&dataType=JSON`;
+
+  // API 요청
+  fetch(url)
+    .then((res) => res.json())
+    .then((data) => {
+      if (!data?.response?.body?.items) return showNoData();
+      const items = data.response.body.items.item;
+      const filtered = items.filter((i) => i.fcstDate === baseDate);
+      if (!filtered.length) return showNoData();
+
+      const formatted = formatWeatherData(filtered);
+      $responseData.innerHTML = formatted;
+      $resultBox.style.display = "block";
+    })
+    .catch((err) => {
+      console.error("API 오류", err);
+      resetMsg();
+      $errorMessage.textContent = `오류가 발생했습니다: ${
+        err.message || "네트워크 문제"
+      }`;
+      $errorMessage.style.display = "block";
+    });
+}
 
 const cityToGrid = {
   서울: { nx: 60, ny: 127 },
@@ -243,14 +241,9 @@ function setDefaultDateTime() {
   }
 }
 
-window.onload = function () {
-  getLocation(); // 위치 정보
-  setDefaultDateTime(); // 날짜/시간
+window.onload = () => {
+  getLocation();
+  setDefaultDateTime();
 };
-
-// 엔터 키 입력 시 자동으로 조회 실행
-document.addEventListener("keyup", function (event) {
-  if (event.key === "Enter") {
-    fetchData();
-  }
-});
+$fetchBtn.addEventListener("click", fetchData);
+document.addEventListener("keyup", (e) => e.key === "Enter" && fetchData());
