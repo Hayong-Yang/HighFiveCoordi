@@ -4,46 +4,46 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Wish List - Highfive</title>
-    <link rel="stylesheet" href="./wishlist.css" />
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const hearts = document.querySelectorAll(".heart");
-
-        hearts.forEach((heart) => {
-          heart.addEventListener("click", () => {
-            heart.classList.toggle("active");
-            heart.textContent = heart.classList.contains("active") ? "❤️" : "♡";
-          });
-        });
-      });
-    </script>
+    <link rel="stylesheet" href="/wishlist.css" />
+    <script defer type="module" src="/wishlist.mjs"></script>
   </head>
 
   <body>
     <header class="header">
       <div class="name">
-        <a href="#Highfive">High Five</a>
+        <a href="/">High Five</a>
       </div>
 
       <div id="headerMenu">
         <ul class="header__menu">
           <li><a href="#All" class="all">All</a></li>
           <li><a href="#top" class="top">top</a></li>
-          <li><a href="#bottom" class="bottom">bottom</a></li>
+          <li><a href="#bottom" class="pants">bottom</a></li>
           <li><a href="#outer" class="outer">outer</a></li>
           <li><a href="#shoes" class="shoes">shoes</a></li>
           <li><a href="#etc" class="etc">etc.</a></li>
         </ul>
       </div>
-
-      <div id="wish-list">
-        <a href="#Wish list">Wish list</a>
-      </div>
     </header>
 
     <main>
-      <section class="product-grid">
-        <div class="product-card">
+      <p id="WishText">WishList</p>
+      <!-- 로그인 안 된 상태 -->
+      <div
+        id="emptyMessage"
+        style="display: none; text-align: center; padding: 100px 0"
+      >
+        <p id="empty">WishList에 담은 상품이 없습니다.</p>
+        <a href="/auth/login" class="go-login-btn">로그인 하러 가기</a>
+      </div>
+
+      <!-- 로그인 된 상태 -->
+      <section
+        class="product-grid"
+        id="wishlistSection"
+        style="display: none; padding: 30px 0"
+      >
+        <!-- <div class="product-card">
           <img src="../images/clothes.png" alt="상품 이미지" />
           <div class="product-info">
             <p class="brand">brand(?)</p>
@@ -79,7 +79,7 @@
             <p class="price">35,100원</p>
           </div>
           <button class="heart">♡</button>
-        </div>
+        </div> -->
       </section>
     </main>
 

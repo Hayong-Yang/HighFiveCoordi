@@ -3,37 +3,35 @@
   <head>
     <meta charset="UTF-8" />
     <title>High Five - 로그인</title>
-    <link rel="stylesheet" href="./login.css" />
+    <link rel="stylesheet" href="/login.css" />
+    <script defer type="text/javascript" src="/login.mjs"></script>
   </head>
   <body>
     <header class="header">
       <div class="name">
-        <a href="#Highfive">High Five</a>
+        <a href="/">High Five</a>
       </div>
 
       <div id="headerMenu">
         <ul class="header__menu">
           <li>
-            <a href="#wishlist">WishList</a>
+            <a href="/auth/signup" id="signUp">SignUp</a>
           </li>
           <li>
-            <a href="#mypage">My Page</a>
+            <a href="/auth/login" id="logIn">LogIn</a>
           </li>
-          <li>
-            <a href="#signup">SignUp</a>
-          </li>
-          <li>
-            <a href="#login">Login</a>
-          </li>
+          <!--<li>
+            <a href="/auth/logout" id="logOut">LogOut</a>
+          </li>-->
         </ul>
       </div>
     </header>
     <!-- test -->
     <main class="login-container">
       <h2>LOGIN</h2>
-      <form>
-        <input type="text" placeholder="ID" required />
-        <input type="password" placeholder="PASSWORD" required />
+      <form id="loginForm" class="loginForm">
+        <input id="inputId" type="text" placeholder="ID" required />
+        <input id="inputPw" type="password" placeholder="PASSWORD" required />
         <button type="submit" class="submit-btn">LOGIN</button>
       </form>
       <div class="find-info">
@@ -57,7 +55,7 @@
         통신판매중개자로서 상품, 상품정보, 거래에 대한 책임이 제한될 수
         있으므로, 각 상품 페이지에서 구체적인 내용을 확인하시기 바랍니다.
       </p>
-      <img class="icons" src="./images/icons.png" alt="icons" />
+      <img class="icons" src="/images/icons.png" alt="icons" />
     </footer>
   </body>
 </html>
