@@ -1,29 +1,41 @@
-let allItems = []; // 전체 상품 저장용 (필터링을 위해 필요)
+let allItems = []; // 전체 상품 데이터
+let currentCategory = "all"; // 현재 선택된 카테고리
+let isSortedByOldest = false; // 담은순 버튼 눌렸는지 여부
 
 document.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem("token");
   const wishlist = document.getElementById("wishlistSection");
   const emptyMsg = document.getElementById("emptyMessage");
+  const sortBtn = document.getElementById("sortByCreatedAt");
 
   if (token) {
     // 로그인 된 상태
     wishlist.style.display = "grid";
+    if (sortBtn) sortBtn.style.display = "inline-block";
     loadWishList(); // 로그인 상태면 위시리스트 로딩
   } else {
     // 로그인 안 된 상태
     emptyMsg.style.display = "block";
+    if (sortBtn) sortBtn.style.display = "none";
   }
 
-  // 카테고리 메뉴 클릭 이벤트 등록
-  const menuItems = document.querySelectorAll(".header__menu a");
-  menuItems.forEach((item) => {
+  // 카테고리 클릭 이벤트
+  document.querySelectorAll(".header__menu a").forEach((item) => {
     item.addEventListener("click", (e) => {
       e.preventDefault();
-      const selectedCategory = item.className; // all, top, bottom 등
-
-      renderFilteredList(selectedCategory);
+      currentCategory = item.className; // all, top, bottom 등
+      isSortedByOldest = false; // 카테고리 클릭 시 정렬 초기화
+      renderFilteredList(currentCategory);
     });
   });
+
+  // 담은순(오래된 순) 버튼 클릭 이벤트
+  if (sortBtn) {
+    sortBtn.addEventListener("click", () => {
+      isSortedByOldest = true;
+      renderFilteredList(currentCategory); // 현재 카테고리 기준 정렬
+    });
+  }
 });
 
 async function loadWishList() {
@@ -47,18 +59,28 @@ async function loadWishList() {
 }
 
 function renderFilteredList(category) {
+  let list =
+    category === "all"
+      ? [...allItems]
+      : allItems.filter((item) => item.category === category);
+
+  if (isSortedByOldest) {
+    list.sort((a, b) => a.idx - b.idx); // 담은순: 오래된 것 먼저
+  } else {
+    list.sort((a, b) => b.idx - a.idx); // 최신순: 최근 담은 것 먼저
+  }
+
+  renderCustomList(list);
+}
+
+function renderCustomList(list) {
   const wishlistSection = document.getElementById("wishlistSection");
   wishlistSection.innerHTML = "";
 
-  const filtered =
-    category === "all"
-      ? allItems
-      : allItems.filter((item) => item.category === category);
-
-  filtered.forEach((item) => {
+  list.forEach((item) => {
     const card = document.createElement("div");
     card.className = "product-card";
-    card.setAttribute("data-category", item.category);
+    card.dataset.category = item.category;
 
     card.innerHTML = `
           <img src="${item.image_url}" alt="상품 이미지" />
@@ -66,19 +88,41 @@ function renderFilteredList(category) {
             <p class="name">${item.name}</p>
             <p class="price">${item.price.toLocaleString()}원</p>
           </div>
-          <button class="heart">♡</button>
+          <button class="heart active" data-product-id="${item.idx}">❤️</button>
         `;
 
     wishlistSection.appendChild(card);
   });
 
-  const hearts = document.querySelectorAll(".heart");
-  hearts.forEach((heart) => {
-    heart.addEventListener("click", () => {
-      heart.classList.toggle("active");
-      heart.textContent = heart.classList.contains("active") ? "❤️" : "♡";
+  wishlistSection.querySelectorAll(".heart").forEach((heart) => {
+    heart.addEventListener("click", async () => {
+      const productId = heart.dataset.productId;
+
+      if (heart.classList.contains("active")) {
+        // UI 업데이트
+        heart.classList.remove("active");
+        heart.textContent = "♡";
+
+        // 서버에 위시리스트 삭제 요청
+        try {
+          const res = await fetch(`/wish/wishlist/${productId}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+          });
+
+          if (res.ok) {
+            // 성공 시 해당 아이템 제거
+            allItems = allItems.filter(
+              (item) => item.idx !== parseInt(productId)
+            );
+            renderFilteredList(currentCategory); // 현재 카테고리 다시 그리기
+          } else {
+            console.error("삭제 실패", await res.json());
+          }
+        } catch (err) {
+          console.error("서버 통신 에러", err);
+        }
+      }
     });
   });
 }
-
-window.onload = loadWishList();

@@ -2,6 +2,16 @@
 const serviceKey =
   "NUqg9iZg+R57kpL1qrF1tst+AG3VXF5LAecO+CNKVMPmo34670TTUOan29Sq5DgB6/UXYTHmJOsUHoUp0CuKQw==";
 
+const $baseDate = document.getElementById("base_date");
+const $baseTime = document.getElementById("base_time");
+const $nx = document.getElementById("nx");
+const $ny = document.getElementById("ny");
+const $responseData = document.getElementById("responseData");
+const $errorMessage = document.getElementById("errorMessage");
+const $noDataMessage = document.getElementById("noDataMessage");
+const $resultBox = document.getElementById("result");
+const $fetchBtn = document.getElementById("doFetchDataButton");
+
 // 위도/경도를 '기상청 좌표계'로 변환하는 함수
 function dfs_xy_conv(lat, lon) {
   const RE = 6371.00877;
@@ -71,83 +81,60 @@ function getLocation() {
   }
 }
 
-document.getElementById("doFetchDataButton").addEventListener(
-  "click",
+function resetMsg() {
+  $errorMessage.style.display = "none";
+  $noDataMessage.style.display = "none";
+  $resultBox.style.display = "none";
+}
+function showNoData() {
+  resetMsg();
+  $noDataMessage.style.display = "block";
+  $responseData.innerHTML = "";
+}
 
-  // 날씨 데이터 조회 및 화면 출력 함수
-  function fetchData() {
-    // 입력 필드에서 사용자가 선택하거나 자동 설정된 값을 가져옴
-    const baseDate = document
-      .getElementById("base_date")
-      .value.replace(/-/g, ""); // 'YYYY-MM-DD' 형식을 'YYYYMMDD'로 변환
-    const baseTime = document.getElementById("base_time").value; // 기준 시간 (예: '0500', '0800' 등)
-    const nx = document.getElementById("nx").value; // 격자 X좌표 (위도 기반)
-    const ny = document.getElementById("ny").value; // 격자 Y좌표 (경도 기반)
 
-    // 입력값 유효성 확인
-    if (!baseDate || !nx || !ny) {
-      // 인풋 중 값이 한개라도 비면
-      alert("모든 값을 입력해주세요.");
-      return;
-    }
+function fetchData() {
+  const baseDate = $baseDate.value.replace(/-/g, "");
+  const baseTime = $baseTime.value;
+  const nx = $nx.value.trim();
+  const ny = $ny.value.trim();
 
-    // 기상청 API로 URL 생성
-    const url =
-      `https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?` +
-      `serviceKey=${encodeURIComponent(serviceKey)}` +
-      `&base_date=${baseDate}&base_time=${baseTime}` +
-      `&nx=${nx}&ny=${ny}&numOfRows=10&dataType=JSON`;
-
-    // API 요청
-    fetch(url) // 생성된 URL 로 데이터 요청
-      .then((response) => response.json()) // fetch에서 응답 받고 실행 -> response : 전체 응답 객체 | .json() 응답 받은 객체를 JSON 데이터로 변환
-      .then((data) => {
-        // 변환된 데이터를 가지고 작업
-        /* 조건식
-         !data.response
-         → response가 아예 없으면 (응답이 없거나 null이면)
-         !data.response.body
-         → response는 있지만 그 안에 body가 없으면 (잘못된 구조일 경우)
-         !data.response.body.items
-         → body는 있지만 진짜 날씨 데이터(items)가 없으면
-
-         이 중 하나라도 true 라면 데이터 없다고 판단해서 실행
-         */
-        if (
-          !data.response ||
-          !data.response.body ||
-          !data.response.body.items
-        ) {
-          document.getElementById("errorMessage").textContent =
-            "데이터가 없습니다.";
-          document.getElementById("errorMessage").style.display = "block"; // 에러 나타내기
-          document.getElementById("responseData").innerHTML = ""; // 이전 데이터 제거
-          document.getElementById("result").style.display = "none"; // 결과 숨기기
-          return;
-        }
-        // 전체 흐름은 API에서 받아온 날씨 데이터를 필터링 후 가공
-        const items = data.response.body.items.item; // 데이터가 시간대별로 추가
-        const filtered = items.filter((item) => item.fcstDate === baseDate); // 그중에서 선택한 날짜(baseDate) 와 같은 데이터만 찾음. 즉, 오늘 날짜에 해당하는 예보만 필터링
-        const formatted = formatWeatherData(filtered, baseDate, baseTime); // 필터링된 데이터들을 formatWeatherData() 함수로 넘겨서 알기 쉬운 정보로 데이터 변환
-        document.getElementById("responseData").innerHTML = formatted; // 변환된 HTML을 페이지 리스트에 넣어줌. (ul > li로 추가됨)
-        document.getElementById("result").style.display = "block";
-        document.getElementById("errorMessage").textContent = ""; // 에러가 아닌 정상 호출 되면 에러텍스트 지우기
-        document.getElementById("errorMessage").style.display = "none"; // 에러 메세지 숨기기
-      })
-      .catch((error) => {
-        // .then 에서 에러가 나면 실행 (네트워크 문제, API 호출 실패 등)
-        console.error("API 호출 오류:", error); // 디버깅 용도
-        document.getElementById(
-          "errorMessage"
-        ).textContent = `오류가 발생했습니다: ${
-          error.message || "네트워크 또는 서버 문제"
-        }`;
-        document.getElementById("errorMessage").style.display = "block"; // 에러 나타내기
-        document.getElementById("responseData").innerHTML = ""; // 이전 데이터 제거
-        document.getElementById("result").style.display = "none"; // 결과 숨기기
-      });
+  if (!baseDate || !nx || !ny) {
+    alert("모든 값을 입력해주세요.");
+    return;
   }
-);
+
+  resetMsg();
+
+  // 기상청 API로 URL 생성
+  const url =
+    `https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?` +
+    `serviceKey=${encodeURIComponent(serviceKey)}` +
+    `&base_date=${baseDate}&base_time=${baseTime}` +
+    `&nx=${nx}&ny=${ny}&numOfRows=10&dataType=JSON`;
+
+  // API 요청
+  fetch(url)
+    .then((res) => res.json())
+    .then((data) => {
+      if (!data?.response?.body?.items) return showNoData();
+      const items = data.response.body.items.item;
+      const filtered = items.filter((i) => i.fcstDate === baseDate);
+      if (!filtered.length) return showNoData();
+
+      const formatted = formatWeatherData(filtered);
+      $responseData.innerHTML = formatted;
+      $resultBox.style.display = "block";
+    })
+    .catch((err) => {
+      console.error("API 오류", err);
+      resetMsg();
+      $errorMessage.textContent = `오류가 발생했습니다: ${
+        err.message || "네트워크 문제"
+      }`;
+      $errorMessage.style.display = "block";
+    });
+}
 
 const cityToGrid = {
   서울: { nx: 60, ny: 127 },
@@ -162,6 +149,12 @@ const cityToGrid = {
 
 function setCityLocation() {
   const city = document.getElementById("base_city").value;
+
+  if (city === "현위치") {
+    getLocation();
+    return;
+  }
+
   const grid = cityToGrid[city];
 
   if (grid) {
@@ -173,129 +166,52 @@ function setCityLocation() {
   }
 }
 
-// 날씨 데이터를 사람이 읽기 쉬운 형태로 정리
-function formatWeatherData(data, baseDate, baseTime) {
-  // 기상 코드 매핑
-  const map = {
-    TMP: "기온(°C)",
-    SKY: "하늘 상태",
-    PTY: "강수 형태",
-    PCP: "강수량(mm)",
-    WSD: "풍속(m/s)",
-    UUU: "동서 바람 성분(m/s)",
-    VVV: "남북 바람 성분(m/s)",
-    WAV: "파고(m)",
-    REH: "습도(%)",
-    VEC: "풍향(°)",
-    POP: "강수확률(%)",
-    SNO: "적설(cm)",
-  };
-  // 하늘 상태 코드
-  const skyMap = {
-    1: "맑음",
-    3: "구름 많음",
-    4: "흐림",
-  };
-  // 하늘 상태 이모지
-  const skyEmojiMap = {
-    1: "☀️",
-    3: "⛅",
-    4: "☁️",
-  };
-  // 강수 형태 코드
-  const ptyMap = {
-    0: "없음",
-    1: "비",
-    2: "비/눈",
-    3: "눈",
-    4: "소나기",
-  };
-  // 강수 상태 이모지
-  const ptyEmojiMap = {
-    1: "🌧️", // 비
-    2: "🌨️", // 비/눈
-    3: "❄️", // 눈
-    4: "🌦️", // 소나기
-  };
+function formatWeatherData(data) {
+  const map = { PTY: "강수 형태", POP: "강수확률(%)", PCP: "강수량(mm)" };
+  const ptyMap = { 0: "없음", 1: "비", 2: "비/눈", 3: "눈", 4: "소나기" };
 
-  // 시간별 데이터 그룹화
+  /* 시간별로 묶기 */
   const grouped = {};
-  data.forEach((item) => {
-    if (!item.fcstTime) return; // 시간 정보가 없으면 건너뜀
-    if (!grouped[item.fcstTime]) grouped[item.fcstTime] = []; // 해당 시간대가 없으면 배열로 초기화
-    grouped[item.fcstTime].push(item); // 해당 시간대 배열에 데이터를 추가
+  data.forEach((i) => (grouped[i.fcstTime] ||= []).push(i));
+  const sortedTimes = Object.keys(grouped).sort();
+
+  let html = "";
+  sortedTimes.forEach((time) => {
+    const items = grouped[time];
+
+    /* 클래스(이모지) 계산 */
+    const sky = items.find((i) => i.category === "SKY")?.fcstValue;
+    const pty = items.find((i) => i.category === "PTY")?.fcstValue;
+    const skyCls = sky ? `sky-${sky}` : "";
+    const ptyCls = pty && pty !== "0" ? `pty-${pty}` : "";
+
+    /* 기온/시간 값 */
+    const tmp = items.find((i) => i.category === "TMP")?.fcstValue ?? "N/A";
+    const hhmm = `${time.slice(0, 2)}:${time.slice(2)}`;
+
+    /* 컬러 박스(시간·PTY·POP·PCP) 만들기 */
+    const getVal = (cat, conv) =>
+      conv
+        ? conv(items.find((i) => i.category === cat)?.fcstValue)
+        : items.find((i) => i.category === cat)?.fcstValue ?? "-";
+
+    const boxes = `
+      <div class="info-grid">
+        <div class="info-box time">시간 : ${hhmm}</div>
+        <div class="info-box pty">강수형태 : ${getVal(
+          "PTY",
+          (v) => ptyMap[v] || v
+        )}</div>
+        <div class="info-box pop">강수확률 : ${getVal("POP")}%</div>
+        <div class="info-box pcp">강수량 : ${getVal("PCP")}</div>
+      </div>`;
+
+    html += `<li class="data-list ${skyCls} ${ptyCls}">
+               <h3>${tmp}°</h3><span class="sky-info"></span>
+               ${boxes}
+             </li>`;
   });
-
-  // 첫 시간대의 하늘 상태 요약 (#skySummary 상태)
-  let firstSummary = null; // 첫 시간대의 하늘 상태나 강수 상태 요약을 담을 변수
-  const sortedTimes = Object.keys(grouped).sort(); // 시간대 키를 정렬하여 시간순으로 정렬된 배열 생성
-  if (sortedTimes.length > 0) {
-    // 시간이 하나라도 있을 경우 실행
-    const firstTime = sortedTimes[0]; // 가장 이른 시간대 선택
-    const items = grouped[firstTime]; // 해당 시간대에 해당하는 데이터들
-
-    const ptyItem = items.find((i) => i.category === "PTY"); // 강수 형태 항목 찾기
-    const skyItem = items.find((i) => i.category === "SKY"); // 하늘 상태 항목 찾기
-
-    const ptyValue = ptyItem?.fcstValue || "0"; // 강수 형태 값 (없으면 "0"으로 처리)
-    const skyValue = skyItem?.fcstValue; // 하늘 상태 값
-
-    if (ptyValue !== "0") {
-      // 비나 눈이 오는 경우
-      const ptyDesc = ptyMap[ptyValue] || ptyValue; // 강수 설명 텍스트
-      const emoji = ptyEmojiMap[ptyValue] || "🌧️"; // 강수 이모지 (기본값은 비)
-      firstSummary = `${emoji} 강수 상태: ${ptyDesc}`; // 요약 문구 생성
-    } else if (skyValue) {
-      // 강수 없고 하늘 상태가 있는 경우 (PKY-0 취급 X)
-      const emoji = skyEmojiMap[skyValue] || ""; // 하늘 상태 이모지
-      const skyDesc = skyMap[skyValue] || skyValue; // 하늘 상태 설명
-      firstSummary = `${emoji} 하늘 상태: ${skyDesc}`; // 요약 문구 생성
-    }
-  }
-
-  if (firstSummary) {
-    // 요약 텍스트가 존재할 경우에만 실행
-    const skyElem = document.getElementById("skySummary"); // 하늘 상태 요약을 표시할 요소 가져오기
-    if (skyElem) {
-      skyElem.textContent = firstSummary; // 요소가 존재하면 요소에 요약 텍스트 삽입
-    }
-  }
-
-  // 리스트 출력 HTML 구성
-  let result = ""; // 다음 조회를 위해 최종 HTML 문자열 초기화
-  for (const time of sortedTimes) {
-    // 정렬된 시간별로 반복
-    const items = grouped[time]; // 해당 시간의 예보 항목들 가져오기
-    if (!items) continue; // 항목이 없으면 건너뜀
-
-    const skyItem = items.find((item) => item.category === "SKY"); // 하늘 상태 항목 찾기
-    const ptyItem = items.find((item) => item.category === "PTY"); // 강수 형태 항목 찾기
-
-    const skyValue = skyItem?.fcstValue; // 하늘 상태 값 추출
-    const ptyValue = ptyItem?.fcstValue; // 강수 형태 값 추출
-
-    const skyClass = skyValue ? `sky-${skyValue}` : ""; // 하늘 상태에 따른 클래스 설정
-    const ptyClass = ptyValue && ptyValue !== "0" ? `pty-${ptyValue}` : ""; // 강수 있을 경우 클래스 설정
-
-    const liClass = ["data-list", skyClass, ptyClass].filter(Boolean).join(" "); // 클래스들을 공백으로 연결
-
-    result += `<li class="${liClass}"><h3>${time.slice(
-      0,
-      2
-    )}:00</h3><span class="sky-info"></span><ul>`; // 시간 제목 + 날씨 정보 컨테이너 시작
-
-    // 항목별 상세 정보 나열
-    items.forEach((item) => {
-      let value = item.fcstValue; // 예보 값
-      if (item.category === "SKY") value = skyMap[value] || value; // 하늘 상태 변환
-      if (item.category === "PTY") value = ptyMap[value] || value; // 강수 형태 변환
-      const label = map[item.category] || item.category; // 항목 이름 변환
-      result += `<li>${label}: ${value}</li>`; // 리스트 항목 추가
-    });
-    result += `</ul></li>`; // 항목 닫기
-  }
-
-  return result; // 완성된 HTML 반환
+  return html;
 }
 
 // 현재 시각 기준으로 자동 날짜/시간 설정
@@ -332,14 +248,9 @@ function setDefaultDateTime() {
   }
 }
 
-window.onload = function () {
-  getLocation(); // 위치 정보
-  setDefaultDateTime(); // 날짜/시간
+window.onload = () => {
+  getLocation();
+  setDefaultDateTime();
 };
-
-// 엔터 키 입력 시 자동으로 조회 실행
-document.addEventListener("keyup", function (event) {
-  if (event.key === "Enter") {
-    fetchData();
-  }
-});
+$fetchBtn.addEventListener("click", fetchData);
+document.addEventListener("keyup", (e) => e.key === "Enter" && fetchData());

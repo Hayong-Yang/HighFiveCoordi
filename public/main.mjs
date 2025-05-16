@@ -1,44 +1,97 @@
-// 회원가입 창으로 이동
-document.getElementById("signUp").addEventListener("click", () => {
-  window.location.href = "/auth/signUp";
-});
+// Base64URL → Base64 디코딩
+function b64UrlDecode(str) {
+  str = str.replace(/-/g, "+").replace(/_/g, "/");
+  const pad = str.length % 4;
+  if (pad) str += "=".repeat(4 - pad);
+  return atob(str);
+}
 
-// 메인 > 로그인 이동
-document.getElementById("logIn").addEventListener("click", () => {
-  window.location.href = "/auth/logIn";
-});
+// 토큰 만료 여부 확인
+function isTokenExpired(token) {
+  if (!token) return true;
+  try {
+    const { exp } = JSON.parse(b64UrlDecode(token.split(".")[1])); // exp: 초
+    return Date.now() >= exp * 1000;
+  } catch {
+    return true;
+  }
+}
 
-// 메인 > 위시리스트 이동
-document.getElementById("Wishlist").addEventListener("click", (event) => {
-  event.preventDefault();
-  window.location.href = "/wish";
-});
+// 만료·인증 실패 시 강제 로그아웃
+function forceLogout(msg = "세션이 만료되었습니다. 다시 로그인해주세요.") {
+  alert(msg);
+  window.location.href = "/";
+}
 
-document.getElementById("logOut").addEventListener("click", function (e) {
-  e.preventDefault();
-  localStorage.removeItem("token");
-  alert("로그아웃 되었습니다.");
-  window.location.href = "/"; // 서버에 요청해서 메인 페이지로 리디렉션
-});
-
-const token = localStorage.getItem("token");
-
-// 버튼 요소들 가져오기
+/********************************************************************
+ * 1.  초기 로그인 상태 판정 & 버튼 토글
+ ********************************************************************/
 const signUpBtn = document.getElementById("signUp");
 const logInBtn = document.getElementById("logIn");
 const logOutBtn = document.getElementById("logOut");
+const wishlistBtn = document.getElementById("Wishlist");
+const doFetchBtn = document.getElementById("doFetchDataButton");
 
-// 로그인 상태에 따라 버튼 숨기기 / 보이기
+let token = localStorage.getItem("token");
+
+// 만료된 토큰 발견 시 제거 + 강제 로그아웃
+if (token && isTokenExpired(token)) {
+  localStorage.removeItem("token");
+  forceLogout();
+}
+
+// 버튼 표시
 if (token) {
-  // 로그인 상태: 회원가입/로그인 숨기고 로그아웃만 보이게
   signUpBtn.style.display = "none";
   logInBtn.style.display = "none";
   logOutBtn.style.display = "inline";
 } else {
-  // 비로그인 상태: 로그아웃 숨기고 회원가입/로그인 보이게
   signUpBtn.style.display = "inline";
   logInBtn.style.display = "inline";
   logOutBtn.style.display = "none";
+}
+
+/********************************************************************
+ * 2.  네비게이션 이벤트
+ ********************************************************************/
+signUpBtn.addEventListener(
+  "click",
+  () => (window.location.href = "/auth/signUp")
+);
+logInBtn.addEventListener(
+  "click",
+  () => (window.location.href = "/auth/logIn")
+);
+wishlistBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  window.location.href = "/wish";
+});
+
+logOutBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  localStorage.removeItem("token");
+  alert("로그아웃 되었습니다.");
+  window.location.href = "/";
+});
+
+/********************************************************************
+ * 3.  보호 POST 요청 헬퍼 (토큰 부착 + 401 처리)
+ ********************************************************************/
+async function protectedPost(url, payload) {
+  token = localStorage.getItem("token"); // 최신 토큰
+  if (!token || isTokenExpired(token)) return forceLogout();
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (res.status === 401) return forceLogout();
+  return res;
 }
 
 // POST: main.html에서 날씨 API 설정값 보내고, 추천 옷을 결과로 받아오는 기능
