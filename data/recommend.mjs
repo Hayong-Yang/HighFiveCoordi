@@ -126,13 +126,13 @@ export function getHueTargets(type, topHue, bottomHue) {
   // 만약 해당 안 되면 빈 배열
   return [];
 }
-export async function getClosefromDB(hueTargets,level) {
+export async function getClothesfromDB(hueTargets,level) {
 const results = [];
   //getHueTargets 에서 만든 리스트를 hueTargets이 하나씩 가져옴
   for (const target of hueTargets) {
-    const [rows] = await pool.query(
-      `SELECT id, image_url FROM products 
-       WHERE category = ? AND level = ? AND ABS(hue - ?) < 20 
+    const [rows] = await db.query(
+      `SELECT idx, image_url FROM products 
+       WHERE category = ? AND temp_level = ? AND ABS(hue - ?) < 20 
        ORDER BY RAND() LIMIT 1`,
       [target.category, level, target.hue]
     );
@@ -141,12 +141,12 @@ const results = [];
   }
 
 // 어떤 타입이고 무슨 옷으 추천했는지 반환
-  return { type, recommendations: results };
+  return { recommendations: results };
 }
 //최종적 옷추천 함수
 export async function getRecommendations({ topHue, bottomHue, level }) {
-  const type = recommendRepository.getRecommendationType(topHue, bottomHue);
-  const hueTargets = recommendRepository.getHueTargets(type, topHue ?? 0, bottomHue ?? 0);
-  const result = await recommendRepository.getClosefromDB(hueTargets, level);
-  return result;
+  const type = getRecommendationType(topHue, bottomHue);
+  const hueTargets = getHueTargets(type, topHue ?? 0, bottomHue ?? 0);
+  const {recommendations } = await getClothesfromDB(hueTargets, level);
+  return recommendations;
 }

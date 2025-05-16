@@ -53,8 +53,11 @@ export async function recommendClothes(request, response, next) {
     const rainPercent = rainPercentItem.fcstValue;
     const feltTemperature = recommendRepository.calculateWindChill(realTemperature, windSpeed);
     const level= recommendRepository.getTempLevel(feltTemperature);
-    
-  const recommendedResult = await getRecommendations({ topHue, bottomHue, level });
+    // topHue,bottomHue: 임시로 사용
+    const topHue = Math.floor(Math.random() * 361);
+    const bottomHue = Math.floor(Math.random() * 361);
+
+  const recommendedResult = await recommendRepository.getRecommendations({ topHue, bottomHue, level });
  console.log(recommendedResult)
   return response.status(200).json({
     recommendedResult,
