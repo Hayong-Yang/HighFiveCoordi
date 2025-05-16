@@ -70,6 +70,25 @@ a {
   width: 100%;
 }
 
+#logOut {
+  display: inline-block;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000; /* 기본 글자색 (버튼 안쪽) */
+  background-color: #fff; /* 배경: 흰색 */
+  border: 1px solid #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+#logOut:hover {
+  background-color: transparent; /* 배경 없음으로 반전 */
+  color: #fff; /* 글자색 반전 */
+  border-color: #fff;
+}
+
 /* 본문 */
 main {
   padding-top: 80px;
@@ -79,7 +98,7 @@ main {
 /* 검은 배경 섹션 */
 #todayweather {
   background-color: #111;
-  color: white;
+  color: black;
   padding: 40px 24px;
   margin-bottom: 24px;
   /*border-radius: 8px;*/

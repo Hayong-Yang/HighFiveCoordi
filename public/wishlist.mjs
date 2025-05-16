@@ -13,10 +13,12 @@ document.addEventListener("DOMContentLoaded", () => {
     wishlist.style.display = "grid";
     if (sortBtn) sortBtn.style.display = "inline-block";
     loadWishList(); // 로그인 상태면 위시리스트 로딩
+    logOutBtn.style.display = "inline";
   } else {
     // 로그인 안 된 상태
     emptyMsg.style.display = "block";
     if (sortBtn) sortBtn.style.display = "none";
+    logOutBtn.style.display = "none";
   }
 
   // 카테고리 클릭 이벤트
@@ -126,3 +128,12 @@ function renderCustomList(list) {
     });
   });
 }
+
+const logOutBtn = document.getElementById("logOut");
+
+logOutBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  localStorage.removeItem("token");
+  alert("로그아웃 되었습니다.");
+  window.location.href = "/";
+});

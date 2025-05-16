@@ -118,6 +118,25 @@ form input {
   font-size: 12px;
 }
 
+#already {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #555;
+  text-align: center;
+}
+
+#already a#GoToSignUp {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+#already a#GoToSignUp:hover {
+  text-decoration: underline;
+  color: #0056b3;
+}
+
 /* 푸터 */
 footer {
   background-color: #000;

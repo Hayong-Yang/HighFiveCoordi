@@ -74,6 +74,25 @@ a {
   color: white;
 }
 
+#logOut {
+  display: inline-block;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000; /* 기본 글자색 (버튼 안쪽) */
+  background-color: #fff; /* 배경: 흰색 */
+  border: 1px solid #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+#logOut:hover {
+  background-color: transparent; /* 배경 없음으로 반전 */
+  color: #fff; /* 글자색 반전 */
+  border-color: #fff;
+}
+
 /* 본문 */
 main {
   padding: 100px 24px;
