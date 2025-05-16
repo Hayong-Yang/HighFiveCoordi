@@ -4,6 +4,8 @@ import { config } from "../config.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
 import * as recommendRepository from "../data/recommend.mjs";
+import { calculateWindChill } from "../util/weatherUtils.mjs";
+
 
 const secretKey = config.jwt.secretKey;
 const bcryptSaltRounds = config.bcrypt.saltRounds;
@@ -12,33 +14,23 @@ const jwtExpiresInDays = config.jwt.expiresInSec;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// 날씨 조회하면 옷 추천화면을 띄우는 기능
 export async function recommendClothes(request, response, next) {
   try {
-    const serviceKey =
-      "NUqg9iZg+R57kpL1qrF1tst+AG3VXF5LAecO+CNKVMPmo34670TTUOan29Sq5DgB6/UXYTHmJOsUHoUp0CuKQw==";
+    const serviceKey = "API_KEY";
     const { nx, ny, baseDate, baseTime } = request.body;
-
-    console.log(
-      "nx:",
-      nx,
-      "ny:",
-      ny,
-      "baseDate:",
-      baseDate,
-      "baseTime",
-      baseTime
-    );
 
     const url =
       `https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?` +
       `serviceKey=${encodeURIComponent(serviceKey)}` +
       `&base_date=${baseDate}&base_time=${baseTime}` +
-      `&nx=${nx}&ny=${ny}&numOfRows=10&dataType=JSON`; // 여기에 실제 API URL 입력
+      `&nx=${nx}&ny=${ny}&numOfRows=10&dataType=JSON`;
+
     const res = await fetch(url);
     const data = await res.json();
 
     const items = data.response.body.items.item;
-    // const targetTime = recommendRepository.getTargetForecastTime(); // 예: "0600"
+
     const tmpItem = items.find(
       (item) => item.category === "TMP" && item.baseTime === baseTime
     );
@@ -48,23 +40,35 @@ export async function recommendClothes(request, response, next) {
     const rainPercentItem = items.find(
       (item) => item.category === "POP" && item.baseTime === baseTime
     );
-    // console.log("items:", items);
-    // console.log("tmpItem:", tmpItem);
-    const realTemperature = tmpItem.fcstValue; // 실제온도
-    const WindSpeed = windItem.fcstValue; // 풍속
-    const rainPercent = rainPercentItem.fcstValue; // 강수확률(%)
 
-    console.log("실제온도", realTemperature);
-    console.log("풍속", WindSpeed);
-    console.log("강수확률(%)", rainPercent);
-
-    if (!tmpItem) {
+    if (!tmpItem || !windItem || !rainPercentItem) {
       return response
         .status(404)
-        .json({ error: "TMP 항목을 찾을 수 없습니다." });
+        .json({ error: "예보 데이터를 충분히 찾을 수 없습니다." });
     }
+
+    const realTemperature = tmpItem.fcstValue;
+    const windSpeed = windItem.fcstValue;
+    const rainPercent = rainPercentItem.fcstValue;
+
+    const feltTemperature = calculateWindChill(realTemperature, windSpeed);
+
+    return response.status(200).json({
+      temperature: parseFloat(realTemperature),
+      windSpeed: parseFloat(windSpeed),
+      rainPercent: parseFloat(rainPercent),
+      feltTemperature: feltTemperature,
+    });
+
   } catch (err) {
     console.error(err);
     response.status(500).json({ error: "날씨 데이터를 불러오는 중 오류 발생" });
   }
+}
+
+// 사용자가 색상적용하기 누르면 옷 추천화면을 새롭게 띄우는 기능
+export async function reloadClothes(request, response, next) {
+  const { topColor, bottomColor } = request.body;
+  // 날씨 level 전역변수에서 받아오기.
+  console.log("상의색상:", topColor, "하의 색상:", bottomColor);
 }
