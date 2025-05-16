@@ -14,6 +14,7 @@ const jwtExpiresInDays = config.jwt.expiresInSec;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// 날씨 조회하면 옷 추천화면을 띄우는 기능
 export async function recommendClothes(request, response, next) {
   try {
     const serviceKey = "API_KEY";
@@ -63,4 +64,11 @@ export async function recommendClothes(request, response, next) {
     console.error(err);
     response.status(500).json({ error: "날씨 데이터를 불러오는 중 오류 발생" });
   }
+}
+
+// 사용자가 색상적용하기 누르면 옷 추천화면을 새롭게 띄우는 기능
+export async function reloadClothes(request, response, next) {
+  const { topColor, bottomColor } = request.body;
+  // 날씨 level 전역변수에서 받아오기.
+  console.log("상의색상:", topColor, "하의 색상:", bottomColor);
 }
