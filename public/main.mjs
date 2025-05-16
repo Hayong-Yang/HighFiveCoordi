@@ -94,29 +94,31 @@ async function protectedPost(url, payload) {
   return res;
 }
 
-/********************************************************************
- * 4.  날씨 기반 추천 옷 요청
- ********************************************************************/
-doFetchBtn.addEventListener("click", async () => {
-  const baseDate = document.getElementById("base_date").value.replace(/-/g, "");
-  const baseTime = document.getElementById("base_time").value;
-  const nx = document.getElementById("nx").value;
-  const ny = document.getElementById("ny").value;
+// POST: main.html에서 날씨 API 설정값 보내고, 추천 옷을 결과로 받아오는 기능
+document
+  .getElementById("doFetchDataButton")
+  .addEventListener("click", async function getRecommendedClothes() {
+    const baseDate = document
+      .getElementById("base_date")
+      .value.replace(/-/g, ""); // 'YYYY-MM-DD' 형식을 'YYYYMMDD'로 변환
+    const baseTime = document.getElementById("base_time").value; // 기준 시간 (예: '0500', '0800' 등)
+    const nx = document.getElementById("nx").value; // 격자 X좌표 (위도 기반)
+    const ny = document.getElementById("ny").value; // 격자 Y좌표 (경도 기반)
 
-  try {
-    const res = await protectedPost("/recommend", {
-      nx,
-      ny,
-      baseDate,
-      baseTime,
+    const res = await fetch("/recommend", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nx: nx,
+        ny: ny,
+        baseDate: baseDate,
+        baseTime: baseTime,
+      }),
     });
-    if (!res) return; // forceLogout 발생 시 종료
-
-    const data = await res.json();
-    console.log("추천 결과:", data);
-    // TODO: 화면에 data 표시 로직을 구현하세요.
-  } catch (err) {
-    console.error("추천 요청 오류:", err);
-    alert("서버와 통신 중 오류가 발생했습니다.");
-  }
-});
+    const result = await res.json();
+    if (res.ok) {
+      console.log(result);
+    } else {
+      console.log(result);
+    }
+  });
