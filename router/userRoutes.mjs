@@ -21,7 +21,10 @@ dotenv.config();
 
 const router = express.Router();
 const Coolsms = CoolsmsPkg.default;
-const messageService = new Coolsms(process.env.apiKey, process.env.apiSecret);
+const messageService = new Coolsms(
+  process.env.apiKey_pw,
+  process.env.apiSecret_pw
+);
 const authCodes = new Map();
 
 // 로그인 유효성 검사

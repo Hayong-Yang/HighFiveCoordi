@@ -13,7 +13,6 @@ const weatherApiServiceKey = config.weatherAPI.servicekey;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
 // async function getWeatherBasedRecommendations(level) {
 //   const categories = ["top", "pants", "outer", "shoes", "etc"];
 //   const results = {};
@@ -51,16 +50,23 @@ export async function recommendClothes(request, response, next) {
     const realTemperature = tmpItem.fcstValue;
     const windSpeed = windItem.fcstValue;
     const rainPercent = rainPercentItem.fcstValue;
-    const feltTemperature = recommendRepository.calculateWindChill(realTemperature, windSpeed);
-    const level= recommendRepository.getTempLevel(feltTemperature);
+    const feltTemperature = recommendRepository.calculateWindChill(
+      realTemperature,
+      windSpeed
+    );
+    const level = recommendRepository.getTempLevel(feltTemperature);
     // topHue,bottomHue: 임시로 사용
     const topHue = Math.floor(Math.random() * 361);
     const bottomHue = Math.floor(Math.random() * 361);
 
-  const recommendedResult = await recommendRepository.getRecommendations({ topHue, bottomHue, level });
- console.log(recommendedResult)
-  return response.status(200).json({
-    recommendedResult,
+    const recommendedResult = await recommendRepository.getRecommendations({
+      topHue,
+      bottomHue,
+      level,
+    });
+    // console.log("백에서 보내는 결과: ", recommendedResult);
+    return response.status(200).json({
+      recommendedResult,
       temperature: parseFloat(realTemperature),
       windSpeed: parseFloat(windSpeed),
       rainPercent: parseFloat(rainPercent),
@@ -71,7 +77,6 @@ export async function recommendClothes(request, response, next) {
     response.status(500).json({ error: "날씨 데이터를 불러오는 중 오류 발생" });
   }
 }
-
 
 // 사용자가 색상적용하기 누르면 옷 추천화면을 새롭게 띄우는 기능
 export async function reloadClothes(request, response, next) {

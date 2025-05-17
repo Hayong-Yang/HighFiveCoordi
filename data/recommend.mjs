@@ -34,7 +34,6 @@ export function rgbToHue(rgb) {
   return (h + 360) % 360;
 }
 
-
 export function calculateWindChill(temp, windSpeed) {
   const T = parseFloat(temp);
   const V = parseFloat(windSpeed);
@@ -50,88 +49,88 @@ export function calculateWindChill(temp, windSpeed) {
 }
 
 // 레벨 만드는 함수
-export function getTempLevel(windChill){
-    if (windChill >= 23) return 3;      // 더운 날씨
-  if (windChill >= 10) return 2;      // 보통 날씨
-  return 1;  
+export function getTempLevel(windChill) {
+  if (windChill >= 23) return 3; // 더운 날씨
+  if (windChill >= 10) return 2; // 보통 날씨
+  return 1;
 }
 // 옷 타입 랜덤 설정
 export function getRecommendationType(topHue, bottomHue) {
   if (topHue !== undefined && bottomHue !== undefined) {
-    return 'custom';
+    return "custom";
   }
   // 정해지지 않으면 33%,33%,34%로 추천
   const rand = Math.random();
-  if (rand < 0.33) return 'similar';
-  else if (rand < 0.66) return 'opposite';
-  else return 'triad';
+  if (rand < 0.33) return "similar";
+  else if (rand < 0.66) return "opposite";
+  else return "triad";
 }
 // getRecommendationType을 토대로 카테고리에 대한 색상 옷 리스트 생성
 // 타입 공식은 손봐야함
 export function getHueTargets(type, topHue, bottomHue) {
-  if (type === 'similar') {
+  if (type === "similar") {
     return [
-      { category: 'top', hue: topHue },
-      { category: 'pants', hue: bottomHue },
-      { category: 'outer', hue: topHue },
-      { category: 'shoes', hue: bottomHue },
-      { category: 'etc', hue: (topHue + 15) % 360 }
+      { category: "top", hue: topHue },
+      { category: "pants", hue: bottomHue },
+      { category: "outer", hue: topHue },
+      { category: "shoes", hue: bottomHue },
+      { category: "etc", hue: (topHue + 15) % 360 },
     ];
-  } else if (type === 'opposite') {
+  } else if (type === "opposite") {
     return [
-      { category: 'top', hue: (bottomHue + 180) % 360 },
-      { category: 'pants', hue: (topHue + 180) % 360 },
-      { category: 'outer', hue: (topHue + 150) % 360 },
-      { category: 'shoes', hue: (bottomHue + 150) % 360 },
-      { category: 'etc', hue: (topHue + 90) % 360 }
+      { category: "top", hue: (bottomHue + 180) % 360 },
+      { category: "pants", hue: (topHue + 180) % 360 },
+      { category: "outer", hue: (topHue + 150) % 360 },
+      { category: "shoes", hue: (bottomHue + 150) % 360 },
+      { category: "etc", hue: (topHue + 90) % 360 },
     ];
-  } else if (type === 'triad') {
+  } else if (type === "triad") {
     return [
-      { category: 'top', hue: topHue },
-      { category: 'pants', hue: (topHue + 120) % 360 },
-      { category: 'outer', hue: (topHue + 240) % 360 },
-      { category: 'shoes', hue: (bottomHue + 120) % 360 },
-      { category: 'etc', hue: (bottomHue + 240) % 360 }
+      { category: "top", hue: topHue },
+      { category: "pants", hue: (topHue + 120) % 360 },
+      { category: "outer", hue: (topHue + 240) % 360 },
+      { category: "shoes", hue: (bottomHue + 120) % 360 },
+      { category: "etc", hue: (bottomHue + 240) % 360 },
     ];
-  } else if (type === 'custom') {
+  } else if (type === "custom") {
     let delta = Math.abs(topHue - bottomHue);
     if (delta > 180) delta = 360 - delta;
 
     if (delta < 30) {
       return [
-        { category: 'top', hue: topHue },
-        { category: 'pants', hue: bottomHue },
-        { category: 'outer', hue: (topHue + bottomHue) / 2 },
-        { category: 'shoes', hue: bottomHue },
-        { category: 'etc', hue: topHue }
+        { category: "top", hue: topHue },
+        { category: "pants", hue: bottomHue },
+        { category: "outer", hue: (topHue + bottomHue) / 2 },
+        { category: "shoes", hue: bottomHue },
+        { category: "etc", hue: topHue },
       ];
     } else if (delta < 90) {
       return [
-        { category: 'top', hue: topHue },
-        { category: 'pants', hue: bottomHue },
-        { category: 'outer', hue: (topHue + 30) % 360 },
-        { category: 'shoes', hue: (bottomHue + 60) % 360 },
-        { category: 'etc', hue: (bottomHue + 90) % 360 }
+        { category: "top", hue: topHue },
+        { category: "pants", hue: bottomHue },
+        { category: "outer", hue: (topHue + 30) % 360 },
+        { category: "shoes", hue: (bottomHue + 60) % 360 },
+        { category: "etc", hue: (bottomHue + 90) % 360 },
       ];
     } else {
       return [
-        { category: 'top', hue: (bottomHue + 180) % 360 },
-        { category: 'pants', hue: (topHue + 180) % 360 },
-        { category: 'outer', hue: (topHue + 90) % 360 },
-        { category: 'shoes', hue: (bottomHue + 90) % 360 },
-        { category: 'etc', hue: (topHue + 45) % 360 }
+        { category: "top", hue: (bottomHue + 180) % 360 },
+        { category: "pants", hue: (topHue + 180) % 360 },
+        { category: "outer", hue: (topHue + 90) % 360 },
+        { category: "shoes", hue: (bottomHue + 90) % 360 },
+        { category: "etc", hue: (topHue + 45) % 360 },
       ];
     }
   }
   // 만약 해당 안 되면 빈 배열
   return [];
 }
-export async function getClothesfromDB(hueTargets,level) {
-const results = [];
+export async function getClothesfromDB(hueTargets, level) {
+  const results = [];
   //getHueTargets 에서 만든 리스트를 hueTargets이 하나씩 가져옴
   for (const target of hueTargets) {
     const [rows] = await db.query(
-      `SELECT idx, image_url FROM products 
+      `SELECT idx, category, image_url FROM products 
        WHERE category = ? AND temp_level = ? AND ABS(hue - ?) < 20 
        ORDER BY RAND() LIMIT 1`,
       [target.category, level, target.hue]
@@ -140,13 +139,13 @@ const results = [];
     if (rows.length > 0) results.push(rows[0]);
   }
 
-// 어떤 타입이고 무슨 옷으 추천했는지 반환
+  // 어떤 타입이고 무슨 옷으 추천했는지 반환
   return { recommendations: results };
 }
 //최종적 옷추천 함수
 export async function getRecommendations({ topHue, bottomHue, level }) {
   const type = getRecommendationType(topHue, bottomHue);
   const hueTargets = getHueTargets(type, topHue ?? 0, bottomHue ?? 0);
-  const {recommendations } = await getClothesfromDB(hueTargets, level);
+  const { recommendations } = await getClothesfromDB(hueTargets, level);
   return recommendations;
 }

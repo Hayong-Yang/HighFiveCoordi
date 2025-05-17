@@ -92,7 +92,6 @@ function showNoData() {
   $responseData.innerHTML = "";
 }
 
-
 function fetchData() {
   const baseDate = $baseDate.value.replace(/-/g, "");
   const baseTime = $baseTime.value;
@@ -248,9 +247,10 @@ function setDefaultDateTime() {
   }
 }
 
-window.onload = () => {
+window.addEventListener("load", function () {
   getLocation();
   setDefaultDateTime();
-};
+});
+
 $fetchBtn.addEventListener("click", fetchData);
 document.addEventListener("keyup", (e) => e.key === "Enter" && fetchData());
