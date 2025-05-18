@@ -14,8 +14,8 @@ const jwtExpiresInDays = config.jwt.expiresInSec;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-async function createJwtToken(idx) {
-  return jwt.sign({ idx }, secretKey, { expiresIn: jwtExpiresInDays });
+async function createJwtToken(idx, userid) {
+  return jwt.sign({ idx, userid }, secretKey, { expiresIn: jwtExpiresInDays });
 }
 
 // 회원가입 기능
@@ -41,10 +41,10 @@ export async function signUp(request, response, next) {
     email,
     phone
   );
-  const token = await createJwtToken(users.idx);
+  const token = await createJwtToken(users.idx, inputId);
   console.log(token);
   if (users) {
-    response.status(201).json({ token, inputId });
+    response.status(201).json({ token, userid: inputId });
   }
 }
 // 아이디 중복체크 기능
@@ -74,8 +74,8 @@ export async function logIn(request, response, next) {
   if (!isValidPassword) {
     return response.status(401).json({ message: "아이디 또는 비밀번호 확인" });
   }
-  const token = await createJwtToken(user.idx);
-  response.status(200).json({ token, inputId });
+  const token = await createJwtToken(user.idx, inputId);
+  response.status(200).json({ token, userid: inputId });
 }
 
 export async function verify(request, response, next) {
@@ -92,7 +92,7 @@ export async function me(request, response, next) {
   if (!user) {
     return response.status(404).json({ message: "일치하는 사용자가 없음" });
   }
-  response.status(200).json({ token: request.token, userId: user.userId });
+  response.status(200).json({ token: request.token, userid: user.userId });
 }
 
 // 아이디 찾기

@@ -1,23 +1,23 @@
 let allItems = []; // 전체 상품 데이터
 let currentCategory = "all"; // 현재 선택된 카테고리
-let isSortedByOldest = false; // 담은순 버튼 눌렸는지 여부
+let currentSort = "recent"; // 정렬 기준: recent | lowPrice | highPrice
 
 document.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem("token");
   const wishlist = document.getElementById("wishlistSection");
   const emptyMsg = document.getElementById("emptyMessage");
-  const sortBtn = document.getElementById("sortByCreatedAt");
+  const sortSelect = document.getElementById("sortOptions");
 
   if (token) {
     // 로그인 된 상태
     wishlist.style.display = "grid";
-    if (sortBtn) sortBtn.style.display = "inline-block";
+    sortSelect.style.display = "inline-block";
     loadWishList(); // 로그인 상태면 위시리스트 로딩
     logOutBtn.style.display = "inline";
   } else {
     // 로그인 안 된 상태
     emptyMsg.style.display = "block";
-    if (sortBtn) sortBtn.style.display = "none";
+    sortSelect.style.display = "none";
     logOutBtn.style.display = "none";
   }
 
@@ -26,18 +26,15 @@ document.addEventListener("DOMContentLoaded", () => {
     item.addEventListener("click", (e) => {
       e.preventDefault();
       currentCategory = item.className; // all, top, bottom 등
-      isSortedByOldest = false; // 카테고리 클릭 시 정렬 초기화
       renderFilteredList(currentCategory);
     });
   });
 
-  // 담은순(오래된 순) 버튼 클릭 이벤트
-  if (sortBtn) {
-    sortBtn.addEventListener("click", () => {
-      isSortedByOldest = true;
-      renderFilteredList(currentCategory); // 현재 카테고리 기준 정렬
-    });
-  }
+  // 정렬 옵션 변경 이벤트
+  sortSelect.addEventListener("change", (e) => {
+    currentSort = e.target.value;
+    renderFilteredList(currentCategory);
+  });
 });
 
 async function loadWishList() {
@@ -66,10 +63,12 @@ function renderFilteredList(category) {
       ? [...allItems]
       : allItems.filter((item) => item.category === category);
 
-  if (isSortedByOldest) {
-    list.sort((a, b) => a.idx - b.idx); // 담은순: 오래된 것 먼저
-  } else {
-    list.sort((a, b) => b.idx - a.idx); // 최신순: 최근 담은 것 먼저
+  if (currentSort === "recent") {
+    list.sort((a, b) => b.idx - a.idx); // 최신순
+  } else if (currentSort === "lowPrice") {
+    list.sort((a, b) => a.price - b.price); // 낮은 가격순
+  } else if (currentSort === "highPrice") {
+    list.sort((a, b) => b.price - a.price); // 높은 가격순
   }
 
   renderCustomList(list);

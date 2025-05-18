@@ -48,6 +48,40 @@ a {
   gap: 24px;
 }
 
+/* #userIdDisplay {
+  color: white;
+  font-size: 15px;
+  position: relative;
+  padding: 4px 0;
+} */
+
+#userIdDisplay {
+  display: none; /* 기본은 숨김 */
+  color: #fff;
+  background: linear-gradient(135deg, #4e54c8, #8f94fb);
+  font-size: 14px;
+  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  position: relative;
+  margin: 0 10px;
+  transition: all 0.3s ease;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+/* 로그인 후 나타날 때 부드럽게 등장 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .header__menu li a {
   color: white;
   font-size: 15px;

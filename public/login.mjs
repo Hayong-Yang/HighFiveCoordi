@@ -15,7 +15,7 @@ if (loginForm) {
 
       if (res.ok) {
         localStorage.setItem("token", data.token);
-        alert(`${data.inputId}님 로그인 성공!`);
+        alert(`${data.userid}님 로그인 성공!`);
         window.location.href = "/";
       } else {
         alert(data.message || "로그인 실패");
