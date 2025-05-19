@@ -98,7 +98,7 @@ document.getElementById("submitBtn").addEventListener("click", async () => {
         color: colorName,
     };
     const token = localStorage.getItem("token");
-
+    // fix;
     try {
         const res = await fetch("/product/createProduct", {
             method: "POST",
