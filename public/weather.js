@@ -92,6 +92,11 @@ function showNoData() {
   $responseData.innerHTML = "";
 }
 
+function isProbablyJSON(text) {
+  const trimmed = text.trim();
+  return trimmed.startsWith("{") || trimmed.startsWith("[");
+}
+
 
 function fetchData() {
   const baseDate = $baseDate.value.replace(/-/g, "");
@@ -115,12 +120,33 @@ function fetchData() {
 
   // API 요청
   fetch(url)
-    .then((res) => res.json())
+    .then(async (res) => {
+      if (!res.ok) throw new Error(`HTTP 오류: ${res.status}`);
+      const text = await res.text();
+
+      if (!isProbablyJSON(text)) {
+        // JSON 아닌 경우 (예: XML, 에러 메시지)
+        throw new Error(
+          "기상청 API가 아직 데이터를 생성하지 않았거나, 데이터가 없습니다."
+        );
+      }
+      return JSON.parse(text);
+    })
     .then((data) => {
-      if (!data?.response?.body?.items) return showNoData();
-      const items = data.response.body.items.item;
-      const filtered = items.filter((i) => i.fcstDate === baseDate);
-      if (!filtered.length) return showNoData();
+      const items = data?.response?.body?.items?.item;
+      if (!Array.isArray(items)) throw new Error("데이터 항목이 없습니다.");
+
+      const earliestDate = items.reduce(
+        (min, i) => (min && min < i.fcstDate ? min : i.fcstDate),
+        null
+      );
+
+      const filtered = items.filter((i) => i.fcstDate === earliestDate);
+
+      if (!filtered.length) {
+        showNoData();
+        return;
+      }
 
       const formatted = formatWeatherData(filtered);
       $responseData.innerHTML = formatted;
@@ -248,9 +274,10 @@ function setDefaultDateTime() {
   }
 }
 
-window.onload = () => {
+window.addEventListener("load", function () {
   getLocation();
   setDefaultDateTime();
-};
+});
+
 $fetchBtn.addEventListener("click", fetchData);
 document.addEventListener("keyup", (e) => e.key === "Enter" && fetchData());

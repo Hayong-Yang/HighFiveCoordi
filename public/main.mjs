@@ -1,3 +1,6 @@
+let savedFeltTemperature; // 전역 변수 선언
+let weatherLevel;
+
 // Base64URL → Base64 디코딩
 function b64UrlDecode(str) {
   str = str.replace(/-/g, "+").replace(/_/g, "/");
@@ -31,6 +34,7 @@ const logInBtn = document.getElementById("logIn");
 const logOutBtn = document.getElementById("logOut");
 const wishlistBtn = document.getElementById("Wishlist");
 const doFetchBtn = document.getElementById("doFetchDataButton");
+const userIdDisplay = document.getElementById("userIdDisplay");
 
 let token = localStorage.getItem("token");
 
@@ -45,10 +49,24 @@ if (token) {
   signUpBtn.style.display = "none";
   logInBtn.style.display = "none";
   logOutBtn.style.display = "inline";
+
+  //토큰에서 userid 추출하여 표시
+  try {
+    const payload = JSON.parse(b64UrlDecode(token.split(".")[1]));
+    if (payload.userid) {
+      userIdDisplay.textContent = `${payload.userid}님 환영합니다!`;
+      userIdDisplay.style.display = "inline"; // userid 표시 영역 보이기
+    } else {
+      userIdDisplay.style.display = "none";
+    }
+  } catch {
+    userIdDisplay.style.display = "none";
+  }
 } else {
   signUpBtn.style.display = "inline";
   logInBtn.style.display = "inline";
   logOutBtn.style.display = "none";
+  userIdDisplay.style.display = "none";
 }
 
 /********************************************************************
@@ -78,14 +96,14 @@ logOutBtn.addEventListener("click", (e) => {
  * 3.  보호 POST 요청 헬퍼 (토큰 부착 + 401 처리)
  ********************************************************************/
 async function protectedPost(url, payload) {
-  token = localStorage.getItem("token"); // 최신 토큰
-  if (!token || isTokenExpired(token)) return forceLogout();
+  currentToken = localStorage.getItem("token"); // 최신 토큰
+  if (!currentToken || isTokenExpired(currentToken)) return forceLogout();
 
   const res = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${currentToken}`,
     },
     body: JSON.stringify(payload),
   });
@@ -117,7 +135,55 @@ document
     });
     const result = await res.json();
     if (res.ok) {
-      console.log(result);
+      const recommendation = result.recommendedResult;
+      savedFeltTemperature = result.feltTemperature; // 전역변수에 할당
+      weatherLevel = result.level;
+
+      // console.log(savedFeltTemperature);
+      if (recommendation) {
+        // console.log(recommendation.idx);
+        // console.log(recommendation.category);
+        // console.log(recommendation.image_url);
+        // 프론트 각 div에 뿌려주기
+        const categories = document.querySelectorAll(".category");
+        // 기존 이미지 제거
+        categories.forEach((categoryDiv) => {
+          categoryDiv.innerHTML = ""; // 내부 모든 요소 제거 (즉, 이전 이미지 초기화)
+        });
+        // 이미지 추가
+        recommendation.forEach((recommendation) => {
+          const image = document.createElement("img");
+          image.src = recommendation.image_url;
+          image.alt = `추천 상품 ${recommendation.idx}`;
+          image.classList.add("product-image"); // 스타일을 위해 클래스 추가 가능
+
+          // 해당 category에 맞는 DOM 요소에 추가
+          categories.forEach((categoryDiv) => {
+            if (categoryDiv.classList.contains(recommendation.category)) {
+              categoryDiv.appendChild(image);
+              // 카테고리를 저장해두기 위해 data-category 속성 추가
+              image.dataset.category = recommendation.category;
+            }
+          });
+        });
+        // DOM에 추가한 이미지들 다시 수집해서 저장
+        const savedRecommendations = [];
+        document.querySelectorAll(".product-image").forEach((img) => {
+          savedRecommendations.push({
+            src: img.src,
+            alt: img.alt,
+            category: img.dataset.category,
+          });
+        });
+        // localStorage에 저장
+        localStorage.setItem(
+          "savedRecommendations",
+          JSON.stringify(savedRecommendations)
+        );
+        console.log(JSON.parse(localStorage.getItem("savedRecommendations")));
+      } else {
+        console.log("추천 결과가 없습니다.");
+      }
     } else {
       console.log(result);
     }
@@ -160,6 +226,81 @@ document
       body: JSON.stringify({
         topColor: topColorPicker,
         bottomColor: bottomColorPicker,
+        level: weatherLevel,
       }),
     });
+    const result = await res.json();
+    if (res.ok) {
+      const recommendation = result.recommendedResult;
+      console.log("색상적용으로 받아온 결과:", recommendation);
+      if (recommendation) {
+        // 프론트 각 div에 뿌려주기
+        const categories = document.querySelectorAll(".category");
+        // 기존 이미지 제거
+        categories.forEach((categoryDiv) => {
+          categoryDiv.innerHTML = ""; // 내부 모든 요소 제거 (즉, 이전 이미지 초기화)
+        });
+        // 이미지 추가
+        recommendation.forEach((recommendation) => {
+          const image = document.createElement("img");
+          image.src = recommendation.image_url;
+          image.alt = `추천 상품 ${recommendation.idx}`;
+          image.classList.add("product-image"); // 스타일을 위해 클래스 추가 가능
+
+          // 해당 category에 맞는 DOM 요소에 추가
+          categories.forEach((categoryDiv) => {
+            if (categoryDiv.classList.contains(recommendation.category)) {
+              categoryDiv.appendChild(image);
+              // 카테고리를 저장해두기 위해 data-category 속성 추가
+              image.dataset.category = recommendation.category;
+            }
+          });
+        });
+        // DOM에 추가한 이미지들 다시 수집해서 저장
+        const savedRecommendations = [];
+        document.querySelectorAll(".product-image").forEach((img) => {
+          savedRecommendations.push({
+            src: img.src,
+            alt: img.alt,
+            category: img.dataset.category,
+          });
+        });
+        // localStorage에 저장
+        localStorage.setItem(
+          "savedRecommendations",
+          JSON.stringify(savedRecommendations)
+        );
+        console.log(JSON.parse(localStorage.getItem("savedRecommendations")));
+      } else {
+        console.log("추천 결과가 없습니다.");
+      }
+    } else {
+      console.log(result);
+    }
   });
+
+// 로컬스토리지에 저장한 추천옷을 새로고침하면 다시 불러오는 기능.
+function restoreRecommendationsFromLocalStorage() {
+  const saved = localStorage.getItem("savedRecommendations");
+  if (!saved) return;
+
+  const savedRecommendations = JSON.parse(saved);
+  const categories = document.querySelectorAll(".category");
+
+  savedRecommendations.forEach((item) => {
+    const image = document.createElement("img");
+    image.src = item.src;
+    image.alt = item.alt;
+    image.classList.add("product-image");
+
+    categories.forEach((categoryDiv) => {
+      if (categoryDiv.classList.contains(item.category)) {
+        categoryDiv.appendChild(image);
+      }
+    });
+  });
+}
+
+window.addEventListener("load", function () {
+  restoreRecommendationsFromLocalStorage();
+});

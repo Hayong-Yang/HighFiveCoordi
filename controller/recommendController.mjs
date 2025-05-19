@@ -13,7 +13,6 @@ const weatherApiServiceKey = config.weatherAPI.servicekey;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
 // async function getWeatherBasedRecommendations(level) {
 //   const categories = ["top", "pants", "outer", "shoes", "etc"];
 //   const results = {};
@@ -51,20 +50,28 @@ export async function recommendClothes(request, response, next) {
     const realTemperature = tmpItem.fcstValue;
     const windSpeed = windItem.fcstValue;
     const rainPercent = rainPercentItem.fcstValue;
-    const feltTemperature = recommendRepository.calculateWindChill(realTemperature, windSpeed);
-    const level= recommendRepository.getTempLevel(feltTemperature);
+    const feltTemperature = recommendRepository.calculateWindChill(
+      realTemperature,
+      windSpeed
+    );
+    const level = recommendRepository.getTempLevel(feltTemperature);
     // topHue,bottomHue: 임시로 사용
     const topHue = Math.floor(Math.random() * 361);
     const bottomHue = Math.floor(Math.random() * 361);
 
-  const recommendedResult = await recommendRepository.getRecommendations({ topHue, bottomHue, level });
- console.log(recommendedResult)
-  return response.status(200).json({
-    recommendedResult,
+    const recommendedResult = await recommendRepository.getRecommendations({
+      topHue,
+      bottomHue,
+      level,
+    });
+    // console.log("백에서 보내는 결과: ", recommendedResult);
+    return response.status(200).json({
+      recommendedResult,
       temperature: parseFloat(realTemperature),
       windSpeed: parseFloat(windSpeed),
       rainPercent: parseFloat(rainPercent),
       feltTemperature: feltTemperature,
+      level: level,
     });
   } catch (err) {
     console.error(err);
@@ -72,10 +79,27 @@ export async function recommendClothes(request, response, next) {
   }
 }
 
-
 // 사용자가 색상적용하기 누르면 옷 추천화면을 새롭게 띄우는 기능
 export async function reloadClothes(request, response, next) {
-  const { topColor, bottomColor } = request.body;
-  // 날씨 level 전역변수에서 받아오기.
-  console.log("상의색상:", topColor, "하의 색상:", bottomColor);
+  try {
+    const { topColor, bottomColor, level } = request.body;
+    // 날씨 level 전역변수에서 받아오기.
+    // console.log("상의색상:", topColor, "하의 색상:", bottomColor);
+    // console.log("받아온 체감온도 레벨", level);
+    const topRGBtoHUE = recommendRepository.rgbToHSL(topColor).h;
+    const bottomRGBtoHUE = recommendRepository.rgbToHSL(bottomColor).h;
+    console.log("상의휴:", topRGBtoHUE, "하의휴:", bottomRGBtoHUE);
+
+    const recommendedResult = await recommendRepository.getRecommendations({
+      topHue: topRGBtoHUE,
+      bottomHue: bottomRGBtoHUE,
+      level: parseInt(level),
+    });
+    return response.status(200).json({
+      recommendedResult,
+    });
+  } catch (err) {
+    console.error(err);
+    response.status(500).json({ error: "날씨 데이터를 불러오는 중 오류 발생" });
+  }
 }

@@ -22,6 +22,9 @@
           <li><a href="#outer" class="outer">outer</a></li>
           <li><a href="#shoes" class="shoes">shoes</a></li>
           <li><a href="#etc" class="etc">etc.</a></li>
+          <li>
+            <a href="/auth/logout" id="logOut">LogOut</a>
+          </li>
         </ul>
       </div>
     </header>
@@ -29,9 +32,13 @@
     <main>
       <p id="WishText">WishList</p>
 
-      <!-- 담은순 버튼 -->
+      <!-- 담은순 드롭다운 -->
       <div class="sort-bar">
-        <button id="sortByCreatedAt">담은순</button>
+        <select id="sortOptions">
+          <option value="createdAt">담은순</option>
+          <option value="lowPrice">낮은가격순</option>
+          <option value="highPrice">높은가격순</option>
+        </select>
       </div>
 
       <!-- 로그인 안 된 상태 -->

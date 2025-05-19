@@ -15,13 +15,18 @@ import {
   duplicateIdCheck,
   logOut,
   findUserId,
+  toFindId,
+  toFindPw,
 } from "../controller/userController.mjs";
 
 dotenv.config();
 
 const router = express.Router();
 const Coolsms = CoolsmsPkg.default;
-const messageService = new Coolsms(process.env.apiKey, process.env.apiSecret);
+const messageService = new Coolsms(
+  process.env.apiKey_pw,
+  process.env.apiSecret_pw
+);
 const authCodes = new Map();
 
 // 로그인 유효성 검사
@@ -61,6 +66,8 @@ router.post("/logIn", logIn);
 router.get("/logIn", toLogin);
 router.get("/logout", logOut);
 router.post("/find-id", findUserId);
+router.get("/find-id.html", toFindId);
+router.get("/find-pw.html", toFindPw);
 
 // 인증번호 발송
 router.post("/sendSms", async (req, res) => {
