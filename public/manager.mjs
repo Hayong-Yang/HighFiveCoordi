@@ -19,16 +19,49 @@ function rgbToHsl(r, g, b) {
     return [Math.round(h), Math.round(s * 100), Math.round(l * 100)];
 }
 
+function getClosestColorName([r, g, b]) {
+    const colorMap = [
+        { name: "Red", rgb: [255, 0, 0] },
+        { name: "Green", rgb: [0, 255, 0] },
+        { name: "Blue", rgb: [0, 0, 255] },
+        { name: "Yellow", rgb: [255, 255, 0] },
+        { name: "Cyan", rgb: [0, 255, 255] },
+        { name: "Magenta", rgb: [255, 0, 255] },
+        { name: "Black", rgb: [0, 0, 0] },
+        { name: "White", rgb: [255, 255, 255] },
+        { name: "Gray", rgb: [128, 128, 128] },
+        { name: "Orange", rgb: [255, 165, 0] },
+        { name: "Pink", rgb: [255, 192, 203] },
+        { name: "Purple", rgb: [128, 0, 128] },
+        { name: "Brown", rgb: [165, 42, 42] },
+    ];
+
+    let minDist = Infinity;
+    let closest = "Unknown";
+
+    for (const c of colorMap) {
+        const [cr, cg, cb] = c.rgb;
+        const dist = Math.sqrt((r - cr) ** 2 + (g - cg) ** 2 + (b - cb) ** 2);
+        if (dist < minDist) {
+            minDist = dist;
+            closest = c.name;
+        }
+    }
+    return closest;
+}
+
 const imageInput = document.getElementById("imageInput");
 const preview = document.getElementById("preview");
 const result = document.getElementById("result");
-let hsl = [0, 0, 0]; // 전역 저장
+
+let hsl = [0, 0, 0];
+let colorName = "Unknown";
 
 imageInput.addEventListener("change", () => {
     const file = imageInput.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = function (e) {
+    reader.onload = (e) => {
         preview.src = e.target.result;
     };
     reader.readAsDataURL(file);
@@ -37,9 +70,10 @@ imageInput.addEventListener("change", () => {
 preview.addEventListener("load", () => {
     const colorThief = new ColorThief();
     const rgb = colorThief.getColor(preview);
-    hsl = rgbToHsl(rgb[0], rgb[1], rgb[2]);
+    hsl = rgbToHsl(...rgb);
+    colorName = getClosestColorName(rgb);
 
-    result.innerText = `대표 색상 (RGB): ${rgb.join(", ")}\nHSL: (${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)`;
+    result.innerText = `대표 색상 (RGB): ${rgb.join(", ")}\nHSL: (${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)\n컬러 이름: ${colorName}`;
 });
 
 document.getElementById("submitBtn").addEventListener("click", async () => {
@@ -47,7 +81,7 @@ document.getElementById("submitBtn").addEventListener("click", async () => {
     const category = document.getElementById("category").value;
     const price = parseInt(document.getElementById("price").value);
     const description = document.getElementById("description").value;
-    const level = parseInt(document.getElementById("level").value);
+    const temp_level = parseInt(document.getElementById("level").value);
     const url = preview.src;
     const [hue, saturation, lightness] = hsl;
 
@@ -60,7 +94,8 @@ document.getElementById("submitBtn").addEventListener("click", async () => {
         url,
         hue,
         saturation,
-        lightness
+        lightness,
+        color: colorName
     };
 
     try {
@@ -69,6 +104,9 @@ document.getElementById("submitBtn").addEventListener("click", async () => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
         });
+
+        if (!res.ok) throw new Error("서버 응답 실패");
+
         const result = await res.json();
         alert("상품 등록 완료! ID: " + result.id);
     } catch (err) {
