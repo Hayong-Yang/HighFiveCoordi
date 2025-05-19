@@ -74,6 +74,25 @@ a {
   color: white;
 }
 
+#logOut {
+  display: inline-block;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000; /* 기본 글자색 (버튼 안쪽) */
+  background-color: #fff; /* 배경: 흰색 */
+  border: 1px solid #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+#logOut:hover {
+  background-color: transparent; /* 배경 없음으로 반전 */
+  color: #fff; /* 글자색 반전 */
+  border-color: #fff;
+}
+
 /* 본문 */
 main {
   padding: 100px 24px;
@@ -84,6 +103,41 @@ main {
   font-size: 28px;
   font-weight: bold;
   margin-top: 10px; /* 헤더와의 간격 고려 */
+}
+
+.sort-bar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 30px 10px 30px;
+}
+
+#sortOptions {
+  appearance: none; /* 기본 화살표 제거 */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+
+  padding: 8px 38px 8px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+  cursor: pointer;
+
+  /* 화살표 커스텀 */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23222' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px 8px;
+  transition: border-color 0.2s ease;
+}
+
+#sortOptions:hover,
+#sortOptions:focus {
+  border-color: #000;
+  outline: none;
 }
 
 #empty {
