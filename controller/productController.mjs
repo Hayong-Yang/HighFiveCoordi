@@ -39,7 +39,9 @@ export const getProductByRandom = async (req, res) => {
 
 // 상품 등록
 export const createProduct = async (req, res) => {
+
     const { name, category, price, description, temp_level, hue, saturation, lightness, url, color } = req.body;
+
     try {
         console.log(req.body);
         // 먼저 기본 정보 INSERT (image_url 없이)
@@ -47,7 +49,6 @@ export const createProduct = async (req, res) => {
             `INSERT INTO products (name, category, price, description, temp_level, hue, saturation, lightness, url, color)
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [name, category, price, description, temp_level ?? 1, hue, saturation, lightness, url, color]
-        );
 
         const insertedId = result.insertId;
         const nameSlug = name.split(" ")[0].replace(/[^\w]/g, '').toLowerCase();

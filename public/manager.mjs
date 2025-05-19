@@ -82,7 +82,9 @@ document.getElementById("submitBtn").addEventListener("click", async () => {
     const price = parseInt(document.getElementById("price").value);
     const description = document.getElementById("description").value;
     const temp_level = parseInt(document.getElementById("level").value);
+
     const url = document.getElementById("url").value;
+
     const [hue, saturation, lightness] = hsl;
 
     const data = {
@@ -95,7 +97,9 @@ document.getElementById("submitBtn").addEventListener("click", async () => {
         hue,
         saturation,
         lightness,
+
         color: colorName,
+
     };
     const token = localStorage.getItem("token");
     // fix;
@@ -110,6 +114,7 @@ document.getElementById("submitBtn").addEventListener("click", async () => {
         });
 
         if (res.status !== 201) throw new Error("서버 응답 실패");
+
 
         const result = await res.json();
         alert("상품 등록 완료! ID: " + result.id);
