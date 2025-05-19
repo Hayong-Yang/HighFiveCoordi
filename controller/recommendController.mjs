@@ -4,14 +4,13 @@ import { config } from "../config.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
 import * as recommendRepository from "../data/recommend.mjs";
-import { calculateWindChill } from "../util/weatherUtils.mjs";
+import { windChill } from "../util/weatherUtils.mjs";
 
 
 const secretKey = config.jwt.secretKey;
 const bcryptSaltRounds = config.bcrypt.saltRounds;
 const jwtExpiresInDays = config.jwt.expiresInSec;
 const weatherApiServiceKey = config.weatherAPI.servicekey;
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -53,7 +52,7 @@ export async function recommendClothes(request, response, next) {
     const windSpeed = windItem.fcstValue;
     const rainPercent = rainPercentItem.fcstValue;
 
-    const feltTemperature = calculateWindChill(realTemperature, windSpeed);
+    const feltTemperature = windChill(realTemperature, windSpeed);
 
     return response.status(200).json({
       recommendedResult,

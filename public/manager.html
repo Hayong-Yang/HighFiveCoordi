@@ -22,20 +22,20 @@
         </label><br />
         <label>가격: <input type="number" id="price" required /></label><br />
         <label>설명: <input type="text" id="description" /></label><br />
-        <label>추천 등급(1~5): <input type="number" id="level" min="1" max="5" required /></label><br />
+        <label>날씨 등급(1~3): <input type="number" id="level" min="1" max="3" required /></label><br />
+        <label>이미지 업로드: <input type="file" id="imageInput" accept="image/*" /></label><br />
     </form>
 
-    <label>이미지 업로드: <input type="file" id="imageInput" accept="image/*" /></label><br />
     <img id="preview" crossorigin="anonymous" width="300" /><br />
-    <p id="result"></p>
+    <p id="result">대표 색상: HSL(...)</p>
+    <p>유사 색상 이름: <strong id="colorName">-</strong></p>
 
     <button id="submitBtn">상품 등록</button>
 
     <!-- ColorThief CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
-
-    <!-- 🔽 분리된 JS 파일 -->
-    <script type="module" src="/js/manager.mjs"></script>
+    <!-- 연동되는 JS -->
+    <script type="module" src="/manager.mjs"></script>
 </body>
 
 </html>
