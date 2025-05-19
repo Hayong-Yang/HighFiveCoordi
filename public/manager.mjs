@@ -46,14 +46,14 @@ function rgbToHex(r, g, b) {
 
 preview.addEventListener("load", () => {
     const colorThief = new ColorThief();
-    const rgb = colorThief.getColor(preview);
+    const rgb = colorThief.getColor(preview); // [r, g, b]
     hsl = rgbToHsl(rgb[0], rgb[1], rgb[2]);
+    colorName = getClosestColorName(rgb); // 🔥 여기에 저장
 
-    const hexColor = rgbToHex(rgb[0], rgb[1], rgb[2]);
-    document.getElementById("color").value = hexColor;  // 🔥 자동 반영 핵심
-
-    result.innerText = `대표 색상 (RGB): ${rgb.join(", ")}\nHSL: (${hsl[0]}, ${hsl[1]}%)`;
+    const [h, s, l] = hsl;
+    document.getElementById("hsl").innerText = `(${h}, ${s}%, ${l}%)`;
 });
+
 
 
 document.getElementById("submitBtn").addEventListener("click", async () => {
@@ -63,7 +63,7 @@ document.getElementById("submitBtn").addEventListener("click", async () => {
     const description = document.getElementById("description").value;
     const temp_level = parseInt(document.getElementById("level").value);
     const [hue, saturation, lightness] = hsl;
-    const color = document.getElementById("color").value;
+
     const data = {
         name,
         category,
@@ -73,7 +73,7 @@ document.getElementById("submitBtn").addEventListener("click", async () => {
         hue,
         saturation,
         lightness,
-        color
+        color: colorName
     };
 
     try {
@@ -92,3 +92,52 @@ document.getElementById("submitBtn").addEventListener("click", async () => {
         alert("상품 등록 실패!");
     }
 });
+// 1. CSS 색상 이름 목록 (기본 색상만 예시, 필요시 확장 가능)
+const cssColors = {
+    black: [0, 0, 0],
+    white: [255, 255, 255],
+    red: [255, 0, 0],
+    green: [0, 128, 0],
+    blue: [0, 0, 255],
+    navy: [0, 0, 128],
+    gray: [128, 128, 128],
+    silver: [192, 192, 192],
+    maroon: [128, 0, 0],
+    olive: [128, 128, 0],
+    teal: [0, 128, 128],
+    purple: [128, 0, 128],
+    orange: [255, 165, 0],
+    pink: [255, 192, 203],
+    brown: [165, 42, 42],
+    gold: [255, 215, 0],
+    beige: [245, 245, 220],
+    khaki: [240, 230, 140],
+    indigo: [75, 0, 130],
+    turquoise: [64, 224, 208],
+    slategray: [112, 128, 144],
+};
+
+// 2. RGB 거리 계산 함수
+function getColorDistance(rgb1, rgb2) {
+    return Math.sqrt(
+        (rgb1[0] - rgb2[0]) ** 2 +
+        (rgb1[1] - rgb2[1]) ** 2 +
+        (rgb1[2] - rgb2[2]) ** 2
+    );
+}
+
+// 3. 가장 가까운 색상 이름 반환 함수
+function getClosestColorName(rgb) {
+    let minDistance = Infinity;
+    let closestColor = "";
+    for (const [name, cssRgb] of Object.entries(cssColors)) {
+        const distance = getColorDistance(rgb, cssRgb);
+        if (distance < minDistance) {
+            minDistance = distance;
+            closestColor = name;
+        }
+    }
+    return closestColor;
+}
+let colorName = "";
+

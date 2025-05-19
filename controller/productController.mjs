@@ -58,7 +58,7 @@ export const createProduct = async (req, res) => {
         hue,
         saturation,
         lightness,
-        color
+        color,
     } = req.body;
 
     console.log("✅ [createProduct] 요청 도착");
