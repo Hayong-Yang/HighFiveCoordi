@@ -48,7 +48,26 @@ export const getProductByRandom = async (request, response) => {
 
 // 상품 등록
 export const createProduct = async (req, res) => {
-    const { name, category, price, description, level, url, hue, saturation, lightness } = req.body;
+    const {
+        name,
+        category,
+        price,
+        description,
+        temp_level,
+        hue,
+        saturation,
+        lightness,
+        color
+    } = req.body;
+
+    console.log("✅ [createProduct] 요청 도착");
+    console.log("req.body:", req.body);
+    console.log("req.user:", req.user);
+
+    if (!req.user) {
+        return res.status(401).json({ message: "인증되지 않은 사용자입니다." });
+    }
+
     try {
         const [result] = await db.execute(
             `INSERT INTO products (name, category, price, description, temp_level, url, hue, saturation, lightness)
