@@ -49,19 +49,38 @@ export const addToWishlist = async (req, res) => {
       .json({ message: "user_idx와 product_idx가 필요합니다." });
   }
 
+  const connection = await db.getConnection(); // 트랜잭션 위해 연결 직접 획득
+
   try {
-    const [result] = await db.execute(
+    await connection.beginTransaction();
+
+    // 찜 추가
+    const [result] = await connection.execute(
       `INSERT INTO wishlists (user_idx, product_idx) VALUES (?, ?)`,
       [user_idx, product_idx]
     );
-    res.status(201).json({ message: "찜 추가 완료", idx: result.insertId });
+
+    // hot_pick 증가
+    await connection.execute(
+      `UPDATE products SET hot_pick = hot_pick + 1 WHERE idx = ?`,
+      [product_idx]
+    );
+
+    await connection.commit();
+    res
+      .status(201)
+      .json({ message: "찜 추가 및 hot_pick 증가 완료", idx: result.insertId });
   } catch (err) {
+    await connection.rollback();
+
     if (err.code === "ER_DUP_ENTRY") {
       res.status(400).json({ message: "이미 찜한 상품입니다." });
     } else {
       console.error("찜 추가 오류:", err);
       res.status(500).json({ message: "찜 추가 실패", error: err.message });
     }
+  } finally {
+    connection.release();
   }
 };
 
