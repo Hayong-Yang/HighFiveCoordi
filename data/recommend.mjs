@@ -34,6 +34,48 @@ export function rgbToHue(rgb) {
   return (h + 360) % 360;
 }
 
+//***************** 이거 사용 권장
+// RGB를 H S L 로 바꾸는 함수
+export function rgbToHSL(hex) {
+  const r = parseInt(hex.substr(1, 2), 16) / 255;
+  const g = parseInt(hex.substr(3, 2), 16) / 255;
+  const b = parseInt(hex.substr(5, 2), 16) / 255;
+
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const delta = max - min;
+
+  // Lightness 계산 (0~100 범위)
+  let l = (max + min) / 2;
+
+  // Saturation 계산 (0~100 범위)
+  let s = 0;
+  if (delta !== 0) {
+    s = delta / (1 - Math.abs(2 * l - 1));
+  }
+
+  // Hue 계산 (0~360 범위)
+  let h = 0;
+  if (delta !== 0) {
+    if (max === r) {
+      h = ((g - b) / delta) % 6;
+    } else if (max === g) {
+      h = (b - r) / delta + 2;
+    } else {
+      h = (r - g) / delta + 4;
+    }
+    h *= 60;
+    if (h < 0) h += 360;
+  }
+
+  // 정수로 반환
+  return {
+    h: Math.round(h), // 0 ~ 360
+    s: Math.round(s * 100), // 0 ~ 100
+    l: Math.round(l * 100), // 0 ~ 100
+  };
+}
+
 export function calculateWindChill(temp, windSpeed) {
   const T = parseFloat(temp);
   const V = parseFloat(windSpeed);
