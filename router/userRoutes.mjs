@@ -15,6 +15,8 @@ import {
   duplicateIdCheck,
   logOut,
   findUserId,
+  toFindId,
+  toFindPw,
 } from "../controller/userController.mjs";
 
 dotenv.config();
@@ -64,6 +66,8 @@ router.post("/logIn", logIn);
 router.get("/logIn", toLogin);
 router.get("/logout", logOut);
 router.post("/find-id", findUserId);
+router.get("/find-id.html", toFindId);
+router.get("/find-pw.html", toFindPw);
 
 // 인증번호 발송
 router.post("/sendSms", async (req, res) => {

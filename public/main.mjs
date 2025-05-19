@@ -31,6 +31,7 @@ const logInBtn = document.getElementById("logIn");
 const logOutBtn = document.getElementById("logOut");
 const wishlistBtn = document.getElementById("Wishlist");
 const doFetchBtn = document.getElementById("doFetchDataButton");
+const userIdDisplay = document.getElementById("userIdDisplay");
 
 let token = localStorage.getItem("token");
 
@@ -45,10 +46,24 @@ if (token) {
   signUpBtn.style.display = "none";
   logInBtn.style.display = "none";
   logOutBtn.style.display = "inline";
+
+  //토큰에서 userid 추출하여 표시
+  try {
+    const payload = JSON.parse(b64UrlDecode(token.split(".")[1]));
+    if (payload.userid) {
+      userIdDisplay.textContent = `${payload.userid}님 환영합니다!`;
+      userIdDisplay.style.display = "inline"; // userid 표시 영역 보이기
+    } else {
+      userIdDisplay.style.display = "none";
+    }
+  } catch {
+    userIdDisplay.style.display = "none";
+  }
 } else {
   signUpBtn.style.display = "inline";
   logInBtn.style.display = "inline";
   logOutBtn.style.display = "none";
+  userIdDisplay.style.display = "none";
 }
 
 /********************************************************************
@@ -78,14 +93,14 @@ logOutBtn.addEventListener("click", (e) => {
  * 3.  보호 POST 요청 헬퍼 (토큰 부착 + 401 처리)
  ********************************************************************/
 async function protectedPost(url, payload) {
-  token = localStorage.getItem("token"); // 최신 토큰
-  if (!token || isTokenExpired(token)) return forceLogout();
+  currentToken = localStorage.getItem("token"); // 최신 토큰
+  if (!currentToken || isTokenExpired(currentToken)) return forceLogout();
 
   const res = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${currentToken}`,
     },
     body: JSON.stringify(payload),
   });
