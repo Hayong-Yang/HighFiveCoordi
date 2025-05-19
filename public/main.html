@@ -1,152 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Main Page</title>
-    <link rel="stylesheet" href="/main.css" />
-    <script defer src="/weather.js"></script>
-    <script defer type="text/javascript" src="/main.mjs"></script>
-  </head>
-  <body>
-    <header class="header">
-      <div class="name">
-        <a href="#Highfive">High Five</a>
-      </div>
 
-      <div id="headerMenu">
-        <ul class="header__menu">
-          <li>
-            <a href="/auth/wishlist" id="Wishlist">WishList</a>
-          </li>
-          <li>
-            <a href="/auth/signup" id="signUp">SignUp</a>
-          </li>
-          <li>
-            <a href="/auth/login" id="logIn">LogIn</a>
-          </li>
-          <li>
-            <a href="/auth/logout" id="logOut">LogOut</a>
-          </li>
-        </ul>
-      </div>
-    </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Main Page</title>
+  <link rel="stylesheet" href="/main.css" />
+  <script defer src="/weather.js"></script>
+  <script defer type="text/javascript" src="/main.mjs"></script>
+</head>
 
-    <main>
-      <section id="weather">
-        <h2 class="weather__title">Today's pick!</h2>
-        <p class="weather__description">
-          오늘의 날씨에 맞는 트렌디한 옷을 추천해드립니다!
-        </p>
+<body>
+  <header class="header">
+    <div class="name">
+      <a href="#Highfive">High Five</a>
+    </div>
 
-        <div id="todayweather">
-          <h3>Today's weather</h3>
-          <div class="input-container">
-            <label for="base_date">기준 날짜:</label>
-            <input type="text" id="base_date" />
-            <input type="hidden" id="base_date_hidden" />
+    <div id="headerMenu">
+      <ul class="header__menu">
+        <li>
+          <a href="/auth/wishlist" id="Wishlist">WishList</a>
+        </li>
+        <li>
+          <a href="/auth/signup" id="signUp">SignUp</a>
+        </li>
+        <li>
+          <a href="/auth/login" id="logIn">LogIn</a>
+        </li>
+        <li>
+          <a href="/auth/logout" id="logOut">LogOut</a>
+        </li>
+        <li>
+          <a href="/manager" id="manager">Manager</a>
+        </li>
+      </ul>
+    </div>
+  </header>
 
-            <div class="time-box">
-              <label for="base_time">기준 시간:</label>
-              <select id="base_time">
-                <option value="0200">02:00</option>
-                <option value="0500">05:00</option>
-                <option value="0800">08:00</option>
-                <option value="1100">11:00</option>
-                <option value="1400">14:00</option>
-                <option value="1700">17:00</option>
-                <option value="2000">20:00</option>
-                <option value="2300">23:00</option>
-              </select>
-            </div>
+  <main>
+    <section id="weather">
+      <h2 class="weather__title">Today's pick!</h2>
+      <p class="weather__description">
+        오늘의 날씨에 맞는 트렌디한 옷을 추천해드립니다!
+      </p>
 
-            <div class="city-box">
-              <label for="base_city">기준 도시:</label>
-              <select id="base_city" onchange="setCityLocation()">
-                <option value="도시 선택">도시 선택</option>
-                <option value="서울">서울</option>
-                <option value="부산">부산</option>
-                <option value="대구">대구</option>
-                <option value="인천">인천</option>
-                <option value="광주">광주</option>
-                <option value="대전">대전</option>
-                <option value="울산">울산</option>
-              </select>
-              <!--
+      <div id="todayweather">
+        <h3>Today's weather</h3>
+        <div class="input-container">
+          <label for="base_date">기준 날짜:</label>
+          <input type="text" id="base_date" />
+          <input type="hidden" id="base_date_hidden" />
+
+          <div class="time-box">
+            <label for="base_time">기준 시간:</label>
+            <select id="base_time">
+              <option value="0200">02:00</option>
+              <option value="0500">05:00</option>
+              <option value="0800">08:00</option>
+              <option value="1100">11:00</option>
+              <option value="1400">14:00</option>
+              <option value="1700">17:00</option>
+              <option value="2000">20:00</option>
+              <option value="2300">23:00</option>
+            </select>
+          </div>
+
+          <div class="city-box">
+            <label for="base_city">기준 도시:</label>
+            <select id="base_city" onchange="setCityLocation()">
+              <option value="도시 선택">도시 선택</option>
+              <option value="서울">서울</option>
+              <option value="부산">부산</option>
+              <option value="대구">대구</option>
+              <option value="인천">인천</option>
+              <option value="광주">광주</option>
+              <option value="대전">대전</option>
+              <option value="울산">울산</option>
+            </select>
+            <!--
               <input type="text" id="city_name" />
               <button onclick="setCityLocation()">도시로 설정</button>-->
-            </div>
-
-            <div class="nx-ny">
-              <label for="nx">X:</label>
-              <input type="text" id="nx" />
-
-              <label for="ny">Y:</label>
-              <input type="text" id="ny" />
-            </div>
-
-            <button id="doFetchDataButton">날씨 조회</button>
           </div>
 
-          <div id="errorMessage"></div>
+          <div class="nx-ny">
+            <label for="nx">X:</label>
+            <input type="text" id="nx" />
 
-          <div id="result">
-            <div id="skySummary" class="sky-summary"></div>
-            <ul id="responseData" class="response-data"></ul>
+            <label for="ny">Y:</label>
+            <input type="text" id="ny" />
           </div>
+
+          <button id="doFetchDataButton">날씨 조회</button>
         </div>
-      </section>
 
-      <section id="recommend">
-        <img src="" alt="recommend" />
-      </section>
+        <div id="errorMessage"></div>
 
-      <section id="article">
-        <h3 class="article__title">article</h3>
-        <div class="article">
-          <div class="article_1">
-            <img src="" alt="article_1" />
-            <p>광고</p>
-            <p>광고 상세 설명</p>
-          </div>
-          <div class="article_2">
-            <img src="" alt="article_2" />
-            <p>광고</p>
-            <p>광고 상세 설명</p>
-          </div>
+        <div id="result">
+          <div id="skySummary" class="sky-summary"></div>
+          <ul id="responseData" class="response-data"></ul>
         </div>
-      </section>
-
-      <section id="Hotpick">
-        <h3>핫한 픽</h3>
-        <img src="" alt="pick1" />
-        <img src="" alt="pick2" />
-        <img src="" alt="pick3" />
-      </section>
-
-      <section id="share">
-        <h3>공유하기</h3>
-        <button>카카오톡 공유하기</button>
-      </section>
-    </main>
-
-    <footer id="contact">
-      <h3>High Five</h3>
-      <hr />
-      <div class="contact__info">
-        <p>사업자 정보</p>
-        <p>법적 고지사항</p>
-        <p>파트너 지원</p>
-        <p>고객 지원</p>
       </div>
-      <div class="copy">&copy; Highfive ALL RIGHTS RESERVED</div>
-      <p>개인정보처리방침·이용약관·결제대행 위탁사</p>
-      <p>
-        일부 상품의 경우 주식회사 하이파이브는 통신판매의 당사자가 아닌
-        통신판매중개자로서 상품, 상품정보, 거래에 대한 책임이 제한될 수
-        있으므로, 각 상품 페이지에서 구체적인 내용을 확인하시기 바랍니다.
-      </p>
-      <img class="icons" src="/images/icons.png" alt="icons" />
-    </footer>
-  </body>
+    </section>
+
+    <section id="recommend">
+      <img src="" alt="recommend" />
+    </section>
+
+    <section id="article">
+      <h3 class="article__title">article</h3>
+      <div class="article">
+        <div class="article_1">
+          <img src="" alt="article_1" />
+          <p>광고</p>
+          <p>광고 상세 설명</p>
+        </div>
+        <div class="article_2">
+          <img src="" alt="article_2" />
+          <p>광고</p>
+          <p>광고 상세 설명</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="Hotpick">
+      <h3>핫한 픽</h3>
+      <img src="" alt="pick1" />
+      <img src="" alt="pick2" />
+      <img src="" alt="pick3" />
+    </section>
+
+    <section id="share">
+      <h3>공유하기</h3>
+      <button>카카오톡 공유하기</button>
+    </section>
+  </main>
+
+  <footer id="contact">
+    <h3>High Five</h3>
+    <hr />
+    <div class="contact__info">
+      <p>사업자 정보</p>
+      <p>법적 고지사항</p>
+      <p>파트너 지원</p>
+      <p>고객 지원</p>
+    </div>
+    <div class="copy">&copy; Highfive ALL RIGHTS RESERVED</div>
+    <p>개인정보처리방침·이용약관·결제대행 위탁사</p>
+    <p>
+      일부 상품의 경우 주식회사 하이파이브는 통신판매의 당사자가 아닌
+      통신판매중개자로서 상품, 상품정보, 거래에 대한 책임이 제한될 수
+      있으므로, 각 상품 페이지에서 구체적인 내용을 확인하시기 바랍니다.
+    </p>
+    <img class="icons" src="/images/icons.png" alt="icons" />
+  </footer>
+</body>
+
 </html>

@@ -9,5 +9,4 @@ function calculateWindChill(temp, windSpeed) {
     return Math.round(windChill * 10) / 10;
 }
 
-const windChill = calculateWindChill(10, 10);
-console.log(windChill);
+export const windChill = calculateWindChill(10, 10);

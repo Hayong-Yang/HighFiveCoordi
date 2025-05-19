@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Color Extractor</title>
+</head>
+
+<body>
+    <h1>대표 색상 추출 및 HSL 변환</h1>
+
+    <form id="productForm">
+        <label>상품명: <input type="text" id="name" required /></label><br />
+        <label>카테고리:
+            <select id="category" required>
+                <option value="top">상의</option>
+                <option value="pants">하의</option>
+                <option value="outer">아우터</option>
+                <option value="shoes">신발</option>
+                <option value="etc">기타</option>
+            </select>
+        </label><br />
+        <label>가격: <input type="number" id="price" required /></label><br />
+        <label>설명: <input type="text" id="description" /></label><br />
+        <label>추천 등급(1~5): <input type="number" id="level" min="1" max="5" required /></label><br />
+    </form>
+
+    <label>이미지 업로드: <input type="file" id="imageInput" accept="image/*" /></label><br />
+    <img id="preview" crossorigin="anonymous" width="300" /><br />
+    <p id="result"></p>
+
+    <button id="submitBtn">상품 등록</button>
+
+    <!-- ColorThief CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
+
+    <!-- 🔽 분리된 JS 파일 -->
+    <script type="module" src="/js/manager.mjs"></script>
+</body>
+
+</html>

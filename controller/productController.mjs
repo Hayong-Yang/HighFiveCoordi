@@ -49,12 +49,12 @@ export const getProductByRandom = async (request, response) => {
 
 // 상품 등록
 export const createProduct = async (req, res) => {
-    const { name, category, price, description, level, hotPick } = req.body;
+    const { name, category, price, description, level, url, hue, saturation, lightness } = req.body;
     try {
         const [result] = await db.execute(
-            `INSERT INTO products (name, category, price, description, level, hotPick)
-       VALUES (?, ?, ?, ?, ?, ?)`,
-            [name, category, price, description, level ?? 1, hotPick ?? false]
+            `INSERT INTO products (name, category, price, description, temp_level, url, hue, saturation, lightness)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [name, category, price, description, level, url, hue, saturation, lightness]
         );
         res.status(201).json({
             message: "상품 등록 성공",
@@ -84,6 +84,16 @@ export const updateProduct = async (req, res) => {
 
 // 상품 삭제
 export const deleteProduct = async (req, res) => {
+    const productId = req.params.id;
+    try {
+        await db.execute("DELETE FROM products WHERE id = ?", [productId]);
+        res.json({ message: "상품 삭제 성공" });
+    } catch (err) {
+        res.status(500).json({ message: "상품 삭제 실패", error: err.message });
+    }
+};
+
+export const deleteProductById = async (req, res) => {
     const productId = req.params.id;
     try {
         await db.execute("DELETE FROM products WHERE id = ?", [productId]);
