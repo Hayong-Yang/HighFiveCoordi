@@ -91,10 +91,12 @@ function showNoData() {
   $noDataMessage.style.display = "block";
   $responseData.innerHTML = "";
 }
+
 function isProbablyJSON(text) {
   const trimmed = text.trim();
   return trimmed.startsWith("{") || trimmed.startsWith("[");
 }
+
 
 function fetchData() {
   const baseDate = $baseDate.value.replace(/-/g, "");
@@ -272,9 +274,10 @@ function setDefaultDateTime() {
   }
 }
 
-window.onload = () => {
+window.addEventListener("load", function () {
   getLocation();
   setDefaultDateTime();
-};
+});
+
 $fetchBtn.addEventListener("click", fetchData);
 document.addEventListener("keyup", (e) => e.key === "Enter" && fetchData());
