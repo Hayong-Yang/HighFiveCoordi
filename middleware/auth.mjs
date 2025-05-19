@@ -21,14 +21,14 @@ export const isAuth = async (request, response, next) => {
             return response.status(401).json(AUTH_ERROR);
         }
         console.log(decoded.idx);
-        const user = await authRepository.findByid(decoded.idx);
+        const user = await authRepository.findByIdx(decoded.idx);
         if (!user) {
             console.log("아이디 없음");
             return response.status(401).json(AUTH_ERROR);
         }
         console.log("user.idx: ", user.idx);
-        console.log("user.userid: ", user.userid);
-        request.userIdx = user.idx;
+        console.log("user.userId: ", user.userId);
+        request.user = user;
         next();
     });
 };

@@ -31,7 +31,7 @@ export async function findByUserId(inputId) {
 
     .then((result) => result[0][0]);
 }
-export async function findById(idx) {
+export async function findByIdx(idx) {
   return await db
 
     .execute("select * from users where idx = ?", [idx])

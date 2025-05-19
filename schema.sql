@@ -7,8 +7,8 @@ use highfiveDB;
 
 CREATE TABLE users (
     idx INT AUTO_INCREMENT PRIMARY KEY,
-    userid VARCHAR(50) NOT NULL UNIQUE,
-    userpw VARCHAR(255) NOT NULL,
+    userId VARCHAR(50) NOT NULL UNIQUE,
+    userPw VARCHAR(255) NOT NULL,
     name VARCHAR(30) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     phone VARCHAR(20) NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE users (
 ); 
 
 CREATE TABLE products (
-    idx INT PRIMARY KEY,
+    idx INT auto_increment PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     category ENUM('top', 'pants', 'outer', 'shoes', 'etc') NOT NULL,
     price INT UNSIGNED NOT NULL,
@@ -29,7 +29,9 @@ CREATE TABLE products (
     saturation INT NOT NULL,        -- 0~100
     lightness INT NOT NULL,         -- 0~100
     image_url VARCHAR(255),         -- 이미지 경로
-    url varchar(255)
+    url varchar(255),
+    user_idx int,
+    foreign key (user_idx) references users(idx)
 );
 
 CREATE TABLE wishlists (

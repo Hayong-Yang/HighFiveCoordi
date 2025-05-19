@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.get("/:id", getProductById);
 router.get("/random", getProductByRandom);
-router.post("/", isAuth, createProduct);
+router.post("/createProduct", isAuth, createProduct);
 router.delete("/:id", isAuth, deleteProductById);
 
 export default router;

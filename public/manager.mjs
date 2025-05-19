@@ -22,6 +22,7 @@ function rgbToHsl(r, g, b) {
 const imageInput = document.getElementById("imageInput");
 const preview = document.getElementById("preview");
 const result = document.getElementById("result");
+const token = localStorage.getItem("token");
 let hsl = [0, 0, 0]; // 전역 저장
 
 imageInput.addEventListener("change", () => {
@@ -33,40 +34,55 @@ imageInput.addEventListener("change", () => {
     };
     reader.readAsDataURL(file);
 });
+// RGB to HEX 변환 함수
+function rgbToHex(r, g, b) {
+    return "#" + [r, g, b]
+        .map(x => {
+            const hex = x.toString(16);
+            return hex.length === 1 ? "0" + hex : hex;
+        })
+        .join("");
+}
 
 preview.addEventListener("load", () => {
     const colorThief = new ColorThief();
     const rgb = colorThief.getColor(preview);
     hsl = rgbToHsl(rgb[0], rgb[1], rgb[2]);
 
-    result.innerText = `대표 색상 (RGB): ${rgb.join(", ")}\nHSL: (${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)`;
+    const hexColor = rgbToHex(rgb[0], rgb[1], rgb[2]);
+    document.getElementById("color").value = hexColor;  // 🔥 자동 반영 핵심
+
+    result.innerText = `대표 색상 (RGB): ${rgb.join(", ")}\nHSL: (${hsl[0]}, ${hsl[1]}%)`;
 });
+
 
 document.getElementById("submitBtn").addEventListener("click", async () => {
     const name = document.getElementById("name").value;
     const category = document.getElementById("category").value;
     const price = parseInt(document.getElementById("price").value);
     const description = document.getElementById("description").value;
-    const level = parseInt(document.getElementById("level").value);
-    const url = preview.src;
+    const temp_level = parseInt(document.getElementById("level").value);
     const [hue, saturation, lightness] = hsl;
-
+    const color = document.getElementById("color").value;
     const data = {
         name,
         category,
         price,
         description,
         temp_level,
-        url,
         hue,
         saturation,
-        lightness
+        lightness,
+        color
     };
 
     try {
-        const res = await fetch("/products/createProduct", {
+        const res = await fetch("/product/createProduct", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
             body: JSON.stringify(data)
         });
         const result = await res.json();
