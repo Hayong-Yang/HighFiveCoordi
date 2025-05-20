@@ -82,7 +82,9 @@ document.getElementById("submitBtn").addEventListener("click", async () => {
     const price = parseInt(document.getElementById("price").value);
     const description = document.getElementById("description").value;
     const temp_level = parseInt(document.getElementById("level").value);
-    const url = preview.src;
+
+    const url = document.getElementById("url").value;
+
     const [hue, saturation, lightness] = hsl;
 
     const data = {
@@ -91,21 +93,28 @@ document.getElementById("submitBtn").addEventListener("click", async () => {
         price,
         description,
         temp_level,
-        url,
+        url,              // 사용자 제공 base64 이미지 or 링크
         hue,
         saturation,
         lightness,
-        color: colorName
-    };
 
+        color: colorName,
+
+    };
+    const token = localStorage.getItem("token");
+    // fix;
     try {
-        const res = await fetch("/products/createProduct", {
+        const res = await fetch("/product/createProduct", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(data),
         });
 
-        if (!res.ok) throw new Error("서버 응답 실패");
+        if (res.status !== 201) throw new Error("서버 응답 실패");
+
 
         const result = await res.json();
         alert("상품 등록 완료! ID: " + result.id);

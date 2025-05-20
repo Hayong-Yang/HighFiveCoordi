@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 
 <head>
-    <meta charset="UTF-8" />
-    <title>Color Extractor</title>
+    <meta charset="UTF-8">
+    <title>상품 등록</title>
 </head>
 
 <body>
-    <h1>대표 색상 추출 및 HSL 변환</h1>
-
+    <h1>상품 등록</h1>
     <form id="productForm">
         <label>상품명: <input type="text" id="name" required /></label><br />
         <label>카테고리:
@@ -22,20 +21,16 @@
         </label><br />
         <label>가격: <input type="number" id="price" required /></label><br />
         <label>설명: <input type="text" id="description" /></label><br />
-        <label>추천 등급(1~5): <input type="number" id="level" min="1" max="5" required /></label><br />
+        <label>날씨 등급(1~3): <input type="number" id="level" min="1" max="3" required /></label><br />
+        <label>상품 링크(URL): <input type="text" id="url" required /></label><br />
+        <label>이미지 선택: <input type="file" id="imageInput" accept="image/*" required /></label><br />
+        <img id="preview" src="" alt="미리보기" width="150" /><br />
+        <p id="result"></p>
+        <button type="button" id="submitBtn">등록</button>
     </form>
 
-    <label>이미지 업로드: <input type="file" id="imageInput" accept="image/*" /></label><br />
-    <img id="preview" crossorigin="anonymous" width="300" /><br />
-    <p id="result"></p>
-
-    <button id="submitBtn">상품 등록</button>
-
-    <!-- ColorThief CDN -->
+    <script type="module" src="/manager.mjs"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
-
-    <!-- 🔽 분리된 JS 파일 -->
-    <script type="module" src="/js/manager.mjs"></script>
 </body>
 
 </html>
