@@ -393,6 +393,41 @@ document.addEventListener("click", async (e) => {
   }
 });
 
+fetch("/product/hotpicks")
+  .then((res) => {
+    if (!res.ok) {
+      throw new Error(`서버 오류: ${res.status}`);
+    }
+    return res.json();
+  })
+  .then((data) => {
+    if (!Array.isArray(data)) {
+      throw new Error("응답 데이터가 배열이 아닙니다.");
+    }
+
+    data.forEach((item, index) => {
+      const div = document.getElementById(`pick${index + 1}`);
+      if (!div) {
+        console.warn(`div#pick${index + 1}가 존재하지 않습니다.`);
+        return;
+      }
+
+      if (!item.image_url) {
+        console.warn(`상품 ${index + 1}에 이미지 URL이 없습니다.`);
+        return;
+      }
+
+      const img = document.createElement("img");
+      img.src = item.image_url;
+      img.alt = item.name || `pick${index + 1}`;
+      img.style.width = "100%"; // 필요 시 스타일 추가
+      div.appendChild(img);
+    });
+  })
+  .catch((err) => {
+    console.error("핫픽 이미지 불러오기 실패:", err);
+  });
+
 window.addEventListener("load", function () {
   restoreRecommendationsFromLocalStorage();
   markWishlisted();
