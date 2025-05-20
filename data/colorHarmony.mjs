@@ -154,7 +154,7 @@ export async function getRecommendations(pickedColor, level) {
 
   console.log("베이스컬러", baseColor);
   console.log(randomStrategy);
-  console.log("🎨 hueTargets:", hueTargets);
+  console.log("hueTargets:", hueTargets);
   //   hueTargets.forEach((t) =>
   //     console.log(`[${t.category}] hue=${t.hue} (${typeof t.hue})`)
   //   );
