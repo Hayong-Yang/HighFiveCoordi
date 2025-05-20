@@ -2,7 +2,7 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <title>High Five - 로그인</title>
+    <title>아이디 찾기 - High Five</title>
     <link rel="stylesheet" href="/login.css" />
     <script defer type="module" src="/login.mjs"></script>
   </head>
@@ -18,24 +18,13 @@
     </header>
 
     <main class="login-container">
-      <h2>LOGIN</h2>
-
-      <!-- 로그인 -->
-      <form id="loginForm" class="loginForm">
-        <input id="inputId" type="text" placeholder="ID" required />
-        <input id="inputPw" type="password" placeholder="PASSWORD" required />
-        <button type="submit" class="submit-btn">LOGIN</button>
+      <h3>아이디 찾기</h3>
+      <form id="findId">
+        <input type="text" id="name" placeholder="이름" required />
+        <input type="email" id="email" placeholder="이메일" required />
+        <button type="submit">아이디 찾기</button>
       </form>
-
-      <div class="find-info">
-        <a href="/auth/find-id.html" id="showFindId">아이디 찾기</a> |
-        <a href="/auth/find-pw.html" id="showFindPassword">비밀번호 찾기</a>
-        <div id="already">
-          회원 가입은
-          <a href="/auth/signup" id="GoToSignUp">여기 </a>
-          에서 할 수 있습니다.
-        </div>
-      </div>
+      <div id="resultMessage" class="Idresult-message"></div>
     </main>
 
     <footer id="contact">

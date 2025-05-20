@@ -28,4 +28,6 @@ export const config = {
     database: required("DB_DATABASE"),
     port: required("DB_PORT"),
   },
+  weatherAPI: { servicekey: required("WEATHER_API_SERVICE_KEY") },
 };
+
