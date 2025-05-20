@@ -4,8 +4,7 @@ import { config } from "../config.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
 import * as recommendRepository from "../data/recommend.mjs";
-import { windChill } from "../util/weatherUtils.mjs";
-
+import * as colorHarmony from "../data/colorHarmony.mjs";
 
 const secretKey = config.jwt.secretKey;
 const bcryptSaltRounds = config.bcrypt.saltRounds;
@@ -51,15 +50,32 @@ export async function recommendClothes(request, response, next) {
     const realTemperature = tmpItem.fcstValue;
     const windSpeed = windItem.fcstValue;
     const rainPercent = rainPercentItem.fcstValue;
+<<<<<<< HEAD
 
     const feltTemperature = windChill(realTemperature, windSpeed);
 
+=======
+    const feltTemperature = recommendRepository.calculateWindChill(
+      realTemperature,
+      windSpeed
+    );
+    const level = recommendRepository.getTempLevel(feltTemperature);
+    // 선택없다면  pickedColor= 0 으로 우선 설정
+    const pickedColor = 0;
+
+    const recommendedResult = await colorHarmony.getRecommendations(
+      pickedColor,
+      level
+    );
+    // console.log("백에서 보내는 결과: ", recommendedResult);
+>>>>>>> 93a1299ac62d5c47c28c4ec94e826f02b1684c50
     return response.status(200).json({
       recommendedResult,
       temperature: parseFloat(realTemperature),
       windSpeed: parseFloat(windSpeed),
       rainPercent: parseFloat(rainPercent),
       feltTemperature: feltTemperature,
+      level: level,
     });
   } catch (err) {
     console.error(err);
@@ -69,7 +85,21 @@ export async function recommendClothes(request, response, next) {
 
 // 사용자가 색상적용하기 누르면 옷 추천화면을 새롭게 띄우는 기능
 export async function reloadClothes(request, response, next) {
-  const { topColor, bottomColor } = request.body;
-  // 날씨 level 전역변수에서 받아오기.
-  console.log("상의색상:", topColor, "하의 색상:", bottomColor);
+  try {
+    const { topColor, level } = request.body;
+    // 날씨 level 전역변수에서 받아오기.
+    // console.log("상의색상:", topColor, "하의 색상:", bottomColor);
+    // console.log("받아온 체감온도 레벨", level);
+
+    const recommendedResult = await colorHarmony.getRecommendations(
+      topColor,
+      level
+    );
+    return response.status(200).json({
+      recommendedResult,
+    });
+  } catch (err) {
+    console.error(err);
+    response.status(500).json({ error: "날씨 데이터를 불러오는 중 오류 발생" });
+  }
 }
