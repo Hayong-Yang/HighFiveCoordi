@@ -1,14 +1,14 @@
- <!-- API 문서 작성 예시입니다.
 
-# API 문서
+# 📘 API 문서
 
-## 회원가입 API ...........................API 이름, URL, Method, Headers 등 정보
+## ✅ 회원가입 API
 
 - **URL**: `/api/auth/signup`
 - **Method**: `POST`
-- **Headers**: `Content-Type: application/json`
+- **Headers**:  
+  `Content-Type: application/json`
 
-### Request Body ................................ API request 정보
+### Request Body
 
 ```json
 {
@@ -16,11 +16,23 @@
   "inputPw": "1234",
   "name": "홍길동",
   "email": "test@example.com",
-  "phone": "01012345678"
+  "phone": "01012345678",
+  "hiddenIdCheck": "y",
+  "ischecked": true
 }
 ```
 
-### Success Response (201) .................................. API 요청 성공시 response
+| 필드명         | 타입      | 필수 | 설명                               |
+|----------------|-----------|------|------------------------------------|
+| inputId        | string    | ✅   | 사용자 ID                          |
+| inputPw        | string    | ✅   | 비밀번호                           |
+| name           | string    | ✅   | 이름                                |
+| email          | string    | ✅   | 이메일                              |
+| phone          | string    | ✅   | 전화번호                            |
+| hiddenIdCheck  | string    | ✅   | 아이디 중복 확인 여부 (`y` 필수)  |
+| ischecked      | boolean   | ✅   | 개인정보 동의 여부 (`true` 필수)  |
+
+### Success Response (201)
 
 ```json
 {
@@ -29,11 +41,172 @@
 }
 ```
 
-### Error Response (409) ................................ API 요청 실패시 response
+### Error Response (401)
+
+#### - 중복확인 안함
+
+```json
+{
+  "message": "아이디 중복 확인을 해주세요"
+}
+```
+
+#### - 개인정보 동의 안함
+
+```json
+{
+  "message": "개인정보 수집 및 이용 동의가 필요합니다."
+}
+```
+
+---
+
+## 🔍 아이디 중복 확인 API
+
+- **URL**: `/api/auth/check-id`
+- **Method**: `POST`
+- **Headers**:  
+  `Content-Type: application/json`
+
+### Request Body
+
+```json
+{
+  "inputId": "testuser"
+}
+```
+
+### Success Response (200)
+
+```json
+{
+  "available": true
+}
+```
+
+### Error Response (409)
 
 ```json
 {
   "message": "이미 존재하는 아이디입니다."
 }
 ```
- -->
+
+
+---
+
+## 🌤 추천 상품 API
+
+- **URL**: `/api/recommend`
+- **Method**: `POST`
+- **Headers**:  
+  `Content-Type: application/json`
+
+### Request Body
+
+```json
+{
+  "nx": "55",
+  "ny": "127",
+  "baseDate": "20250518",
+  "baseTime": "0800"
+}
+```
+
+| 필드명    | 타입    | 필수 | 설명                  |
+|-----------|---------|------|-----------------------|
+| nx        | string  | ✅   | 기상청 x 좌표         |
+| ny        | string  | ✅   | 기상청 y 좌표         |
+| baseDate  | string  | ✅   | 기준 날짜 (yyyymmdd)  |
+| baseTime  | string  | ✅   | 기준 시간 (hhmm)      |
+
+### Success Response (200)
+
+```json
+{
+  "recommendations": ["id", "1 (temp_level)","url", "category"]
+}
+```
+
+---
+
+## 💖 위시리스트 페이지 요청 API
+
+- **URL**: `/wishlist`
+- **Method**: `GET`
+- **Response**: HTML 페이지 (`wishlist.html` 전송)
+
+
+---
+
+## 📦 전체 상품 목록 조회 API
+
+- **URL**: `/api/products`
+- **Method**: `GET`
+
+### Success Response (200)
+
+```json
+[
+  {
+    "id": 1,
+    "name": "상품명",
+    "category": "카테고리",
+    "price": 10000,
+    "description": "상품 설명",
+    "level": 1,
+    "hotPick": 0
+  }
+]
+```
+
+---
+
+## 🔍 특정 상품 조회 API
+
+- **URL**: `/api/products/:id`
+- **Method**: `GET`
+
+### Success Response (200)
+
+```json
+{
+  "id": 1,
+  "name": "상품명",
+  "category": "카테고리",
+  "price": 10000,
+  "description": "상품 설명",
+  "level": 1,
+  "hotPick": 0
+}
+```
+
+### Error Response (404)
+
+```json
+{
+  "message": "상품을 찾을 수 없습니다"
+}
+```
+
+---
+
+## 🎲 랜덤 상품 조회 API
+
+- **URL**: `/api/products/random`
+- **Method**: `GET`
+
+### Success Response (200)
+
+```json
+{
+  "id": 5,
+  "name": "랜덤상품",
+  "category": "신발",
+  "price": 8900
+}
+```
+
+---
+
+# 목차 만들기

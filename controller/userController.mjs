@@ -127,11 +127,11 @@ const messageService = new Coolsms(
   process.env.apiSecret_pw
 );
 
-async function sendSMS() {
+async function sendSMS(toPhoneNumber) {
   try {
-    const result = await sendSMS({
-      to: pwPhone, // 수신자 번호
-      from: process.env.senderNumber, // 발신번호
+    const result = await messageService.sendOne({
+      to: toPhoneNumber, // 예: "01012345678"
+      from: process.env.senderNumber, // 예: "01087654321"
       text: "인증번호 1234",
     });
     console.log("✅ 문자 전송 성공:", result);
