@@ -16,7 +16,7 @@ CREATE TABLE users (
 ); 
 
 CREATE TABLE products (
-    idx INT PRIMARY KEY,
+    idx INT auto_increment PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     category ENUM('top', 'pants', 'outer', 'shoes', 'etc') NOT NULL,
     price INT UNSIGNED NOT NULL,
@@ -28,7 +28,8 @@ CREATE TABLE products (
     hue INT NOT NULL,               -- 0~360
     saturation INT NOT NULL,        -- 0~100
     lightness INT NOT NULL,         -- 0~100
-    image_url VARCHAR(255)              -- 이미지 경로
+    image_url VARCHAR(255),
+    url varchar(255)
 );
 
 CREATE TABLE wishlists (
@@ -75,5 +76,9 @@ desc products;
 drop table users;
 drop table wishlists;
 drop table products;
+
+            INSERT INTO products 
+            (name, category, price, description, temp_level, image_url, hue, saturation, lightness, color, url)
+            VALUES ("123","top",123,"123",3,"123",221,31,21,"black","adf");
 
 
