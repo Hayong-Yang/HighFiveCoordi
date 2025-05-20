@@ -4,12 +4,13 @@ import { config } from "../config.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
 import * as recommendRepository from "../data/recommend.mjs";
+import { windChill } from "../util/weatherUtils.mjs";
+
 
 const secretKey = config.jwt.secretKey;
 const bcryptSaltRounds = config.bcrypt.saltRounds;
 const jwtExpiresInDays = config.jwt.expiresInSec;
 const weatherApiServiceKey = config.weatherAPI.servicekey;
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -50,21 +51,9 @@ export async function recommendClothes(request, response, next) {
     const realTemperature = tmpItem.fcstValue;
     const windSpeed = windItem.fcstValue;
     const rainPercent = rainPercentItem.fcstValue;
-    const feltTemperature = recommendRepository.calculateWindChill(
-      realTemperature,
-      windSpeed
-    );
-    const level = recommendRepository.getTempLevel(feltTemperature);
-    // topHue,bottomHue: 임시로 사용
-    const topHue = Math.floor(Math.random() * 361);
-    const bottomHue = Math.floor(Math.random() * 361);
 
-    const recommendedResult = await recommendRepository.getRecommendations({
-      topHue,
-      bottomHue,
-      level,
-    });
-    // console.log("백에서 보내는 결과: ", recommendedResult);
+    const feltTemperature = windChill(realTemperature, windSpeed);
+
     return response.status(200).json({
       recommendedResult,
       temperature: parseFloat(realTemperature),
