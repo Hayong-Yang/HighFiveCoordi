@@ -6,7 +6,7 @@ if (loginForm) {
     const inputPw = document.getElementById("inputPw").value;
 
     try {
-      const res = await fetch("/auth/login", {
+      const res = await fetch("/auth/logIn", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ inputId, inputPw }),

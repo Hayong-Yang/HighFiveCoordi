@@ -70,7 +70,7 @@ export async function logIn(request, response, next) {
   if (!user) {
     return response.status(401).json(`${inputId} 아이디를 찾을 수 없음`);
   }
-  const isValidPassword = await bcrypt.compare(inputPw, user.userpw);
+  const isValidPassword = await bcrypt.compare(inputPw, user.userPw);
   if (!isValidPassword) {
     return response.status(401).json({ message: "아이디 또는 비밀번호 확인" });
   }
