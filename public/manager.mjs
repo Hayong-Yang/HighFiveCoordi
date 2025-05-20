@@ -83,6 +83,7 @@ document.getElementById("submitBtn").addEventListener("click", async () => {
     const description = document.getElementById("description").value;
     const temp_level = parseInt(document.getElementById("level").value);
     const url = document.getElementById("url").value;
+    const image_filename = document.getElementById("imageInput").value;
     const [hue, saturation, lightness] = hsl;
 
     const data = {
@@ -96,7 +97,11 @@ document.getElementById("submitBtn").addEventListener("click", async () => {
         saturation,
         lightness,
         color: colorName,
+        image_filename,
     };
+
+    console.log(data);
+
     const token = localStorage.getItem("token");
     try {
         const res = await fetch("/product/createProduct", {
