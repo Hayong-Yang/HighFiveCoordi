@@ -44,7 +44,7 @@ CREATE TABLE wishlists (
 
 select * from products;
 
-insert into products(idx, name, category, price, description, color, temp_level, hue, saturation, lightness, image_url)
+insert into products(idx, name, category, price, description, color, temp_level, hue, saturation, lightness, image_url, url)
 values  (101, "HS STRIPE KNIT COLLAR SHIRT_NAVY", "top", 52200, "부드러운 이미지를 주는 니트 티셔츠로 많은 남성들의 남친룩을 담당합니다.", "navy", 2, 218, 39, 12, 'http://localhost:8080/product_images/101shirtshort_navy.webp',"https://www.musinsa.com/products/3998728"),
       (102, "ASI 에센셜 코튼 헨리넥 티셔츠_피그먼트 올리브", "top", 33900, "봄, 가을에 부드러운 이미지와 빈티지한 느낌을 동시에 줄 수 있는 다용도 티셔츠입니다.", "olive", 1, 70, 15, 32, 'http://localhost:8080/product_images/102_shirtlong_olive.webp',"https://www.musinsa.com/products/4852646"),
         (103, "오버핏 1:1 스트라이프 반팔티", "top", 19900, "캐주얼한 스트라이프로 더운 날 포인트로 입기 좋은 티셔츠입니다.", "grey", 3, 330, 4, 10, 'http://localhost:8080/product_images/103_shirt-short_grey.webp',"https://www.musinsa.com/products/5033156"),
