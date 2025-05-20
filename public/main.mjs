@@ -1,3 +1,6 @@
+let savedFeltTemperature; // 전역 변수 선언
+let weatherLevel;
+
 // Base64URL → Base64 디코딩
 function b64UrlDecode(str) {
   str = str.replace(/-/g, "+").replace(/_/g, "/");
@@ -17,11 +20,11 @@ function isTokenExpired(token) {
   }
 }
 
-// 만료·인증 실패 시 강제 로그아웃
-function forceLogout(msg = "세션이 만료되었습니다. 다시 로그인해주세요.") {
-  alert(msg);
-  window.location.href = "/";
-}
+// // 만료·인증 실패 시 강제 로그아웃
+// function forceLogout(msg = "세션이 만료되었습니다. 다시 로그인해주세요.") {
+//   alert(msg);
+//   window.location.href = "/";
+// }
 
 /********************************************************************
  * 1.  초기 로그인 상태 판정 & 버튼 토글
@@ -34,12 +37,13 @@ const doFetchBtn = document.getElementById("doFetchDataButton");
 const userIdDisplay = document.getElementById("userIdDisplay");
 
 let token = localStorage.getItem("token");
+let currentUserIdx = Number(localStorage.getItem("user_idx")) || null; // 위시리스트 용 현재 유저 idx
 
-// 만료된 토큰 발견 시 제거 + 강제 로그아웃
-if (token && isTokenExpired(token)) {
-  localStorage.removeItem("token");
-  forceLogout();
-}
+// // 만료된 토큰 발견 시 제거 + 강제 로그아웃
+// if (token && isTokenExpired(token)) {
+//   localStorage.removeItem("token");
+//   forceLogout();
+// }
 
 // 버튼 표시
 if (token) {
@@ -50,11 +54,14 @@ if (token) {
   //토큰에서 userid 추출하여 표시
   try {
     const payload = JSON.parse(b64UrlDecode(token.split(".")[1]));
+    if (payload.idx) {
+      currentUserIdx = payload.idx;
+      localStorage.setItem("user_idx", payload.idx);
+    }
     if (payload.userid) {
+      localStorage.setItem("userid", payload.userid);
       userIdDisplay.textContent = `${payload.userid}님 환영합니다!`;
-      userIdDisplay.style.display = "inline"; // userid 표시 영역 보이기
-    } else {
-      userIdDisplay.style.display = "none";
+      userIdDisplay.style.display = "inline";
     }
   } catch {
     userIdDisplay.style.display = "none";
@@ -91,24 +98,26 @@ logOutBtn.addEventListener("click", (e) => {
 
 /********************************************************************
  * 3.  보호 POST 요청 헬퍼 (토큰 부착 + 401 처리)
+ * // 위시리스트 하트용
  ********************************************************************/
-async function protectedPost(url, payload) {
-  currentToken = localStorage.getItem("token"); // 최신 토큰
-  if (!currentToken || isTokenExpired(currentToken)) return forceLogout();
-
+async function protectedFetch(url, opt = {}) {
+  const tk = localStorage.getItem("token");
+  if (!tk || isTokenExpired(tk)) return forceLogout();
   const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${currentToken}`,
-    },
-    body: JSON.stringify(payload),
+    headers: { Authorization: `Bearer ${tk}`, ...opt.headers },
+    ...opt,
   });
-
   if (res.status === 401) return forceLogout();
   return res;
 }
+const protectedPost = (url, body) =>
+  protectedFetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
 
+// ***************************************
 // POST: main.html에서 날씨 API 설정값 보내고, 추천 옷을 결과로 받아오는 기능
 document
   .getElementById("doFetchDataButton")
@@ -131,9 +140,16 @@ document
       }),
     });
     const result = await res.json();
+    if (!res.ok || !result) return console.log("추천결과가 없습니다.");
+
     if (res.ok) {
       const recommendation = result.recommendedResult;
+      savedFeltTemperature = result.feltTemperature; // 전역변수에 할당
+      weatherLevel = result.level;
+
+      // console.log(savedFeltTemperature);
       if (recommendation) {
+        console.log(recommendation);
         // console.log(recommendation.idx);
         // console.log(recommendation.category);
         // console.log(recommendation.image_url);
@@ -143,12 +159,21 @@ document
         categories.forEach((categoryDiv) => {
           categoryDiv.innerHTML = ""; // 내부 모든 요소 제거 (즉, 이전 이미지 초기화)
         });
-        // 이미지 추가
+        // 기존 하트제거
+        document.querySelectorAll(".heart").forEach((h) => {
+          h.textContent = "♡";
+          delete h.dataset.productIdx; // ★
+        });
+
+        // 새 이미지 추가
         recommendation.forEach((recommendation) => {
           const image = document.createElement("img");
           image.src = recommendation.image_url;
           image.alt = `추천 상품 ${recommendation.idx}`;
           image.classList.add("product-image"); // 스타일을 위해 클래스 추가 가능
+
+          // // 새 하트 추가
+          // const heart = div.querySelector(".heart");
 
           // 해당 category에 맞는 DOM 요소에 추가
           categories.forEach((categoryDiv) => {
@@ -157,22 +182,42 @@ document
               // 카테고리를 저장해두기 위해 data-category 속성 추가
               image.dataset.category = recommendation.category;
             }
+            // // forEach문 돌면서 하트 추가.
+            const heart = categoryDiv.querySelector(".heart");
+            if (heart) {
+              heart.dataset.productIdx = r.idx;
+              heart.textContent = "♡";
+            }
           });
         });
         // DOM에 추가한 이미지들 다시 수집해서 저장
-        const savedRecommendations = [];
-        document.querySelectorAll(".product-image").forEach((img) => {
-          savedRecommendations.push({
-            src: img.src,
-            alt: img.alt,
-            category: img.dataset.category,
-          });
-        });
+        // const savedRecommendations = [];
+        // document.querySelectorAll(".product-image").forEach((img) => {
+        //   savedRecommendations.push({
+        //     src: img.src,
+        //     alt: img.alt,
+        //     category: img.dataset.category,
+        //   });
+        // });
         // localStorage에 저장
+        // localStorage.setItem(
+        //   "savedRecommendations",
+        //   JSON.stringify(savedRecommendations)
+        // );
+
+        // 수정된 로컬스토리지 저장방법
         localStorage.setItem(
           "savedRecommendations",
-          JSON.stringify(savedRecommendations)
+          JSON.stringify(
+            recommendation.map((r) => ({
+              src: r.image_url,
+              alt: `추천 상품 ${r.idx}`,
+              category: r.category,
+              productIdx: r.idx,
+            }))
+          )
         );
+
         console.log(JSON.parse(localStorage.getItem("savedRecommendations")));
       } else {
         console.log("추천 결과가 없습니다.");
@@ -219,32 +264,136 @@ document
       body: JSON.stringify({
         topColor: topColorPicker,
         bottomColor: bottomColorPicker,
+        level: weatherLevel,
       }),
     });
+    const result = await res.json();
+    if (res.ok) {
+      const recommendation = result.recommendedResult;
+      console.log("색상적용으로 받아온 결과:", recommendation);
+      if (recommendation) {
+        // 프론트 각 div에 뿌려주기
+        const categories = document.querySelectorAll(".category");
+        // 기존 이미지 제거
+        categories.forEach((categoryDiv) => {
+          categoryDiv.innerHTML = ""; // 내부 모든 요소 제거 (즉, 이전 이미지 초기화)
+        });
+        // 이미지 추가
+        recommendation.forEach((recommendation) => {
+          const image = document.createElement("img");
+          image.src = recommendation.image_url;
+          image.alt = `추천 상품 ${recommendation.idx}`;
+          image.classList.add("product-image"); // 스타일을 위해 클래스 추가 가능
+
+          // 해당 category에 맞는 DOM 요소에 추가
+          categories.forEach((categoryDiv) => {
+            if (categoryDiv.classList.contains(recommendation.category)) {
+              categoryDiv.appendChild(image);
+              // 카테고리를 저장해두기 위해 data-category 속성 추가
+              image.dataset.category = recommendation.category;
+            }
+          });
+        });
+        // DOM에 추가한 이미지들 다시 수집해서 저장
+        const savedRecommendations = [];
+        document.querySelectorAll(".product-image").forEach((img) => {
+          savedRecommendations.push({
+            src: img.src,
+            alt: img.alt,
+            category: img.dataset.category,
+          });
+        });
+        // localStorage에 저장
+        localStorage.setItem(
+          "savedRecommendations",
+          JSON.stringify(savedRecommendations)
+        );
+        console.log(JSON.parse(localStorage.getItem("savedRecommendations")));
+      } else {
+        console.log("추천 결과가 없습니다.");
+      }
+    } else {
+      console.log(result);
+    }
+
+    await markWishlisted();
   });
 
 // 로컬스토리지에 저장한 추천옷을 새로고침하면 다시 불러오는 기능.
+// function restoreRecommendationsFromLocalStorage() {
+//   const saved = localStorage.getItem("savedRecommendations");
+//   if (!saved) return;
+//   const savedRecommendations = JSON.parse(saved);
+//   const categories = document.querySelectorAll(".category");
+
+//   savedRecommendations.forEach((item) => {
+//     const image = document.createElement("img");
+//     image.src = item.src;
+//     image.alt = item.alt;
+//     image.classList.add("product-image");
+
+//     categories.forEach((categoryDiv) => {
+//       if (categoryDiv.classList.contains(item.category)) {
+//         categoryDiv.appendChild(image);
+//       }
+//     });
+//   });
+// }
 function restoreRecommendationsFromLocalStorage() {
   const saved = localStorage.getItem("savedRecommendations");
   if (!saved) return;
-
-  const savedRecommendations = JSON.parse(saved);
-  const categories = document.querySelectorAll(".category");
-
-  savedRecommendations.forEach((item) => {
-    const image = document.createElement("img");
-    image.src = item.src;
-    image.alt = item.alt;
-    image.classList.add("product-image");
-
-    categories.forEach((categoryDiv) => {
-      if (categoryDiv.classList.contains(item.category)) {
-        categoryDiv.appendChild(image);
-      }
+  const items = JSON.parse(saved);
+  items.forEach((it) => {
+    document.querySelectorAll(`.category.${it.category}`).forEach((div) => {
+      const img = document.createElement("img");
+      img.src = it.src;
+      img.alt = it.alt;
+      img.className = "product-image";
+      div.appendChild(img);
+      const heart = div.querySelector(".heart");
+      if (heart) heart.dataset.productIdx = it.productIdx;
     });
   });
 }
+//
+async function markWishlisted() {
+  if (!currentUserIdx) return;
+  const res = await protectedFetch(`/wish/mine?user_idx=${currentUserIdx}`);
+  if (!res.ok) return;
+  const wished = (await res.json()).map((w) => Number(w.product_idx));
+  document.querySelectorAll(".heart").forEach((h) => {
+    if (wished.includes(Number(h.dataset.productIdx)))
+      h.textContent = ":하트2:";
+  });
+}
+
+document.addEventListener("click", async (e) => {
+  if (!e.target.classList.contains("heart")) return;
+  if (!currentUserIdx) return alert("로그인 후 이용 가능합니다!");
+  const heart = e.target,
+    productIdx = heart.dataset.productIdx;
+  if (!productIdx) return alert("추천을 먼저 받아주세요!");
+  const like = heart.textContent === "♡";
+  heart.textContent = like ? ":하트2:" : "♡";
+  const body = { user_idx: currentUserIdx, product_idx: productIdx };
+  let res;
+  if (like) {
+    res = await protectedPost("/wish", body);
+    if (res.status === 400) return; // ★ 이미 담긴 상품
+  } else {
+    res = await protectedFetch("/wish", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+  }
+  if (!res.ok) {
+    alert("위시리스트 저장 실패");
+    heart.textContent = like ? "♡" : ":하트2:";
+  }
+});
 
 window.addEventListener("load", function () {
-  restoreRecommendationsFromLocalStorage(); // 너가 실행하고 싶은 함수
+  restoreRecommendationsFromLocalStorage();
+  markWishlisted();
 });
