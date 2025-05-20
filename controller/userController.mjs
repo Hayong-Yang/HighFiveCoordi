@@ -1,9 +1,12 @@
+import db from "../db/database.mjs";
 import * as authRepository from "../data/auth.mjs";
 import * as bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { config } from "../config.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
+import pkg from "coolsms-node-sdk";
+
 const secretKey = config.jwt.secretKey;
 const bcryptSaltRounds = config.bcrypt.saltRounds;
 const jwtExpiresInDays = config.jwt.expiresInSec;
@@ -11,8 +14,8 @@ const jwtExpiresInDays = config.jwt.expiresInSec;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-async function createJwtToken(idx) {
-  return jwt.sign({ idx }, secretKey, { expiresIn: jwtExpiresInDays });
+async function createJwtToken(idx, userid) {
+  return jwt.sign({ idx, userid }, secretKey, { expiresIn: jwtExpiresInDays });
 }
 
 // 회원가입 기능
@@ -38,10 +41,10 @@ export async function signUp(request, response, next) {
     email,
     phone
   );
-  const token = await createJwtToken(users.idx);
+  const token = await createJwtToken(users.idx, inputId);
   console.log(token);
   if (users) {
-    response.status(201).json({ token, inputId });
+    response.status(201).json({ token, userid: inputId });
   }
 }
 // 아이디 중복체크 기능
@@ -71,8 +74,8 @@ export async function logIn(request, response, next) {
   if (!isValidPassword) {
     return response.status(401).json({ message: "아이디 또는 비밀번호 확인" });
   }
-  const token = await createJwtToken(user.idx);
-  response.status(200).json({ token, inputId });
+  const token = await createJwtToken(user.idx, inputId);
+  response.status(200).json({ token, userid: inputId });
 }
 
 export async function verify(request, response, next) {
@@ -89,7 +92,52 @@ export async function me(request, response, next) {
   if (!user) {
     return response.status(404).json({ message: "일치하는 사용자가 없음" });
   }
-  response.status(200).json({ token: request.token, userId: user.userId });
+  response.status(200).json({ token: request.token, userid: user.userId });
+}
+
+// 아이디 찾기
+export async function findUserId(request, response, next) {
+  const { name, email } = request.body;
+
+  try {
+    const [rows] = await db.execute(
+      "SELECT userid FROM users WHERE name = ? AND email = ?",
+      [name, email]
+    );
+
+    if (rows.length > 0) {
+      response.json({ success: true, user_id: rows[0].userid });
+    } else {
+      response.json({
+        success: false,
+        message: "일치하는 정보가 없습니다.",
+      });
+    }
+  } catch (err) {
+    console.error(err);
+    response.status(500).json({ success: false, message: "서버 오류" });
+  }
+}
+
+// 비밀번호 찾기
+const Coolsms = pkg.default;
+
+const messageService = new Coolsms(
+  process.env.apiKey_pw,
+  process.env.apiSecret_pw
+);
+
+async function sendSMS() {
+  try {
+    const result = await sendSMS({
+      to: pwPhone, // 수신자 번호
+      from: process.env.senderNumber, // 발신번호
+      text: "인증번호 1234",
+    });
+    console.log("✅ 문자 전송 성공:", result);
+  } catch (error) {
+    console.error("❌ 문자 전송 오류:", error);
+  }
 }
 
 // 메인 > 로그인으로 이동
@@ -106,4 +154,14 @@ export async function toSignUp(request, response, next) {
 export async function logOut(request, response, next) {
   // 클라이언트 측에서 토큰 삭제를 맡기고, 메인 페이지로 리디렉션
   response.redirect("/");
+}
+
+// 아이디 찾기 페이지 렌더
+export async function toFindId(req, res, next) {
+  res.sendFile(path.resolve(__dirname, "../public/find-id.html"));
+}
+
+// 비밀번호 찾기 페이지 렌더
+export async function toFindPw(req, res, next) {
+  res.sendFile(path.resolve(__dirname, "../public/find-pw.html"));
 }

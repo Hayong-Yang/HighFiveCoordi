@@ -18,7 +18,10 @@ const __dirname = path.dirname(__filename);
 // 정적 라우터
 app.use(express.static(path.resolve(__dirname, "public")));
 app.use("/images", express.static(path.join(__dirname, "images")));
-
+app.use(
+  "/product_images",
+  express.static(path.join(__dirname, "product_images"))
+);
 // 미들웨어
 app.use(express.json()); // JSON 요청 처리
 app.use(express.urlencoded({ extended: true })); // 폼 데이터 처리

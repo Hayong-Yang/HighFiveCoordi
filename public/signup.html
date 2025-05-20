@@ -21,9 +21,6 @@
           <li>
             <a href="/auth/login" id="logIn">LogIn</a>
           </li>
-          <!--<li>
-            <a href="/auth/logout" id="logOut">LogOut</a>
-          </li>-->
         </ul>
       </div>
     </header>
@@ -39,13 +36,17 @@
         <input id="inputPw" type="password" placeholder="password" />
         <input id="name" type="name" placeholder="name" />
         <input id="email" type="email" placeholder="e-mail" />
-        <input id="phone" type="tel" placeholder="phone number" />
+        <input id="phone" type="tel" placeholder="010-0000-0000" />
         <label id="checkbox" class="checkbox">
           <input id="checkbox" type="checkbox" />
           이용약관 개인정보 수집 및 정보이용에 동의합니다.
         </label>
         <button id="SignUpBtn" type="button" class="submit-btn">Sign up</button>
       </form>
+      <div id="already">
+        계정이 이미 있는 경우에는
+        <a href="/auth/login" id="GoToLogIn">로그인 </a>해주세요.
+      </div>
     </main>
 
     <footer id="contact">

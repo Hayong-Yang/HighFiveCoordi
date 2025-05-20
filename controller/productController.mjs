@@ -32,7 +32,6 @@ export const getProductById = async (request, response) => {
             .json({ message: "상품 조회 실패", error: err.message });
     }
 };
-
 // 랜덤 상품 조회
 export const getProductByRandom = async (request, response) => {
     try {
@@ -49,21 +48,57 @@ export const getProductByRandom = async (request, response) => {
 
 // 상품 등록
 export const createProduct = async (req, res) => {
-    const { name, category, price, description, level, hotPick } = req.body;
+    const {
+        name,
+        category,
+        price,
+        description,
+        temp_level,
+        hue,
+        saturation,
+        lightness,
+        color,
+        image_url,
+        url
+    } = req.body;
+
+    // fakepath 제거 처리
+    const cleanFilename = image_url?.split('\\').pop() || null;
+
     try {
+        console.log(cleanFilename);
+        console.log("--------------------------------");
+        console.log(req.body)
         const [result] = await db.execute(
-            `INSERT INTO products (name, category, price, description, level, hotPick)
-       VALUES (?, ?, ?, ?, ?, ?)`,
-            [name, category, price, description, level ?? 1, hotPick ?? false]
+            `INSERT INTO products 
+            (name, category, price, description, temp_level, image_url, hue, saturation, lightness, color, url)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [
+                name,
+                category,
+                price,
+                description,
+                temp_level ?? 1,
+                cleanFilename ?? '',
+                hue ?? 0,
+                saturation ?? 0,
+                lightness ?? 0,
+                color ?? 'Unknown',
+                url ?? ''
+            ]
         );
         res.status(201).json({
             message: "상품 등록 성공",
             id: result.insertId,
         });
     } catch (err) {
-        res.status(500).json({ message: "상품 등록 실패", error: err.message });
+        res.status(500).json({
+            message: "상품 등록 실패",
+            error: err.message,
+        });
     }
 };
+
 
 // 상품 수정
 export const updateProduct = async (req, res) => {
