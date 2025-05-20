@@ -4,8 +4,8 @@ import {
   addToWishlist,
   removeFromWishlist,
   toWishlist,
-  getProductsJSON,
-  deleteProductsJSON,
+  // getProductsJSON,
+  // deleteProductsJSON,
 } from "../controller/wishlistController.mjs";
 
 const router = express.Router();

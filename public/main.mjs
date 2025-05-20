@@ -20,11 +20,11 @@ function isTokenExpired(token) {
   }
 }
 
-// 만료·인증 실패 시 강제 로그아웃
-function forceLogout(msg = "세션이 만료되었습니다. 다시 로그인해주세요.") {
-  alert(msg);
-  window.location.href = "/";
-}
+// // 만료·인증 실패 시 강제 로그아웃
+// function forceLogout(msg = "세션이 만료되었습니다. 다시 로그인해주세요.") {
+//   alert(msg);
+//   window.location.href = "/";
+// }
 
 /********************************************************************
  * 1.  초기 로그인 상태 판정 & 버튼 토글
@@ -39,11 +39,11 @@ const userIdDisplay = document.getElementById("userIdDisplay");
 let token = localStorage.getItem("token");
 let currentUserIdx = Number(localStorage.getItem("user_idx")) || null; // 위시리스트 용 현재 유저 idx
 
-// 만료된 토큰 발견 시 제거 + 강제 로그아웃
-if (token && isTokenExpired(token)) {
-  localStorage.removeItem("token");
-  forceLogout();
-}
+// // 만료된 토큰 발견 시 제거 + 강제 로그아웃
+// if (token && isTokenExpired(token)) {
+//   localStorage.removeItem("token");
+//   forceLogout();
+// }
 
 // 버튼 표시
 if (token) {
@@ -149,6 +149,7 @@ document
 
       // console.log(savedFeltTemperature);
       if (recommendation) {
+        console.log(recommendation);
         // console.log(recommendation.idx);
         // console.log(recommendation.category);
         // console.log(recommendation.image_url);
