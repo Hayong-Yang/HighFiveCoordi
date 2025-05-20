@@ -28,7 +28,8 @@ CREATE TABLE products (
     hue INT NOT NULL,               -- 0~360
     saturation INT NOT NULL,        -- 0~100
     lightness INT NOT NULL,         -- 0~100
-    image_url VARCHAR(255)              -- 이미지 경로
+    image_url VARCHAR(255),
+    url VARCHAR(255)
 );
 
 CREATE TABLE wishlists (
