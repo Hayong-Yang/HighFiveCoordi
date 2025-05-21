@@ -1,6 +1,5 @@
 let savedFeltTemperature; // 전역 변수 선언
 let weatherLevel;
-
 // Base64URL → Base64 디코딩
 function b64UrlDecode(str) {
   str = str.replace(/-/g, "+").replace(/_/g, "/");
@@ -20,6 +19,7 @@ function isTokenExpired(token) {
   }
 }
 
+
 // // 만료·인증 실패 시 강제 로그아웃
 // function forceLogout(msg = "세션이 만료되었습니다. 다시 로그인해주세요.") {
 //   alert(msg);
@@ -28,7 +28,7 @@ function isTokenExpired(token) {
 
 /********************************************************************
  * 1.  초기 로그인 상태 판정 & 버튼 토글
- ********************************************************************/
+********************************************************************/
 const signUpBtn = document.getElementById("signUp");
 const logInBtn = document.getElementById("logIn");
 const logOutBtn = document.getElementById("logOut");
@@ -38,6 +38,23 @@ const userIdDisplay = document.getElementById("userIdDisplay");
 
 let token = localStorage.getItem("token");
 let currentUserIdx = Number(localStorage.getItem("user_idx")) || null; // 위시리스트 용 현재 유저 idx
+
+const managerBtn = document.getElementById("manager");
+// 예: token에서 관리자 여부 판단
+let isManager = false;
+if (token) {
+  try {
+    const payload = JSON.parse(b64UrlDecode(token.split(".")[1]));
+    if (payload.userid === "admin") {
+      isManager = true;
+    }
+  } catch (e) {
+    console.error("토큰 디코딩 실패:", e);
+  }
+}
+if (!isManager) {
+  managerBtn.style.display = "none";
+}
 
 // // 만료된 토큰 발견 시 제거 + 강제 로그아웃
 // if (token && isTokenExpired(token)) {
