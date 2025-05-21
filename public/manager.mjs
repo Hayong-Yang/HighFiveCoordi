@@ -117,10 +117,12 @@ document.getElementById("submitBtn").addEventListener("click", async () => {
             body: JSON.stringify(data),
         });
 
+
         if (res.status !== 201) throw new Error("서버 응답 실패");
 
         const result = await res.json();
         alert("상품 등록 완료! ID: " + result.id);
+        window.location.href = "/manager.html";
     } catch (err) {
         console.error("상품 등록 실패:", err);
         alert("상품 등록 실패!");
