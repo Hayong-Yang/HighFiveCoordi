@@ -31,7 +31,6 @@ function forceLogout(msg = "로그인이 필요한 기능입니다.") {
  * 1.  초기 로그인 상태 판정 & 버튼 토글
  ********************************************************************/
 const signUpBtn = document.getElementById("signUp");
-ㄴ;
 const logInBtn = document.getElementById("logIn");
 const logOutBtn = document.getElementById("logOut");
 const wishlistBtn = document.getElementById("Wishlist");
