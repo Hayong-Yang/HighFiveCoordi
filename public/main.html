@@ -7,33 +7,37 @@
   <title>Main Page</title>
   <link rel="stylesheet" href="/main.css" />
   <script defer src="/weather.js"></script>
-  <script defer type="text/javascript" src="/main.mjs"></script>
+  <script defer type="module" src="/main.mjs"></script>
+  <script defer type="module" src="/mainRecommendFunction.mjs"></script>
 </head>
 
 <body>
   <header class="header">
     <div class="name">
-      <a href="#Highfive">High Five</a>
+      <a href="/">High Five</a>
     </div>
 
-      <div id="headerMenu">
-        <ul class="header__menu">
-          <li id="userIdDisplay" style="display: none"></li>
-          <li>
-            <a href="/auth/wishlist" id="Wishlist">WishList</a>
-          </li>
-          <li>
-            <a href="/auth/signup" id="signUp">SignUp</a>
-          </li>
-          <li>
-            <a href="/auth/login" id="logIn">LogIn</a>
-          </li>
-          <li>
-            <a href="/auth/logout" id="logOut">LogOut</a>
-          </li>
-        </ul>
-      </div>
-    </header>
+    <div id="headerMenu">
+      <ul class="header__menu">
+        <li id="userIdDisplay" style="display: none"></li>
+        <li>
+          <a href="/auth/wishlist" id="Wishlist">WishList</a>
+        </li>
+        <li>
+          <a href="/auth/signup" id="signUp">SignUp</a>
+        </li>
+        <li>
+          <a href="/auth/login" id="logIn">LogIn</a>
+        </li>
+        <li>
+          <a href="/auth/logout" id="logOut">LogOut</a>
+        </li>
+        <li>
+          <a href="/manager.html">manager</a>
+        </li>
+      </ul>
+    </div>
+  </header>
 
   <main>
     <section id="weather">
@@ -43,219 +47,159 @@
       </p>
 
       <div id="todayweather">
-        <h3>Today's weather</h3>
-        <div class="input-container">
-          <label for="base_date">기준 날짜:</label>
-          <input type="text" id="base_date" />
-          <input type="hidden" id="base_date_hidden" />
+        <div class="weather-container">
+          <!-- 왼쪽: 입력 영역 -->
+          <div class="weather_input">
+            <div class="form-row">
+              <label for="base_date">날짜 : </label>
+              <input type="text" id="base_date" />
+              <input type="hidden" id="base_date_hidden" />
+            </div>
 
-          <div class="time-box">
-            <label for="base_time">기준 시간:</label>
-            <select id="base_time">
-              <option value="0200">02:00</option>
-              <option value="0500">05:00</option>
-              <option value="0800">08:00</option>
-              <option value="1100">11:00</option>
-              <option value="1400">14:00</option>
-              <option value="1700">17:00</option>
-              <option value="2000">20:00</option>
-              <option value="2300">23:00</option>
-            </select>
+            <div class="form-row">
+              <label for="base_time">시간 : </label>
+              <select id="base_time">
+                <option value="0200">02:00</option>
+                <option value="0500">05:00</option>
+                <option value="0800">08:00</option>
+                <option value="1100">11:00</option>
+                <option value="1400">14:00</option>
+                <option value="1700">17:00</option>
+                <option value="2000">20:00</option>
+                <option value="2300">23:00</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <label for="base_city">지역 : </label>
+              <select id="base_city" onchange="setCityLocation()">
+                <option value="현위치">현위치</option>
+                <option value="서울">서울</option>
+                <option value="부산">부산</option>
+                <option value="대구">대구</option>
+                <option value="인천">인천</option>
+                <option value="광주">광주</option>
+                <option value="대전">대전</option>
+                <option value="울산">울산</option>
+              </select>
+            </div>
+
+            <div class="form-row row-nx-ny">
+              <div class="half">
+                <label for="nx">X : </label>
+                <input type="text" id="nx" />
+              </div>
+              <div class="half">
+                <label for="ny">Y : </label>
+                <input type="text" id="ny" />
+              </div>
+            </div>
+
+            <button id="doFetchDataButton">날씨 조회</button>
           </div>
 
-          <div class="city-box">
-            <label for="base_city">기준 도시:</label>
-            <select id="base_city" onchange="setCityLocation()">
-              <option value="도시 선택">도시 선택</option>
-              <option value="서울">서울</option>
-              <option value="부산">부산</option>
-              <option value="대구">대구</option>
-              <option value="인천">인천</option>
-              <option value="광주">광주</option>
-              <option value="대전">대전</option>
-              <option value="울산">울산</option>
-            </select>
-            <!--
-              <input type="text" id="city_name" />
-              <button onclick="setCityLocation()">도시로 설정</button>-->
+          <!-- 오른쪽: 결과 영역 -->
+          <div class="weather_result">
+            <h3>Weather</h3>
+            <div id="errorMessage"></div>
+
+            <div id="noDataMessage" class="response-data">
+              <div class="empty-emoji">🌤️</div>
+              <p>오늘의 날씨를 조회하려면</p>
+              <p>
+                오른쪽에서 정보를 입력해주시고, 날씨 조회 버튼을 눌러주세요!
+              </p>
+            </div>
+
+            <div id="result">
+              <ul id="responseData" class="response-data"></ul>
+            </div>
           </div>
-
-          <div class="nx-ny">
-            <label for="nx">X:</label>
-            <input type="text" id="nx" />
-
-            <label for="ny">Y:</label>
-            <input type="text" id="ny" />
-          </div>
-
-          <button id="doFetchDataButton">날씨 조회</button>
         </div>
-
-        <div id="errorMessage"></div>
-
-        <div id="result">
-          <div id="skySummary" class="sky-summary"></div>
-          <ul id="responseData" class="response-data"></ul>
-        </div>
+        <!-- 🔧 닫기 누락되어 있던 weather-container -->
       </div>
     </section>
 
-      <section id="recommend">
-        <div id="recommendations">
-          <button class="circle-btn left-btn arrow-button">&lsaquo;</button>
-          <!-- 왼쪽 화살표 버튼 -->
+    <section id="recommend">
+      <div id="recommendations">
+        <button class="circle-btn left-btn arrow-button">&lsaquo;</button>
+        <!-- 왼쪽 화살표 버튼 -->
 
-          <p id="showCoordi"></p>
-          <div class="left-col">
-            <div class="category etc">
-              <div class="heart" data-category="etc">♡</div>
-            </div>
-            <div class="category outer">
-              <div class="heart" data-category="outer">♡</div>
-            </div>
-            <div class="category shoes">
-              <div class="heart" data-category="shoes">♡</div>
-            </div>
+        <p id="showCoordi"></p>
+        <div class="left-col">
+          <div class="category etc">
+            <div class="heart" data-category="etc">♡</div>
           </div>
-          <div class="right-col">
-            <div class="category top">
-              <div class="heart" data-category="top">♡</div>
-            </div>
-            <div class="category pants">
-              <div class="heart" data-category="pants">♡</div>
-            </div>
+          <div class="category outer">
+            <div class="heart" data-category="outer">♡</div>
           </div>
-          <!-- 오른쪽 화살표 버튼 -->
-          <button class="circle-btn right-btn arrow-button">&rsaquo;</button>
+          <div class="category shoes">
+            <div class="heart" data-category="shoes">♡</div>
+          </div>
         </div>
-        <div id="filterSection">
-          <div id="personalColor">퍼스너컬러</div>
-          <!-- 커스텀 색상 선택 -->
-          <div id="custom">
-            <div class="custom-container">
-              <!-- 상의 섹션 -->
-              <div class="top-row">
-                <svg
-                  id="top-svg"
-                  viewBox="0 0 200 200"
-                  class="svg-icon"
-                  width="100"
-                  height="100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <!-- 몸통 -->
-                  <rect
-                    x="50"
-                    y="40"
-                    width="100"
-                    height="110"
-                    fill="#ffffff"
-                    stroke="#000"
-                    stroke-width="2"
-                    rx="15"
-                    ry="15"
-                  />
+        <div class="right-col">
+          <div class="category top">
+            <div class="heart" data-category="top">♡</div>
+          </div>
+          <div class="category pants">
+            <div class="heart" data-category="pants">♡</div>
+          </div>
+        </div>
+        <!-- 오른쪽 화살표 버튼 -->
+        <button class="circle-btn right-btn arrow-button">&rsaquo;</button>
+      </div>
+      <div id="filterSection">
+        <div id="personalColor">퍼스너컬러</div>
+        <!-- 커스텀 색상 선택 -->
+        <div id="custom">
+          <div class="custom-container">
+            <!-- 상의 섹션 -->
+            <div class="top-row">
+              <svg id="top-svg" viewBox="0 0 200 200" class="svg-icon" width="100" height="100"
+                xmlns="http://www.w3.org/2000/svg">
+                <!-- 몸통 -->
+                <rect x="50" y="40" width="100" height="110" fill="#ffffff" stroke="#000" stroke-width="2" rx="15"
+                  ry="15" />
 
-                  <!-- 좌우 반팔 -->
-                  <rect
-                    x="30"
-                    y="50"
-                    width="20"
-                    height="50"
-                    fill="#ffffff"
-                    stroke="#000"
-                    stroke-width="2"
-                    rx="8"
-                    ry="8"
-                  />
-                  <rect
-                    x="150"
-                    y="50"
-                    width="20"
-                    height="50"
-                    fill="#ffffff"
-                    stroke="#000"
-                    stroke-width="2"
-                    rx="8"
-                    ry="8"
-                  />
+                <!-- 좌우 반팔 -->
+                <rect x="30" y="50" width="20" height="50" fill="#ffffff" stroke="#000" stroke-width="2" rx="8"
+                  ry="8" />
+                <rect x="150" y="50" width="20" height="50" fill="#ffffff" stroke="#000" stroke-width="2" rx="8"
+                  ry="8" />
 
-                  <!-- 목 부분 -->
-                  <rect
-                    x="90"
-                    y="20"
-                    width="20"
-                    height="30"
-                    fill="none"
-                    stroke="#000"
-                    stroke-width="2"
-                    rx="8"
-                    ry="8"
-                  />
-                </svg>
-                <span class="color-label">상의 색상:</span>
-                <input type="color" id="topColorPicker" value="#ffffff" />
-              </div>
+                <!-- 목 부분 -->
+                <rect x="90" y="20" width="20" height="30" fill="none" stroke="#000" stroke-width="2" rx="8" ry="8" />
+              </svg>
+              <span class="color-label">상의 색상:</span>
+              <input type="color" id="topColorPicker" value="#ffffff" />
+            </div>
 
-              <!-- 하의 섹션 -->
-              <div class="pants-row">
-                <svg
-                  id="bottom-svg"
-                  viewBox="0 0 200 200"
-                  class="svg-icon"
-                  width="100"
-                  height="100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <!-- 허리 부분 -->
-                  <rect
-                    x="60"
-                    y="20"
-                    width="80"
-                    height="40"
-                    fill="#ffffff"
-                    stroke="#000"
-                    stroke-width="2"
-                    rx="12"
-                    ry="12"
-                  />
+            <!-- 하의 섹션 -->
+            <div class="pants-row">
+              <svg id="bottom-svg" viewBox="0 0 200 200" class="svg-icon" width="100" height="100"
+                xmlns="http://www.w3.org/2000/svg">
+                <!-- 허리 부분 -->
+                <rect x="60" y="20" width="80" height="40" fill="#ffffff" stroke="#000" stroke-width="2" rx="12"
+                  ry="12" />
 
-                  <!-- 좌우 다리 (사이 간격 띄움) -->
-                  <rect
-                    x="60"
-                    y="60"
-                    width="35"
-                    height="100"
-                    fill="#ffffff"
-                    stroke="#000"
-                    stroke-width="2"
-                    rx="10"
-                    ry="10"
-                  />
-                  <rect
-                    x="105"
-                    y="60"
-                    width="35"
-                    height="100"
-                    fill="#ffffff"
-                    stroke="#000"
-                    stroke-width="2"
-                    rx="10"
-                    ry="10"
-                  />
-                </svg>
-                <span class="color-label">하의 색상:</span>
-                <input type="color" id="bottomColorPicker" value="#ffffff" />
-              </div>
+                <!-- 좌우 다리 (사이 간격 띄움) -->
+                <rect x="60" y="60" width="35" height="100" fill="#ffffff" stroke="#000" stroke-width="2" rx="10"
+                  ry="10" />
+                <rect x="105" y="60" width="35" height="100" fill="#ffffff" stroke="#000" stroke-width="2" rx="10"
+                  ry="10" />
+              </svg>
+              <span class="color-label">하의 색상:</span>
+              <input type="color" id="bottomColorPicker" value="#ffffff" />
+            </div>
 
-              <!-- 적용 버튼 -->
-              <div class="button-row">
-                <button id="apply-btn">적용하기</button>
-              </div>
+            <!-- 적용 버튼 -->
+            <div class="button-row">
+              <button id="apply-btn">적용하기</button>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
     <section id="article">
       <h3 class="article__title">article</h3>

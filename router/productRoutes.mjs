@@ -2,16 +2,15 @@ import express from "express";
 import {
     getProductById,
     getProductByRandom,
-    createProduct,
-    deleteProductById,
+    createProduct
 } from "../controller/productController.mjs";
-import { isAuth } from "../middleware/auth.mjs";
+import { isAuth } from "../middleware/auth.mjs"
+
 
 const router = express.Router();
 
 router.get("/:id", getProductById);
 router.get("/random", getProductByRandom);
-router.post("/", isAuth, createProduct);
-router.delete("/:id", isAuth, deleteProductById);
+router.post("/createProduct", isAuth, createProduct)
 
 export default router;

@@ -82,7 +82,12 @@ document.getElementById("submitBtn").addEventListener("click", async () => {
     const price = parseInt(document.getElementById("price").value);
     const description = document.getElementById("description").value;
     const temp_level = parseInt(document.getElementById("level").value);
-    const url = preview.src;
+    const url = document.getElementById("url").value;
+
+    const file = imageInput.files[0];
+    const filename = file ? file.name : "default.png";  // fallback 가능
+    const image_url = `http://localhost:8080/product_images/${filename}`;
+
     const [hue, saturation, lightness] = hsl;
 
     const data = {
@@ -91,21 +96,28 @@ document.getElementById("submitBtn").addEventListener("click", async () => {
         price,
         description,
         temp_level,
-        url,
         hue,
         saturation,
         lightness,
-        color: colorName
+        color: colorName,
+        image_url,  // ✅ 이미지 URL 경로 직접 생성
+        url
     };
 
+    console.log("최종 요청 데이터:", data);
+
+    const token = localStorage.getItem("token");
     try {
-        const res = await fetch("/products/createProduct", {
+        const res = await fetch("/product/createProduct", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(data),
         });
 
-        if (!res.ok) throw new Error("서버 응답 실패");
+        if (res.status !== 201) throw new Error("서버 응답 실패");
 
         const result = await res.json();
         alert("상품 등록 완료! ID: " + result.id);
