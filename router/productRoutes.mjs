@@ -1,9 +1,9 @@
 import express from "express";
 import {
-  getProductById,
-  getProductByRandom,
-  createProduct,
-  getTopHotPicks,
+    getProductById,
+    getProductByRandom,
+    createProduct,
+    getTopHotPicks,
 } from "../controller/productController.mjs";
 import { isAuth } from "../middleware/auth.mjs";
 

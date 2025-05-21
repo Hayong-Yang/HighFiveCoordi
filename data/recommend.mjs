@@ -1,7 +1,6 @@
 import { db } from "../db/database.mjs";
 import { config } from "../config.mjs";
 import bcrypt from "bcrypt";
-import * as colorHarmony from "./colorHarmony.mjs";
 
 //now.getHours() → 정각으로 만든 현재 시각에서 시(hour) 만 추출 (0~23)
 // .toString() → 숫자를 문자열로 변환
@@ -33,58 +32,6 @@ export function rgbToHue(rgb) {
   //파랑이 가장 크면 Hue는 240 ~ 300도 범위
   else h = 60 * ((r - g) / (max - min)) + 240;
   return (h + 360) % 360;
-}
-
-//***************** 이거 사용 권장
-// RGB를 H S L 로 바꾸는 함수
-export function rgbToHSL(hex) {
-  // 1. 입력이 숫자 0이면 → 랜덤 HSL 반환
-  if (hex === 0) {
-    const h = Math.floor(Math.random() * 361); // 0~360
-    const s = Math.floor(Math.random() * 101); // 0~100
-    const l = Math.floor(Math.random() * 101); // 0~100
-    return { h, s, l };
-  }
-
-  // 2. 입력이 문자열인지 검사
-  if (typeof hex !== "string" || !hex.startsWith("#") || hex.length !== 7) {
-    console.warn("❌ 유효하지 않은 hex 입력값:", hex);
-    return { h: NaN, s: 0, l: 0 };
-  }
-
-  // 3. 문자열 HEX → RGB → HSL 변환
-  const r = parseInt(hex.substr(1, 2), 16) / 255;
-  const g = parseInt(hex.substr(3, 2), 16) / 255;
-  const b = parseInt(hex.substr(5, 2), 16) / 255;
-
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
-  const delta = max - min;
-
-  let l = (max + min) / 2;
-  let s = 0;
-  if (delta !== 0) {
-    s = delta / (1 - Math.abs(2 * l - 1));
-  }
-
-  let h = 0;
-  if (delta !== 0) {
-    if (max === r) {
-      h = ((g - b) / delta) % 6;
-    } else if (max === g) {
-      h = (b - r) / delta + 2;
-    } else {
-      h = (r - g) / delta + 4;
-    }
-    h *= 60;
-    if (h < 0) h += 360;
-  }
-
-  return {
-    h: Math.round(h),
-    s: Math.round(s * 100),
-    l: Math.round(l * 100),
-  };
 }
 
 export function calculateWindChill(temp, windSpeed) {

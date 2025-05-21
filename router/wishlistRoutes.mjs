@@ -1,11 +1,11 @@
 import express from "express";
 import {
-  getWishlistByUser,
-  addToWishlist,
-  removeFromWishlist,
-  toWishlist,
-  // getProductsJSON,
-  // deleteProductsJSON,
+    getWishlistByUser,
+    addToWishlist,
+    removeFromWishlist,
+    toWishlist,
+    // getProductsJSON,
+    // deleteProductsJSON,
 } from "../controller/wishlistController.mjs";
 
 const router = express.Router();

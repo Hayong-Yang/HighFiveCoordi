@@ -45,7 +45,6 @@ function getColorNameByHSL(h, s, l) {
     if (h < 270) return "Blue";
     if (h < 330) return "Purple";
     return "Red";
-
 }
 
 const imageInput = document.getElementById("imageInput");
