@@ -247,7 +247,7 @@ document
   .addEventListener("click", async function applyColors() {
     // 날씨 먼저 조회하도록 방어.
     if (typeof weatherLevel === "undefined" || weatherLevel === null) {
-      alert("🌤️ 먼저 날씨를 조회해주세요!");
+      alert("먼저 날씨를 조회해주세요!");
       return;
     }
     // 상의 색상
@@ -523,17 +523,33 @@ fetch("/product/hotpicks")
         console.warn(`div#pick${index + 1}가 존재하지 않습니다.`);
         return;
       }
+      const { image_url, url, name } = item;
 
       if (!item.image_url) {
         console.warn(`상품 ${index + 1}에 이미지 URL이 없습니다.`);
         return;
       }
 
+      // a 태그 생성
+      const link = document.createElement("a");
+      link.href = url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer"; // 보안상 추가
+
+      // img 태그 생성
       const img = document.createElement("img");
-      img.src = item.image_url;
-      img.alt = item.name || `pick${index + 1}`;
-      img.style.width = "100%"; // 필요 시 스타일 추가
-      div.appendChild(img);
+      img.src = image_url;
+      img.alt = name || `pick${index + 1}`;
+      img.style.width = "100%";
+      img.style.height = "100%";
+      img.style.objectFit = "cover";
+      img.style.borderRadius = "12px";
+
+      // 이미지 → 링크 안에 넣기
+      link.appendChild(img);
+
+      // div 안에 추가
+      div.appendChild(link);
     });
   })
   .catch((err) => {
