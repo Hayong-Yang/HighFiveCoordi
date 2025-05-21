@@ -37,7 +37,7 @@ function getClosestColorName([r, g, b]) {
     ];
 
     let minDist = Infinity;
-    let closest = "Unknown";
+    let closest = "Unknown"; $
 
     for (const c of colorMap) {
         const [cr, cg, cb] = c.rgb;
