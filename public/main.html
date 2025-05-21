@@ -1,347 +1,321 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Main Page</title>
-        <link rel="stylesheet" href="/main.css" />
-        <script defer src="/weather.js"></script>
-        <script defer type="module" src="/main.mjs"></script>
-        <script defer type="module" src="/mainRecommendFunction.mjs"></script>
-    </head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Main Page</title>
+    <link rel="stylesheet" href="/main.css" />
+    <script defer src="/weather.js"></script>
+    <script defer type="module" src="/main.mjs"></script>
+    <script defer type="module" src="/mainRecommendFunction.mjs"></script>
+  </head>
 
-    <body>
-        <header class="header">
-            <div class="name">
-                <a href="/">High Five</a>
+  <body>
+    <header class="header">
+      <div class="name">
+        <a href="/">High Five</a>
+      </div>
+
+      <div id="headerMenu">
+        <ul class="header__menu">
+          <li id="userIdDisplay" style="display: none"></li>
+          <li>
+            <a href="/auth/wishlist" id="Wishlist">WishList</a>
+          </li>
+          <li>
+            <a href="/auth/signup" id="signUp">SignUp</a>
+          </li>
+          <li>
+            <a href="/auth/login" id="logIn">LogIn</a>
+          </li>
+          <li>
+            <a href="/auth/logout" id="logOut">LogOut</a>
+          </li>
+          <li>
+            <a href="/manager.html">manager</a>
+          </li>
+        </ul>
+      </div>
+    </header>
+
+    <main>
+      <section id="weather">
+        <h2 class="weather__title">Today's pick!</h2>
+        <p class="weather__description">
+          오늘의 날씨에 맞는 트렌디한 옷을 추천해드립니다!
+        </p>
+
+        <div id="todayweather">
+          <div class="weather-container">
+            <!-- 왼쪽: 입력 영역 -->
+            <div class="weather_input">
+              <div class="form-row">
+                <label for="base_date">날짜 : </label>
+                <input type="text" id="base_date" />
+                <input type="hidden" id="base_date_hidden" />
+              </div>
+
+              <div class="form-row">
+                <label for="base_time">시간 : </label>
+                <select id="base_time">
+                  <option value="0200">02:00</option>
+                  <option value="0500">05:00</option>
+                  <option value="0800">08:00</option>
+                  <option value="1100">11:00</option>
+                  <option value="1400">14:00</option>
+                  <option value="1700">17:00</option>
+                  <option value="2000">20:00</option>
+                  <option value="2300">23:00</option>
+                </select>
+              </div>
+
+              <div class="form-row">
+                <label for="base_city">지역 : </label>
+                <select id="base_city" onchange="setCityLocation()">
+                  <option value="현위치">현위치</option>
+                  <option value="서울">서울</option>
+                  <option value="부산">부산</option>
+                  <option value="대구">대구</option>
+                  <option value="인천">인천</option>
+                  <option value="광주">광주</option>
+                  <option value="대전">대전</option>
+                  <option value="울산">울산</option>
+                </select>
+              </div>
+
+              <div class="form-row row-nx-ny">
+                <div class="half">
+                  <label for="nx">X : </label>
+                  <input type="text" id="nx" />
+                </div>
+                <div class="half">
+                  <label for="ny">Y : </label>
+                  <input type="text" id="ny" />
+                </div>
+              </div>
+
+              <button id="doFetchDataButton">날씨 조회</button>
             </div>
 
-            <div id="headerMenu">
-                <ul class="header__menu">
-                    <li id="userIdDisplay" style="display: none"></li>
-                    <li>
-                        <a href="/auth/wishlist" id="Wishlist">WishList</a>
-                    </li>
-                    <li>
-                        <a href="/auth/signup" id="signUp">SignUp</a>
-                    </li>
-                    <li>
-                        <a href="/auth/login" id="logIn">LogIn</a>
-                    </li>
-                    <li>
-                        <a href="/auth/logout" id="logOut">LogOut</a>
-                    </li>
-                    <li>
-                        <a href="/manager.html">manager</a>
-                    </li>
-                </ul>
-            </div>
-        </header>
+            <!-- 오른쪽: 결과 영역 -->
+            <div class="weather_result">
+              <h3>Weather</h3>
+              <div id="errorMessage"></div>
 
-        <main>
-            <section id="weather">
-                <h2 class="weather__title">Today's pick!</h2>
-                <p class="weather__description">
-                    오늘의 날씨에 맞는 트렌디한 옷을 추천해드립니다!
+              <div id="noDataMessage" class="response-data">
+                <div class="empty-emoji">🌤️</div>
+                <p>오늘의 날씨를 조회하려면</p>
+                <p>
+                  오른쪽에서 정보를 입력해주시고, 날씨 조회 버튼을 눌러주세요!
                 </p>
+              </div>
 
-                <div id="todayweather">
-                    <div class="weather-container">
-                        <!-- 왼쪽: 입력 영역 -->
-                        <div class="weather_input">
-                            <div class="form-row">
-                                <label for="base_date">날짜 : </label>
-                                <input type="text" id="base_date" />
-                                <input type="hidden" id="base_date_hidden" />
-                            </div>
-
-                            <div class="form-row">
-                                <label for="base_time">시간 : </label>
-                                <select id="base_time">
-                                    <option value="0200">02:00</option>
-                                    <option value="0500">05:00</option>
-                                    <option value="0800">08:00</option>
-                                    <option value="1100">11:00</option>
-                                    <option value="1400">14:00</option>
-                                    <option value="1700">17:00</option>
-                                    <option value="2000">20:00</option>
-                                    <option value="2300">23:00</option>
-                                </select>
-                            </div>
-
-                            <div class="form-row">
-                                <label for="base_city">지역 : </label>
-                                <select
-                                    id="base_city"
-                                    onchange="setCityLocation()"
-                                >
-                                    <option value="현위치">현위치</option>
-                                    <option value="서울">서울</option>
-                                    <option value="부산">부산</option>
-                                    <option value="대구">대구</option>
-                                    <option value="인천">인천</option>
-                                    <option value="광주">광주</option>
-                                    <option value="대전">대전</option>
-                                    <option value="울산">울산</option>
-                                </select>
-                            </div>
-
-                            <div class="form-row row-nx-ny">
-                                <div class="half">
-                                    <label for="nx">X : </label>
-                                    <input type="text" id="nx" />
-                                </div>
-                                <div class="half">
-                                    <label for="ny">Y : </label>
-                                    <input type="text" id="ny" />
-                                </div>
-                            </div>
-
-                            <button id="doFetchDataButton">날씨 조회</button>
-                        </div>
-
-                        <!-- 오른쪽: 결과 영역 -->
-                        <div class="weather_result">
-                            <h3>Weather</h3>
-                            <div id="errorMessage"></div>
-
-                            <div id="noDataMessage" class="response-data">
-                                <div class="empty-emoji">🌤️</div>
-                                <p>오늘의 날씨를 조회하려면</p>
-                                <p>
-                                    오른쪽에서 정보를 입력해주시고, 날씨 조회
-                                    버튼을 눌러주세요!
-                                </p>
-                            </div>
-
-                            <div id="result">
-                                <ul
-                                    id="responseData"
-                                    class="response-data"
-                                ></ul>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- 🔧 닫기 누락되어 있던 weather-container -->
-                </div>
-            </section>
-
-            <section id="recommend">
-                <div id="recommendations">
-                    <button class="circle-btn left-btn arrow-button">
-                        &lsaquo;
-                    </button>
-                    <!-- 왼쪽 화살표 버튼 -->
-
-                    <p id="showCoordi"></p>
-                    <div class="left-col">
-                        <div class="category etc">
-                            <div class="heart" data-category="etc">♡</div>
-                        </div>
-                        <div class="category outer">
-                            <div class="heart" data-category="outer">♡</div>
-                        </div>
-                        <div class="category shoes">
-                            <div class="heart" data-category="shoes">♡</div>
-                        </div>
-                    </div>
-                    <div class="right-col">
-                        <div class="category top">
-                            <div class="heart" data-category="top">♡</div>
-                        </div>
-                        <div class="category pants">
-                            <div class="heart" data-category="pants">♡</div>
-                        </div>
-                    </div>
-                    <!-- 오른쪽 화살표 버튼 -->
-                    <button class="circle-btn right-btn arrow-button">
-                        &rsaquo;
-                    </button>
-                </div>
-                <div id="filterSection">
-                    <div id="personalColor">퍼스너컬러</div>
-                    <!-- 커스텀 색상 선택 -->
-                    <div id="custom">
-                        <div class="custom-container">
-                            <!-- 상의 섹션 -->
-                            <div class="top-row">
-                                <svg
-                                    id="top-svg"
-                                    viewBox="0 0 200 200"
-                                    class="svg-icon"
-                                    width="100"
-                                    height="100"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <!-- 몸통 -->
-                                    <rect
-                                        x="50"
-                                        y="40"
-                                        width="100"
-                                        height="110"
-                                        fill="#ffffff"
-                                        stroke="#000"
-                                        stroke-width="2"
-                                        rx="15"
-                                        ry="15"
-                                    />
-
-                                    <!-- 좌우 반팔 -->
-                                    <rect
-                                        x="30"
-                                        y="50"
-                                        width="20"
-                                        height="50"
-                                        fill="#ffffff"
-                                        stroke="#000"
-                                        stroke-width="2"
-                                        rx="8"
-                                        ry="8"
-                                    />
-                                    <rect
-                                        x="150"
-                                        y="50"
-                                        width="20"
-                                        height="50"
-                                        fill="#ffffff"
-                                        stroke="#000"
-                                        stroke-width="2"
-                                        rx="8"
-                                        ry="8"
-                                    />
-
-                                    <!-- 목 부분 -->
-                                    <rect
-                                        x="90"
-                                        y="20"
-                                        width="20"
-                                        height="30"
-                                        fill="none"
-                                        stroke="#000"
-                                        stroke-width="2"
-                                        rx="8"
-                                        ry="8"
-                                    />
-                                </svg>
-                                <span class="color-label">상의 색상:</span>
-                                <input
-                                    type="color"
-                                    id="topColorPicker"
-                                    value="#ffffff"
-                                />
-                            </div>
-
-                            <!-- 하의 섹션 -->
-                            <div class="pants-row">
-                                <svg
-                                    id="bottom-svg"
-                                    viewBox="0 0 200 200"
-                                    class="svg-icon"
-                                    width="100"
-                                    height="100"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <!-- 허리 부분 -->
-                                    <rect
-                                        x="60"
-                                        y="20"
-                                        width="80"
-                                        height="40"
-                                        fill="#ffffff"
-                                        stroke="#000"
-                                        stroke-width="2"
-                                        rx="12"
-                                        ry="12"
-                                    />
-
-                                    <!-- 좌우 다리 (사이 간격 띄움) -->
-                                    <rect
-                                        x="60"
-                                        y="60"
-                                        width="35"
-                                        height="100"
-                                        fill="#ffffff"
-                                        stroke="#000"
-                                        stroke-width="2"
-                                        rx="10"
-                                        ry="10"
-                                    />
-                                    <rect
-                                        x="105"
-                                        y="60"
-                                        width="35"
-                                        height="100"
-                                        fill="#ffffff"
-                                        stroke="#000"
-                                        stroke-width="2"
-                                        rx="10"
-                                        ry="10"
-                                    />
-                                </svg>
-                                <span class="color-label">하의 색상:</span>
-                                <input
-                                    type="color"
-                                    id="bottomColorPicker"
-                                    value="#ffffff"
-                                />
-                            </div>
-
-                            <!-- 적용 버튼 -->
-                            <div class="button-row">
-                                <button id="apply-btn">적용하기</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="article">
-                <h3 class="article__title">article</h3>
-                <div class="article">
-                    <div class="article_1">
-                        <img src="" alt="article_1" />
-                        <p>광고</p>
-                        <p>광고 상세 설명</p>
-                    </div>
-                    <div class="article_2">
-                        <img src="" alt="article_2" />
-                        <p>광고</p>
-                        <p>광고 상세 설명</p>
-                    </div>
-                </div>
-            </section>
-
-            <section id="Hotpick">
-                <h3>핫한 픽</h3>
-                <img src="" alt="pick1" />
-                <img src="" alt="pick2" />
-                <img src="" alt="pick3" />
-            </section>
-
-            <section id="share">
-                <h3>공유하기</h3>
-                <button>카카오톡 공유하기</button>
-            </section>
-        </main>
-
-        <footer id="contact">
-            <h3>High Five</h3>
-            <hr />
-            <div class="contact__info">
-                <p>사업자 정보</p>
-                <p>법적 고지사항</p>
-                <p>파트너 지원</p>
-                <p>고객 지원</p>
+              <div id="result">
+                <ul id="responseData" class="response-data"></ul>
+              </div>
             </div>
-            <div class="copy">&copy; Highfive ALL RIGHTS RESERVED</div>
-            <p>개인정보처리방침·이용약관·결제대행 위탁사</p>
-            <p>
-                일부 상품의 경우 주식회사 하이파이브는 통신판매의 당사자가 아닌
-                통신판매중개자로서 상품, 상품정보, 거래에 대한 책임이 제한될 수
-                있으므로, 각 상품 페이지에서 구체적인 내용을 확인하시기
-                바랍니다.
-            </p>
-            <img class="icons" src="/images/icons.png" alt="icons" />
-        </footer>
-    </body>
+          </div>
+          <!-- 🔧 닫기 누락되어 있던 weather-container -->
+        </div>
+      </section>
+
+      <section id="recommend">
+        <div id="recommendations">
+          <button class="circle-btn left-btn arrow-button">&lsaquo;</button>
+          <!-- 왼쪽 화살표 버튼 -->
+
+          <p id="showCoordi"></p>
+          <div class="left-col">
+            <div class="category etc">
+              <div class="heart" data-category="etc">♡</div>
+            </div>
+            <div class="category outer">
+              <div class="heart" data-category="outer">♡</div>
+            </div>
+            <div class="category shoes">
+              <div class="heart" data-category="shoes">♡</div>
+            </div>
+          </div>
+          <div class="right-col">
+            <div class="category top">
+              <div class="heart" data-category="top">♡</div>
+            </div>
+            <div class="category pants">
+              <div class="heart" data-category="pants">♡</div>
+            </div>
+          </div>
+          <!-- 오른쪽 화살표 버튼 -->
+          <button class="circle-btn right-btn arrow-button">&rsaquo;</button>
+        </div>
+        <div id="filterSection">
+          <div id="personalColor">퍼스너컬러</div>
+          <!-- 커스텀 색상 선택 -->
+          <div id="custom">
+            <div class="custom-container">
+              <!-- 상의 섹션 -->
+              <div class="top-row">
+                <svg
+                  id="top-svg"
+                  viewBox="0 0 200 200"
+                  class="svg-icon"
+                  width="100"
+                  height="100"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <!-- 몸통 -->
+                  <rect
+                    x="50"
+                    y="40"
+                    width="100"
+                    height="110"
+                    fill="#ffffff"
+                    stroke="#000"
+                    stroke-width="2"
+                    rx="15"
+                    ry="15"
+                  />
+
+                  <!-- 좌우 반팔 -->
+                  <rect
+                    x="30"
+                    y="50"
+                    width="20"
+                    height="50"
+                    fill="#ffffff"
+                    stroke="#000"
+                    stroke-width="2"
+                    rx="8"
+                    ry="8"
+                  />
+                  <rect
+                    x="150"
+                    y="50"
+                    width="20"
+                    height="50"
+                    fill="#ffffff"
+                    stroke="#000"
+                    stroke-width="2"
+                    rx="8"
+                    ry="8"
+                  />
+
+                  <!-- 목 부분 -->
+                  <rect
+                    x="90"
+                    y="20"
+                    width="20"
+                    height="30"
+                    fill="none"
+                    stroke="#000"
+                    stroke-width="2"
+                    rx="8"
+                    ry="8"
+                  />
+                </svg>
+                <span class="color-label">상의 색상:</span>
+                <input type="color" id="topColorPicker" value="#ffffff" />
+              </div>
+
+              <!-- 하의 섹션 -->
+              <div class="pants-row">
+                <svg
+                  id="bottom-svg"
+                  viewBox="0 0 200 200"
+                  class="svg-icon"
+                  width="100"
+                  height="100"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <!-- 허리 부분 -->
+                  <rect
+                    x="60"
+                    y="20"
+                    width="80"
+                    height="40"
+                    fill="#ffffff"
+                    stroke="#000"
+                    stroke-width="2"
+                    rx="12"
+                    ry="12"
+                  />
+
+                  <!-- 좌우 다리 (사이 간격 띄움) -->
+                  <rect
+                    x="60"
+                    y="60"
+                    width="35"
+                    height="100"
+                    fill="#ffffff"
+                    stroke="#000"
+                    stroke-width="2"
+                    rx="10"
+                    ry="10"
+                  />
+                  <rect
+                    x="105"
+                    y="60"
+                    width="35"
+                    height="100"
+                    fill="#ffffff"
+                    stroke="#000"
+                    stroke-width="2"
+                    rx="10"
+                    ry="10"
+                  />
+                </svg>
+                <span class="color-label">하의 색상:</span>
+                <input type="color" id="bottomColorPicker" value="#ffffff" />
+              </div>
+
+              <!-- 적용 버튼 -->
+              <div class="button-row">
+                <button id="apply-btn">적용하기</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="Hotpick">
+        <h3>Hotpick</h3>
+        <div class="pick" id="pick1"></div>
+        <div class="pick" id="pick2"></div>
+        <div class="pick" id="pick3"></div>
+      </section>
+
+      <section id="article">
+        <h3 class="article__title">article</h3>
+        <div class="article">
+          <div class="article_1">
+            <img src="../images/광고1.png" alt="article_1" />
+          </div>
+          <div class="article_2">
+            <img src="../images/광고2.png" alt="article_2" />
+          </div>
+          <div class="article_3">
+            <img src="../images/광고3.png" alt="article_3" />
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer id="contact">
+      <h3>High Five</h3>
+      <hr />
+      <div class="contact__info">
+        <p>사업자 정보</p>
+        <p>법적 고지사항</p>
+        <p>파트너 지원</p>
+        <p>고객 지원</p>
+      </div>
+      <div class="copy">&copy; Highfive ALL RIGHTS RESERVED</div>
+      <p>개인정보처리방침·이용약관·결제대행 위탁사</p>
+      <p>
+        일부 상품의 경우 주식회사 하이파이브는 통신판매의 당사자가 아닌
+        통신판매중개자로서 상품, 상품정보, 거래에 대한 책임이 제한될 수
+        있으므로, 각 상품 페이지에서 구체적인 내용을 확인하시기 바랍니다.
+      </p>
+      <img class="icons" src="/images/icons.png" alt="icons" />
+    </footer>
+  </body>
 </html>
