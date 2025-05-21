@@ -500,7 +500,8 @@ main {
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  overflow: hidden; /* 이미지 넘침 방지 */
+  /* overflow: hidden; */ /* 삭제 또는 아래처럼 변경 */
+  overflow: visible;
   position: relative;
 }
 
@@ -535,9 +536,49 @@ main {
   font-size: 24px;
   cursor: pointer;
   transition: transform 0.2s;
+  z-index: 3; /* 이미지 위로 올라오도록 */
 }
 .heart:hover {
   transform: scale(1.1);
+}
+
+/* 사진 호버시 url 띄우기 & 실제 사이트로 이동 */
+.product-link {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%; /* 반드시 height 확보 */
+  overflow: hidden; /* 내부에서만 잘리게 */
+}
+/* 이미지 */
+.product-link img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute; /* 텍스트와 겹치지 않도록 */
+  top: 0;
+  left: 0;
+}
+
+.product-link::after {
+  content: "구매자 사이트로 이동하시겠습니까?";
+  position: absolute;
+  bottom: -30px;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 6px 0;
+  font-size: 13px;
+  text-align: center;
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 2;
+  pointer-events: none;
+}
+.product-link:hover::after {
+  bottom: 0;
+  opacity: 1;
 }
 
 /* filterSection 내부 요소 간단 스타일 */
