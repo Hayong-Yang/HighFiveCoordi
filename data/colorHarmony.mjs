@@ -121,7 +121,7 @@ export async function getClothesfromDB(hueTargets, level) {
 
   for (const target of hueTargets) {
     const [rows] = await db.query(
-      `SELECT idx, category, image_url FROM products 
+      `SELECT idx, category, image_url, url FROM products 
        WHERE category = ? AND temp_level = ? AND LEAST(ABS(hue - ?), 360 - ABS(hue - ?)) < 20 
        ORDER BY RAND() LIMIT 1`,
       [target.category, level, target.hue, target.hue]

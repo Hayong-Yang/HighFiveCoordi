@@ -31,35 +31,21 @@ function rgbToHsl(r, g, b) {
     return [Math.round(h), Math.round(s * 100), Math.round(l * 100)];
 }
 
-function getClosestColorName([r, g, b]) {
-    const colorMap = [
-        { name: "Red", rgb: [255, 0, 0] },
-        { name: "Green", rgb: [0, 255, 0] },
-        { name: "Blue", rgb: [0, 0, 255] },
-        { name: "Yellow", rgb: [255, 255, 0] },
-        { name: "Cyan", rgb: [0, 255, 255] },
-        { name: "Magenta", rgb: [255, 0, 255] },
-        { name: "Black", rgb: [0, 0, 0] },
-        { name: "White", rgb: [255, 255, 255] },
-        { name: "Gray", rgb: [128, 128, 128] },
-        { name: "Orange", rgb: [255, 165, 0] },
-        { name: "Pink", rgb: [255, 192, 203] },
-        { name: "Purple", rgb: [128, 0, 128] },
-        { name: "Brown", rgb: [165, 42, 42] },
-    ];
-
-    let minDist = Infinity;
-    let closest = "Unknown";
-
-    for (const c of colorMap) {
-        const [cr, cg, cb] = c.rgb;
-        const dist = Math.sqrt((r - cr) ** 2 + (g - cg) ** 2 + (b - cb) ** 2);
-        if (dist < minDist) {
-            minDist = dist;
-            closest = c.name;
-        }
-    }
-    return closest;
+function getColorNameByHSL(h, s, l) {
+    if (s < 15 && l < 20) return "Black";
+    if (s < 15 && l > 80) return "White";
+    if (s < 15) return "Gray";
+    if (h >= 20 && h <= 50 && s < 50 && l > 65) return "Beige";
+    if (h < 30) return "Red";
+    if (h < 60) return "Orange";
+    if (h < 90) return "Yellow";
+    if (h < 150) return "Green";
+    if (h < 180) return "Turquoise";
+    if (h < 210) return "Cyan";
+    if (h < 270) return "Blue";
+    if (h < 330) return "Purple";
+    return "Red";
+>>>>>>>>> Temporary merge branch 2
 }
 
 const imageInput = document.getElementById("imageInput");
