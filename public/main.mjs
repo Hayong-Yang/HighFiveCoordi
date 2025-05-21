@@ -20,16 +20,18 @@ function isTokenExpired(token) {
   }
 }
 
-// // 만료·인증 실패 시 강제 로그아웃
-// function forceLogout(msg = "세션이 만료되었습니다. 다시 로그인해주세요.") {
-//   alert(msg);
-//   window.location.href = "/";
-// }
+function forceLogout(msg = "로그인이 필요한 기능입니다.") {
+  if (sessionStorage.getItem("alreadyLoggedOut")) return;
+  sessionStorage.setItem("alreadyLoggedOut", "1");
+  alert(msg);
+  window.location.href = "/";
+}
 
 /********************************************************************
  * 1.  초기 로그인 상태 판정 & 버튼 토글
  ********************************************************************/
 const signUpBtn = document.getElementById("signUp");
+ㄴ;
 const logInBtn = document.getElementById("logIn");
 const logOutBtn = document.getElementById("logOut");
 const wishlistBtn = document.getElementById("Wishlist");
@@ -244,6 +246,11 @@ document
 document
   .getElementById("apply-btn")
   .addEventListener("click", async function applyColors() {
+    // 날씨 먼저 조회하도록 방어.
+    if (typeof weatherLevel === "undefined" || weatherLevel === null) {
+      alert("🌤️ 먼저 날씨를 조회해주세요!");
+      return;
+    }
     // 상의 색상
     const topColor = document.getElementById("topColorPicker").value;
     const topSvg = document.getElementById("top-svg");
@@ -256,27 +263,27 @@ document
       }
     });
 
-    // 하의 색상
-    const bottomColor = document.getElementById("bottomColorPicker").value;
-    const bottomSvg = document.getElementById("bottom-svg");
-    const bottomRects = bottomSvg.querySelectorAll("rect");
+    // // 하의 색상
+    // const bottomColor = document.getElementById("bottomColorPicker").value;
+    // const bottomSvg = document.getElementById("bottom-svg");
+    // const bottomRects = bottomSvg.querySelectorAll("rect");
 
-    bottomRects.forEach((rect) => {
-      rect.setAttribute("fill", bottomColor);
-    });
+    // bottomRects.forEach((rect) => {
+    //   rect.setAttribute("fill", bottomColor);
+    // });
 
     // POST: 적용하기 버튼 누르면 사용자가 선택한 색상 rgb값을 바탕으로 옷 추천화면이 새로고침 되는 기능
     const topColorPicker = document.getElementById("topColorPicker").value;
-    const bottomColorPicker =
-      document.getElementById("bottomColorPicker").value;
-    console.log("상의색상:", topColorPicker, "하의 색상:", bottomColorPicker);
+    // const bottomColorPicker =
+    //   document.getElementById("bottomColorPicker").value;
+    // console.log("상의색상:", topColorPicker, "하의 색상:", bottomColorPicker);
 
     const res = await fetch("/recommend/reloadByColor", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         topColor: topColorPicker,
-        bottomColor: bottomColorPicker,
+        // bottomColor: bottomColorPicker,
         level: weatherLevel,
       }),
     });
@@ -535,6 +542,11 @@ fetch("/product/hotpicks")
   });
 
 window.addEventListener("load", function () {
+  sessionStorage.removeItem("alreadyLoggedOut"); // 새로고침 또는 재방문 시 초기화
   restoreRecommendationsFromLocalStorage();
-  markWishlisted();
+  // ❷ 토큰 확인 후 markWishlisted 실행
+  const token = localStorage.getItem("token");
+  if (token && !isTokenExpired(token)) {
+    markWishlisted();
+  }
 });
