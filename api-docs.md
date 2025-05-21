@@ -94,18 +94,17 @@ HighFiveCoordi 프로젝트는 기온에 따른 스타일 코디 추천 서비�
 
 ---
 
-
 ## 1. 🧑 사용자 인증 API
 
 ### UserController
 
-#### 회원가입 API
+### 회원가입 API
 
 - **URL**: `/api/auth/signup`
 - **Method**: `POST`
 - **Headers**:  
 
-#### Request Body
+### 요청 바디
 
 ```json
 {
@@ -129,7 +128,7 @@ HighFiveCoordi 프로젝트는 기온에 따른 스타일 코디 추천 서비�
 | hiddenIdCheck  | string    | ✅   | 아이디 중복 확인 여부 (`y` 필수)  |
 | ischecked      | boolean   | ✅   | 개인정보 동의 여부 (`true` 필수)  |
 
-### Success Response (201)
+### 요청 성공 (201)
 
 ```json
 {
@@ -138,9 +137,9 @@ HighFiveCoordi 프로젝트는 기온에 따른 스타일 코디 추천 서비�
 }
 ```
 
-### Error Response (401)
+### 요청 실패 (401)
 
-#### - 중복확인 안함
+### _중복확인 안함_
 
 ```json
 {
@@ -148,7 +147,7 @@ HighFiveCoordi 프로젝트는 기온에 따른 스타일 코디 추천 서비�
 }
 ```
 
-#### - 개인정보 동의 안함
+###  _개인정보 동의 안함_
 
 ```json
 {
@@ -158,14 +157,14 @@ HighFiveCoordi 프로젝트는 기온에 따른 스타일 코디 추천 서비�
 
 ---
 
-### 🔍 아이디 중복 확인 API
+### 아이디 중복 확인 API
 
 - **URL**: `/api/auth/check-id`
 - **Method**: `POST`
 - **Headers**:  
   `Content-Type: application/json`
 
-### Request Body
+### _요청 바디_
 
 ```json
 {
@@ -173,21 +172,99 @@ HighFiveCoordi 프로젝트는 기온에 따른 스타일 코디 추천 서비�
 }
 ```
 
-### Success Response (200)
+### _사용 가능한 아이디 (200)_
 
 ```json
 {
-  "available": true
+  "message": "testuser는 사용가능합니다."
 }
 ```
 
-### Error Response (409)
+### _이미 존재하는 아이디  (409)_
 
 ```json
 {
-  "message": "이미 존재하는 아이디입니다."
+  "message": "testuser이 이미 있습니다."
 }
 ```
+### _아이디가 입려되지 않은 경우 (400)_
+
+```json
+{
+  "message": "아이디를 입력해주세요."
+}
+```
+##  로그인 API
+
+사용자가 입력한 아이디(`inputId`)와 비밀번호(`inputPw`)를 확인하여,  
+정상 인증되면 **JWT 토큰을 생성해 응답**하는 로그인 기능입니다.
+
+---
+
+### 요청 개요
+
+- **Method**: `POST`
+- **Endpoint**: `/auth/login`
+- **Content-Type**: `application/json`
+
+---
+
+### 요청 바디
+
+```json
+{
+  "inputId": "testuser",
+  "inputPw": "12345678"
+}
+```
+### 요청 예시
+
+### _요청 성공 (200)_
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "userid": "testuser"
+}
+```
+이 토큰을 localStorage, cookie, 또는 Authorization 헤더에 저장하여
+이후 인증된 요청에 활용할 수 있습니다.
+
+### _아이디 존재하지 않음 (401)_
+```json
+"testuser 아이디를 찾을 수 없음"
+```
+
+### _비밀번호 불일치 (401)_
+```json
+{
+  "message":"아이디 또는 비밀번호 확인"
+}
+```
+###  인증 확인 및 내 정보 조회 API
+
+### 사용자 인증 확인 (`/auth/verify`)
+
+요청에 포함된 JWT 토큰에서 사용자 ID가 추출되었는지 확인합니다.  
+주로 로그인 상태 확인, 인증된 사용자 전용 기능 활성화 등에 사용됩니다.
+
+---
+
+### 요청 개요
+
+- **Method**: `GET`
+- **Endpoint**: `/auth/verify`
+- **Headers**:
+  ```http
+  Authorization: Bearer {JWT_TOKEN}
+  ```
+
+
+
+
+
+
+
+
 ### Data.Auth
 
 

@@ -127,13 +127,3 @@ export const deleteProduct = async (req, res) => {
         res.status(500).json({ message: "상품 삭제 실패", error: err.message });
     }
 };
-
-export const deleteProductById = async (req, res) => {
-    const productId = req.params.id;
-    try {
-        await db.execute("DELETE FROM products WHERE id = ?", [productId]);
-        res.json({ message: "상품 삭제 성공" });
-    } catch (err) {
-        res.status(500).json({ message: "상품 삭제 실패", error: err.message });
-    }
-};
