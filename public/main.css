@@ -153,6 +153,11 @@ main {
 }
 
 /* 날씨 섹션 */
+#weather {
+  border-top: 1px solid var(--clr-border);
+  border-bottom: 1px solid var(--clr-border);
+}
+
 .title_desc_box {
   background-color: #111;
   border: 1px solid #111;
@@ -486,6 +491,8 @@ main {
   display: flex;
   flex-direction: row;
   height: 800px;
+  border-top: 1px solid var(--clr-border);
+  border-bottom: 1px solid var(--clr-border);
 }
 #recommendations {
   flex: 7;
@@ -545,18 +552,23 @@ main {
 /* 크기 비율 설정 */
 .etc {
   height: 25%;
+  /* background: url("/category4.png") no-repeat center center / cover; */
 }
 .outer {
   height: 45%;
+  /* background: url("/category5.png") no-repeat center center / cover; */
 }
 .shoes {
   height: 25%;
+  /* background: url("/category2.png") no-repeat center center / cover; */
 }
 .top {
   height: 48.5%;
+  /* background: url("/category3.png") no-repeat center center / cover; */
 }
 .pants {
   height: 48%;
+  /* background: url("/category1.png") no-repeat center center / cover; */
 }
 
 .heart {
@@ -628,11 +640,29 @@ main {
   box-shadow: 0rem 0rem 0.5rem rgba(0, 0, 0, 0.15);
 }
 #personalColor {
-  flex: 4;
+  flex: 4.5;
+  margin-bottom: 15px;
+  padding: 5px;
+  max-width: 600px; /* 이거 제한하고 싶으면 유지 */
+  width: 100%; /* 추가 */
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  box-shadow: 0rem 0rem 0.5rem rgba(0, 0, 0, 0.15);
+}
+#re_recommend {
+  background-color: #999999;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 10px;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 #custom {
-  flex: 6;
+  flex: 5.5;
   margin-bottom: 15px;
   padding: 5px;
   max-width: 600px; /* 이거 제한하고 싶으면 유지 */

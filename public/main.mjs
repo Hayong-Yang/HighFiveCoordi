@@ -241,6 +241,100 @@ document
     // await markWishlisted();
   });
 
+// POST 옷 다시 추천 기능 **************
+// re_recommend
+document
+  .getElementById("re_recommend")
+  .addEventListener("click", async function ReRecommend() {
+    // 날씨 먼저 조회하도록 방어.
+    if (typeof weatherLevel === "undefined" || weatherLevel === null) {
+      alert("먼저 날씨를 조회해주세요!");
+      return;
+    }
+    const res = await fetch("/recommend/again", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        level: weatherLevel,
+      }),
+    });
+    const result = await res.json();
+    if (!res.ok || !result) return console.log("추천결과가 없습니다.");
+
+    if (res.ok) {
+      const recommendation = result.recommendedResult;
+
+      if (recommendation) {
+        console.log("받은결과: ", recommendation);
+        // 프론트 각 div에 뿌려주기
+        const categories = document.querySelectorAll(".category");
+        // 기존 이미지 제거
+        categories.forEach((categoryDiv) => {
+          categoryDiv
+            .querySelectorAll("a.product-link")
+            .forEach((link) => link.remove());
+        });
+        // 기존 하트제거
+        document.querySelectorAll(".heart").forEach((h) => {
+          h.textContent = "♡";
+          delete h.dataset.productIdx; // ★
+        });
+
+        // 새 이미지 추가
+        recommendation.forEach((recommendation) => {
+          const image = document.createElement("img");
+          image.src = recommendation.image_url;
+          image.alt = `추천 상품 ${recommendation.idx}`;
+          image.classList.add("product-image"); // 스타일을 위해 클래스 추가 가능
+
+          // 링크만들기
+          const link = document.createElement("a");
+          link.href = recommendation.url; // 여기에 판매 링크 URL 삽입
+          link.target = "_blank"; // 새 탭에서 열기
+          link.classList.add("product-link");
+
+          link.appendChild(image); // 링크태그 안에 이미지 태그삽입
+
+          // 해당 category에 맞는 DOM 요소에 추가
+          categories.forEach((categoryDiv) => {
+            if (categoryDiv.classList.contains(recommendation.category)) {
+              categoryDiv.appendChild(link); // <a><img></a> 구조로 삽입
+              // 카테고리를 저장해두기 위해 data-category 속성 추가
+              image.dataset.category = recommendation.category;
+            }
+            // // forEach문 돌면서 하트 추가.
+            const heart = categoryDiv.querySelector(".heart");
+            if (heart) {
+              heart.dataset.productIdx = recommendation.idx;
+              heart.textContent = "♡";
+            }
+          });
+        });
+
+        // 수정된 로컬스토리지 저장방법
+        localStorage.setItem(
+          "savedRecommendations",
+          JSON.stringify(
+            recommendation.map((r) => ({
+              src: r.image_url,
+              alt: `추천 상품 ${r.idx}`,
+              category: r.category,
+              productIdx: r.idx,
+              url: r.url, // 추가
+            }))
+          )
+        );
+
+        console.log(JSON.parse(localStorage.getItem("savedRecommendations")));
+      } else {
+        console.log("추천 결과가 없습니다.");
+      }
+    } else {
+      console.log(result);
+    }
+    // await markWishlisted();
+  });
+
 // 옷 색상 적용 기능
 document
   .getElementById("apply-btn")
@@ -558,7 +652,7 @@ fetch("/product/hotpicks")
 
 window.addEventListener("load", function () {
   sessionStorage.removeItem("alreadyLoggedOut"); // 새로고침 또는 재방문 시 초기화
-  restoreRecommendationsFromLocalStorage();
+  // restoreRecommendationsFromLocalStorage();
   // ❷ 토큰 확인 후 markWishlisted 실행
   const token = localStorage.getItem("token");
   if (token && !isTokenExpired(token)) {
