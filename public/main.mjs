@@ -156,8 +156,12 @@ document
         // 프론트 각 div에 뿌려주기
         const categories = document.querySelectorAll(".category");
         // 기존 이미지 제거
+        // categories.forEach((categoryDiv) => {
+        //   categoryDiv.innerHTML = ""; // 내부 모든 요소 제거 (즉, 이전 이미지 초기화)
+        // });
         categories.forEach((categoryDiv) => {
-          categoryDiv.innerHTML = ""; // 내부 모든 요소 제거 (즉, 이전 이미지 초기화)
+          // 이미지만 제거
+          categoryDiv.querySelectorAll("img").forEach((img) => img.remove());
         });
         // 기존 하트제거
         document.querySelectorAll(".heart").forEach((h) => {
@@ -172,9 +176,6 @@ document
           image.alt = `추천 상품 ${recommendation.idx}`;
           image.classList.add("product-image"); // 스타일을 위해 클래스 추가 가능
 
-          // // 새 하트 추가
-          // const heart = div.querySelector(".heart");
-
           // 해당 category에 맞는 DOM 요소에 추가
           categories.forEach((categoryDiv) => {
             if (categoryDiv.classList.contains(recommendation.category)) {
@@ -185,7 +186,7 @@ document
             // // forEach문 돌면서 하트 추가.
             const heart = categoryDiv.querySelector(".heart");
             if (heart) {
-              heart.dataset.productIdx = r.idx;
+              heart.dataset.productIdx = recommendation.idx;
               heart.textContent = "♡";
             }
           });
@@ -225,6 +226,7 @@ document
     } else {
       console.log(result);
     }
+    // await markWishlisted();
   });
 
 // 옷 색상 적용 기능
@@ -268,17 +270,25 @@ document
       }),
     });
     const result = await res.json();
+    if (!res.ok || !result) return console.log("추천결과가 없습니다.");
+
     if (res.ok) {
       const recommendation = result.recommendedResult;
-      console.log("색상적용으로 받아온 결과:", recommendation);
       if (recommendation) {
+        console.log(recommendation);
         // 프론트 각 div에 뿌려주기
         const categories = document.querySelectorAll(".category");
         // 기존 이미지 제거
         categories.forEach((categoryDiv) => {
-          categoryDiv.innerHTML = ""; // 내부 모든 요소 제거 (즉, 이전 이미지 초기화)
+          categoryDiv.querySelectorAll("img").forEach((img) => img.remove());
         });
-        // 이미지 추가
+        // 기존 하트제거
+        document.querySelectorAll(".heart").forEach((h) => {
+          h.textContent = "♡";
+          delete h.dataset.productIdx; // ★
+        });
+
+        // 새 이미지 추가
         recommendation.forEach((recommendation) => {
           const image = document.createElement("img");
           image.src = recommendation.image_url;
@@ -292,22 +302,27 @@ document
               // 카테고리를 저장해두기 위해 data-category 속성 추가
               image.dataset.category = recommendation.category;
             }
+            // // forEach문 돌면서 하트 추가.
+            const heart = categoryDiv.querySelector(".heart");
+            if (heart) {
+              heart.dataset.productIdx = recommendation.idx;
+              heart.textContent = "♡";
+            }
           });
         });
-        // DOM에 추가한 이미지들 다시 수집해서 저장
-        const savedRecommendations = [];
-        document.querySelectorAll(".product-image").forEach((img) => {
-          savedRecommendations.push({
-            src: img.src,
-            alt: img.alt,
-            category: img.dataset.category,
-          });
-        });
-        // localStorage에 저장
+        // 수정된 로컬스토리지 저장방법
         localStorage.setItem(
           "savedRecommendations",
-          JSON.stringify(savedRecommendations)
+          JSON.stringify(
+            recommendation.map((r) => ({
+              src: r.image_url,
+              alt: `추천 상품 ${r.idx}`,
+              category: r.category,
+              productIdx: r.idx,
+            }))
+          )
         );
+
         console.log(JSON.parse(localStorage.getItem("savedRecommendations")));
       } else {
         console.log("추천 결과가 없습니다.");
@@ -315,8 +330,7 @@ document
     } else {
       console.log(result);
     }
-
-    await markWishlisted();
+    // await markWishlisted();
   });
 
 // 로컬스토리지에 저장한 추천옷을 새로고침하면 다시 불러오는 기능.
@@ -362,8 +376,7 @@ async function markWishlisted() {
   if (!res.ok) return;
   const wished = (await res.json()).map((w) => Number(w.product_idx));
   document.querySelectorAll(".heart").forEach((h) => {
-    if (wished.includes(Number(h.dataset.productIdx)))
-      h.textContent = ":하트2:";
+    if (wished.includes(Number(h.dataset.productIdx))) h.textContent = "❤️";
   });
 }
 
@@ -374,7 +387,7 @@ document.addEventListener("click", async (e) => {
     productIdx = heart.dataset.productIdx;
   if (!productIdx) return alert("추천을 먼저 받아주세요!");
   const like = heart.textContent === "♡";
-  heart.textContent = like ? ":하트2:" : "♡";
+  heart.textContent = like ? "❤️" : "♡";
   const body = { user_idx: currentUserIdx, product_idx: productIdx };
   let res;
   if (like) {
@@ -389,7 +402,7 @@ document.addEventListener("click", async (e) => {
   }
   if (!res.ok) {
     alert("위시리스트 저장 실패");
-    heart.textContent = like ? "♡" : ":하트2:";
+    heart.textContent = like ? "♡" : "❤️";
   }
 });
 
