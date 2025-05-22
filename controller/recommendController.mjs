@@ -81,6 +81,26 @@ export async function recommendClothes(request, response, next) {
     }
 }
 
+// 다시 추천 버튼 누르면 날씨 기반으로 옷 다시 추천
+// recommendAgain
+export async function recommendAgain(request, response, next) {
+  try {
+    const { level } = request.body;
+    const pickedColor = 0;
+
+    const recommendedResult = await colorHarmony.getRecommendations(
+      pickedColor,
+      level
+    );
+    return response.status(200).json({
+      recommendedResult,
+    });
+  } catch (err) {
+    console.error(err);
+    response.status(500).json({ error: "날씨 데이터를 불러오는 중 오류 발생" });
+  }
+}
+
 // 사용자가 색상적용하기 누르면 옷 추천화면을 새롭게 띄우는 기능
 export async function reloadClothes(request, response, next) {
     try {
