@@ -32,7 +32,7 @@ export async function recommendClothes(request, response, next) {
     const data = await res.json();
     // console.log("data", data);
     const items = data.response.body.items.item;
-    console.log("items", items);
+    // console.log("items", items);
     const tmpItem = items.find(
       (item) => item.category === "TMP" && item.baseTime === baseTime
     );
@@ -60,13 +60,14 @@ export async function recommendClothes(request, response, next) {
     // 선택없다면  pickedColor= 0 으로 우선 설정
     const pickedColor = 0;
 
-    const recommendedResult = await colorHarmony.getRecommendations(
+    const { recommendations, strategy } = await colorHarmony.getRecommendations(
       pickedColor,
       level
     );
     // console.log("백에서 보내는 결과: ", recommendedResult);
     return response.status(200).json({
-      recommendedResult,
+      recommendedResult: recommendations,
+      strategy,
       temperature: parseFloat(realTemperature),
       windSpeed: parseFloat(windSpeed),
       rainPercent: parseFloat(rainPercent),
@@ -75,9 +76,7 @@ export async function recommendClothes(request, response, next) {
     });
   } catch (err) {
     console.error(err);
-    response
-      .status(500)
-      .json({ error: "날씨 데이터를 불러오는 중 오류 발생" });
+    response.status(500).json({ error: "날씨 데이터를 불러오는 중 오류 발생" });
   }
 }
 
@@ -88,12 +87,13 @@ export async function recommendAgain(request, response, next) {
     const { level } = request.body;
     const pickedColor = 0;
 
-    const recommendedResult = await colorHarmony.getRecommendations(
+    const { recommendations, strategy } = await colorHarmony.getRecommendations(
       pickedColor,
       level
     );
     return response.status(200).json({
-      recommendedResult,
+      recommendedResult: recommendations,
+      strategy,
     });
   } catch (err) {
     console.error(err);
@@ -109,17 +109,15 @@ export async function reloadClothes(request, response, next) {
     // console.log("상의색상:", topColor, "하의 색상:", bottomColor);
     // console.log("받아온 체감온도 레벨", level);
 
-    const recommendedResult = await colorHarmony.getRecommendations(
+    const { recommendations, strategy } = await colorHarmony.getRecommendations(
       topColor,
       level
     );
-    return response.status(200).json({
-      recommendedResult,
-    });
+    return response
+      .status(200)
+      .json({ recommendedResult: recommendations, strategy });
   } catch (err) {
     console.error(err);
-    response
-      .status(500)
-      .json({ error: "날씨 데이터를 불러오는 중 오류 발생" });
+    response.status(500).json({ error: "날씨 데이터를 불러오는 중 오류 발생" });
   }
 }

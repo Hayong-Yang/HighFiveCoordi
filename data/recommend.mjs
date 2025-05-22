@@ -101,12 +101,19 @@ export function calculateWindChill(temp, windSpeed) {
   return Math.round(windChill * 10) / 10;
 }
 
-// 레벨 만드는 함수
+// // 레벨 만드는 함수
+// export function getTempLevel(windChill) {
+//   if (windChill >= 23) return 3; // 더운 날씨
+//   if (windChill >= 10) return 2; // 보통 날씨
+//   return 1;
+// }
+// 레벨 만드는 함수 시연용 임시로 수정해서 사용
 export function getTempLevel(windChill) {
-  if (windChill >= 23) return 3; // 더운 날씨
+  if (windChill >= 19) return 3; // 더운 날씨
   if (windChill >= 10) return 2; // 보통 날씨
   return 1;
 }
+
 // 옷 타입 랜덤 설정
 export function getRecommendationType(topHue, bottomHue) {
   if (topHue !== undefined && bottomHue !== undefined) {

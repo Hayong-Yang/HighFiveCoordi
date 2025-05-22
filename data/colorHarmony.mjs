@@ -150,22 +150,25 @@ export async function getRecommendations(pickedColor, level) {
     recommendStrategies[Math.floor(Math.random() * recommendStrategies.length)];
 
   // 랜덤 전략 실행 → [{ category, hue }, ...]
-  //   const hueTargets = randomStrategy(baseColor);
+  const hueTargets = randomStrategy(baseColor);
   //*********************************************************************
   // similarHarmony만 수행하도록 잠시 바꿔둠!!!
   //*********************************************************************
-  const hueTargets = similarHarmony(baseColor);
+  // const hueTargets = similarHarmony(baseColor);
 
   console.log("베이스컬러", baseColor);
-  //   console.log(randomStrategy);
-  console.log(similarHarmony);
+  console.log(randomStrategy);
+  // console.log(similarHarmony);
   console.log("hueTargets:", hueTargets);
   //   hueTargets.forEach((t) =>
   //     console.log(`[${t.category}] hue=${t.hue} (${typeof t.hue})`)
   //   );
 
   const { recommendations } = await getClothesfromDB(hueTargets, level);
-  return recommendations;
+  return {
+    recommendations,
+    strategy: randomStrategy.name, // 👈 알고리즘 이름 추가
+  };
   //   return {
   //     recommendations: results,
   //     baseColor,

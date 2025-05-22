@@ -1,6 +1,7 @@
 let savedFeltTemperature; // 전역 변수 선언
 let weatherLevel;
-const serverHost = "http://192.168.162.220:8080";
+// const serverHost = "http://192.168.162.220:8080";
+const serverHost = "http://localhost:8080";
 
 // Base64URL → Base64 디코딩
 function b64UrlDecode(str) {
@@ -391,6 +392,26 @@ document
     if (res.ok) {
       const recommendation = result.recommendedResult;
       if (recommendation) {
+        // 추천 알고리즘 텍스트
+        const strategyName = result.strategy;
+        const strategyDisplayMap = {
+          similarHarmony: "유사 색상 추천",
+          complementaryHarmony: "보색 추천",
+          triadicHarmony: "삼각 조화 추천",
+        };
+        const imageMap = {
+          similarHarmony: "/analogous.png",
+          complementaryHarmony: "complementary.png",
+          triadicHarmony: "/triad.png",
+        };
+        document.getElementById(
+          "custom-color-textbox"
+        ).innerHTML = `적용된 알고리즘: ${
+          strategyDisplayMap[strategyName] || strategyName
+        } <br><img src="${
+          imageMap[strategyName]
+        }" alt="${strategyName}" style="width: 60px; vertical-align: middle;" />`;
+
         console.log("받은결과: ", recommendation);
         // 프론트 각 div에 뿌려주기
         const categories = document.querySelectorAll(".category");
