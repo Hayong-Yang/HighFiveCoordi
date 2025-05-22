@@ -4,6 +4,7 @@ import userRoutes from "./router/userRoutes.mjs";
 import productRoutes from "./router/productRoutes.mjs";
 import wishlistRoutes from "./router/wishlistRoutes.mjs";
 import recommendRoutes from "./router/recommendRoutes.mjs";
+import managerRoutes from "./router/managerRoutes.mjs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { config } from "./config.mjs";
@@ -31,6 +32,7 @@ app.use("/auth", userRoutes);
 app.use("/product", productRoutes);
 app.use("/wish", wishlistRoutes);
 app.use("/recommend", recommendRoutes);
+app.use("/manager", managerRoutes);
 
 // 기본 라우터
 app.get("/", (req, res) => {

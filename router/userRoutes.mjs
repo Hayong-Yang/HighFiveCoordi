@@ -6,6 +6,7 @@ import bcrypt from "bcrypt";
 import CoolsmsPkg from "coolsms-node-sdk";
 import dotenv from "dotenv";
 import { config } from "../config.mjs";
+import jwt from "jsonwebtoken";
 
 import {
   logIn,
@@ -115,7 +116,7 @@ router.post("/sendSms", async (req, res) => {
 
 // 인증번호 확인
 router.post("/verifyCode", (req, res) => {
-  const { pwPhone, code } = req.body;
+  const { pwPhone, code, pwId } = req.body;
 
   if (!authCodes.has(pwPhone)) {
     return res
@@ -127,17 +128,26 @@ router.post("/verifyCode", (req, res) => {
   if (storedCode !== code) {
     return res.status(400).json({ message: "인증번호가 일치하지 않습니다." });
   }
+  const tmpToken = jwt.sign({ userId: pwId }, process.env.JWT_SECRET, {
+    expiresIn: "1h",
+  });
 
   authCodes.delete(pwPhone);
-  res.status(200).json({ message: "인증 성공" });
+  res.status(200).json({ message: "인증 성공", tmpToken });
 });
 
 // 비밀번호 재설정 (bcrypt 적용)
 router.post("/resetPassword", async (req, res) => {
-  const { userId, newPassword } = req.body;
-
+  const { userId, newPassword, tmpToken } = req.body;
+  console.log("tmpToken", tmpToken);
   if (!userId || !newPassword) {
     return res.status(400).json({ message: "필수 항목이 누락되었습니다." });
+  }
+  if (!tmpToken) {
+    return res.status(400).json({ message: "임시 토큰이 누락되었습니다." });
+  }
+  if (!jwt.verify(tmpToken, process.env.JWT_SECRET)) {
+    return res.status(400).json({ message: "임시 토큰이 유효하지 않습니다." });
   }
 
   try {

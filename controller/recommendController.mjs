@@ -10,7 +10,6 @@ const secretKey = config.jwt.secretKey;
 const bcryptSaltRounds = config.bcrypt.saltRounds;
 const jwtExpiresInDays = config.jwt.expiresInSec;
 const weatherApiServiceKey = config.weatherAPI.servicekey;
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -31,7 +30,9 @@ export async function recommendClothes(request, response, next) {
 
     const res = await fetch(url);
     const data = await res.json();
+    // console.log("data", data);
     const items = data.response.body.items.item;
+    console.log("items", items);
     const tmpItem = items.find(
       (item) => item.category === "TMP" && item.baseTime === baseTime
     );
@@ -74,6 +75,28 @@ export async function recommendClothes(request, response, next) {
     });
   } catch (err) {
     console.error(err);
+    response
+      .status(500)
+      .json({ error: "날씨 데이터를 불러오는 중 오류 발생" });
+  }
+}
+
+// 다시 추천 버튼 누르면 날씨 기반으로 옷 다시 추천
+// recommendAgain
+export async function recommendAgain(request, response, next) {
+  try {
+    const { level } = request.body;
+    const pickedColor = 0;
+
+    const recommendedResult = await colorHarmony.getRecommendations(
+      pickedColor,
+      level
+    );
+    return response.status(200).json({
+      recommendedResult,
+    });
+  } catch (err) {
+    console.error(err);
     response.status(500).json({ error: "날씨 데이터를 불러오는 중 오류 발생" });
   }
 }
@@ -95,6 +118,8 @@ export async function reloadClothes(request, response, next) {
     });
   } catch (err) {
     console.error(err);
-    response.status(500).json({ error: "날씨 데이터를 불러오는 중 오류 발생" });
+    response
+      .status(500)
+      .json({ error: "날씨 데이터를 불러오는 중 오류 발생" });
   }
 }
