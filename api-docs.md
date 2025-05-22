@@ -17,10 +17,10 @@ HighFiveCoordi 프로젝트는 날씨 맞춤형 스타일 코디 추천 서비�
 
 ### 작성 배경
 HighFiveCoordi 프로젝트는 기온에 따른 스타일 코디 추천 서비스를 목표로 개발되었습니다. 다양한 온도, 색상, 스타일 로직을 기반으로 상품을 선별·추천하여, 프론트엔드 와 효율적인 데이터 교환을 지원합니다.
-
+---
+---
 ## 📚 API 문서 목차
 
----
 
 ### 1. 🧑 사용자 인증 API
 | 구성 요소         | 설명                         |
@@ -91,27 +91,27 @@ HighFiveCoordi 프로젝트는 기온에 따른 스타일 코디 추천 서비�
 | 구성 요소       | 설명                     |
 |------------------|--------------------------|
 | **app**           | Express 서버 초기화 및 라우터 연결 |
-
+---
 ---
 
 ## 1. 🧑 사용자 인증 API
 
 ### UserController
 
-### 회원가입 API
+#### 회원가입 API
 
 - **URL**: `/api/auth/signup`
 - **Method**: `POST`
 - **Headers**:  
 
-### 요청 바디
+##### 요청 바디
 
 ```json
 {
   "inputId": "testuser",
   "inputPw": "1234",
-  "name": "홍길동",
-  "email": "test@example.com",
+  "name": "김사과",
+  "email": "apple@example.com",
   "phone": "01012345678",
   "hiddenIdCheck": "y",
   "ischecked": true
@@ -128,7 +128,7 @@ HighFiveCoordi 프로젝트는 기온에 따른 스타일 코디 추천 서비�
 | hiddenIdCheck  | string    | ✅   | 아이디 중복 확인 여부 (`y` 필수)  |
 | ischecked      | boolean   | ✅   | 개인정보 동의 여부 (`true` 필수)  |
 
-### 요청 성공 (201)
+##### 요청 성공 (201)
 
 ```json
 {
@@ -137,9 +137,9 @@ HighFiveCoordi 프로젝트는 기온에 따른 스타일 코디 추천 서비�
 }
 ```
 
-### 요청 실패 (401)
+##### 요청 실패 (401)
 
-### _중복확인 안함_
+##### _중복확인 안함_
 
 ```json
 {
@@ -147,7 +147,7 @@ HighFiveCoordi 프로젝트는 기온에 따른 스타일 코디 추천 서비�
 }
 ```
 
-###  _개인정보 동의 안함_
+#####  _개인정보 동의 안함_
 
 ```json
 {
@@ -157,14 +157,14 @@ HighFiveCoordi 프로젝트는 기온에 따른 스타일 코디 추천 서비�
 
 ---
 
-### 아이디 중복 확인 API
+##### 아이디 중복 확인 API
 
 - **URL**: `/api/auth/check-id`
 - **Method**: `POST`
 - **Headers**:  
   `Content-Type: application/json`
 
-### _요청 바디_
+##### _요청 바디_
 
 ```json
 {
@@ -172,7 +172,7 @@ HighFiveCoordi 프로젝트는 기온에 따른 스타일 코디 추천 서비�
 }
 ```
 
-### _사용 가능한 아이디 (200)_
+##### _사용 가능한 아이디 (200)_
 
 ```json
 {
@@ -180,28 +180,29 @@ HighFiveCoordi 프로젝트는 기온에 따른 스타일 코디 추천 서비�
 }
 ```
 
-### _이미 존재하는 아이디  (409)_
+##### _이미 존재하는 아이디  (409)_
 
 ```json
 {
   "message": "testuser이 이미 있습니다."
 }
 ```
-### _아이디가 입려되지 않은 경우 (400)_
+##### _아이디가 입려되지 않은 경우 (400)_
 
 ```json
 {
   "message": "아이디를 입력해주세요."
 }
 ```
-##  로그인 API
+---
+####  로그인 API
 
 사용자가 입력한 아이디(`inputId`)와 비밀번호(`inputPw`)를 확인하여,  
 정상 인증되면 **JWT 토큰을 생성해 응답**하는 로그인 기능입니다.
 
 ---
 
-### 요청 개요
+#### 요청 개요
 
 - **Method**: `POST`
 - **Endpoint**: `/auth/login`
@@ -209,7 +210,7 @@ HighFiveCoordi 프로젝트는 기온에 따른 스타일 코디 추천 서비�
 
 ---
 
-### 요청 바디
+##### 요청 바디
 
 ```json
 {
@@ -217,9 +218,9 @@ HighFiveCoordi 프로젝트는 기온에 따른 스타일 코디 추천 서비�
   "inputPw": "12345678"
 }
 ```
-### 요청 예시
+##### 요청 예시
 
-### _요청 성공 (200)_
+##### _요청 성공 (200)_
 ```json
 {
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
@@ -229,27 +230,27 @@ HighFiveCoordi 프로젝트는 기온에 따른 스타일 코디 추천 서비�
 이 토큰을 localStorage, cookie, 또는 Authorization 헤더에 저장하여
 이후 인증된 요청에 활용할 수 있습니다.
 
-### _아이디 존재하지 않음 (401)_
+##### _아이디 존재하지 않음 (401)_
 ```json
 "testuser 아이디를 찾을 수 없음"
 ```
 
-### _비밀번호 불일치 (401)_
+##### _비밀번호 불일치 (401)_
 ```json
 {
   "message":"아이디 또는 비밀번호 확인"
 }
 ```
-###  인증 확인 및 내 정보 조회 API
+####  인증 확인 및 내 정보 조회 API
 
-### 사용자 인증 확인 (`/auth/verify`)
+##### 사용자 인증 확인 (`/auth/verify`)
 
 요청에 포함된 JWT 토큰에서 사용자 ID가 추출되었는지 확인합니다.  
 주로 로그인 상태 확인, 인증된 사용자 전용 기능 활성화 등에 사용됩니다.
 
 ---
 
-### 요청 개요
+#### 요청 개요
 
 - **Method**: `GET`
 - **Endpoint**: `/auth/verify`
@@ -257,32 +258,369 @@ HighFiveCoordi 프로젝트는 기온에 따른 스타일 코디 추천 서비�
   ```http
   Authorization: Bearer {JWT_TOKEN}
   ```
+####  처리 흐름
+
+1. **JWT 인증 미들웨어 작동**
+   - `Authorization: Bearer <token>` 헤더가 요청에 포함됨
+   - 토큰을 복호화하여 사용자 정보 추출
+   - `request.id` 및 `request.token` 속성에 값 설정
+
+2. **DB에서 사용자 조회**
+   - `authRepository.findById(request.id)` 실행
+   - 토큰 안의 `id`로 실제 DB에 존재하는 사용자 확인
+
+3. **응답 반환**
+   - 사용자 정보가 있으면:
+     - 상태코드 `200 OK`
+     - 응답 바디에 `token`, `userid` 포함
+   - 사용자 정보가 없으면:
+     - 상태코드 `404 Not Found`
+     - 메시지: `"일치하는 사용자가 없음"`
 
 
+#### 상태 코드
+| 엔드포인트          | 코드    | 의미            |
+| -------------- | ----- | ------------- |
+| `/auth/verify` | `200` | 인증 성공 (id 반환) |
+| `/auth/verify` | `401` | 인증 실패         |
+| `/auth/me`     | `200` | 사용자 정보 반환     |
+| `/auth/me`     | `404` | 사용자를 찾을 수 없음  |
+---
+#### 아이디 찾기 API
 
-
-
-
-
-
-### Data.Auth
-
-
-
-### UserRoutes
+사용자의 이름(`name`)과 이메일(`email`)을 기준으로  
+회원가입된 사용자의 `userid`를 찾아 반환합니다.
 
 ---
 
+#### 요청 개요
+
+- **Method**: `POST`
+- **Endpoint**: `/auth/find-id`
+- **Content-Type**: `application/json`
+
+---
+
+##### 요청 바디
+
+```json
+{
+  "name": "김사과",
+  "email": "apple@example.com"
+}
+```
+##### 응답 예시
+
+##### _일치하는 사용자 (200)_
+```json
+{
+  "success": true,
+  "user_id": "testuser"
+}
+```
+##### _일치하는 정보 없음 (200)_
+```json
+{
+  "success": false,
+  "message": "일치하는 정보가 없습니다."
+}
+```
+응답은 200이지만 success:false로 실패
+
+##### _서버 오류 (500)_
+```json
+{
+  "success": false,
+  "message": "서버 오류"
+}
+```
+#### 처리 흐름
+1.클라이언트가 이름과 이메일을 POST 요청으로 보냄
+
+2.서버가 SQL 실행:
+```sql
+SELECT userid FROM users WHERE name = ? AND email = ?
+```
+3.결과가 존재하면 → user_id 반환
+
+4.없으면 → "일치하는 정보가 없습니다" 메시지 반환
+
+5.오류 발생 시 → 500 상태로 "서버 오류" 반환
+
+#### SMS 인증번호 전송 기능
+
+CoolSMS API를 사용하여  
+사용자의 휴대폰으로 **인증번호를 전송**하는 비동기 함수입니다.
+
+---
+
+#### _기능 설명_
+
+- 외부 SMS 서비스 **CoolSMS SDK**를 통해 문자 메시지를 보냅니다.
+- 발신번호(`from`)와 수신번호(`to`)는 전화번호 형식(숫자만)이어야 하며, 인증된 발신번호만 사용 가능합니다.
+- 현재 메시지 내용은 하드코딩된 `"인증번호 1234"`입니다.
+---
+
+#### _사용된 모듈 및 설정_
+
+```js
+import pkg from "coolsms-node-sdk";
+
+const Coolsms = pkg.default;
+
+const messageService = new Coolsms(
+  process.env.apiKey_pw,
+  process.env.apiSecret_pw
+);
+```
+| 환경변수           | 설명                 |
+| -------------- | ------------------ |
+| `apiKey_pw`    | CoolSMS API Key    |
+| `apiSecret_pw` | CoolSMS Secret Key |
+| `senderNumber` | 인증된 발신 전화번호        |
+
+---
+#### _호출 _
+```js
+await sendSMS("01012345678");
+```
+##### _정상 응답_
+```json
+{
+  "groupId": "G4V20250520113000",
+  "statusCode": "2000",
+  "statusMessage": "Success",
+  "to": "01012345678"
+}
+```
+##### _오류 응답_
+```bash
+❌ 문자 전송 오류: [Error 객체 또는 응답 JSON]
+```
+##### _❌ 문자 전송 오류 코드 표_
+
+| 오류 예시 | 오류 코드 | 오류 메시지 | 원인 설명 |
+|-----------|-----------|-------------|------------|
+| 전화번호 오류 | `4000` | `Invalid recipient number.` | 수신자 번호 형식이 잘못되었거나 존재하지 않음 |
+| 발신 번호 인증 안 됨 | `4004` | `Unregistered sender number.` | 발신 번호(`from`)가 CoolSMS에 등록되지 않음 |
+| API Key 오류 | 없음 (예외 발생) | `Unauthorized. Invalid API key or secret` | 환경변수의 `apiKey_pw`, `apiSecret_pw`가 잘못됨 |
+| 서버 연결 실패 | 없음 (예외 발생) | `connect ETIMEDOUT sms.coolsms.co.kr:443` | CoolSMS 서버와 연결 실패 (네트워크 문제, 방화벽 등) |
+---
+#### 라우팅 함수
+
+| 함수 이름       | 역할 설명                              | HTTP 메서드 | 엔드포인트            | 반환 위치 (HTML 파일 or 경로)        |
+|----------------|------------------------------------------|-------------|------------------------|----------------------------------------|
+| `toLogin`      | 로그인 페이지로 이동                     | GET         | `/auth/login`         | `/public/login.html`                   |
+| `toSignUp`     | 회원가입 페이지로 이동                   | GET         | `/auth/signup`        | `/public/signup.html`                  |
+| `logOut`       | 로그아웃 처리 후 메인 페이지로 리디렉션 | GET         | `/auth/logout`        | `/` (메인 페이지, 클라이언트가 토큰 삭제) |
+| `toFindId`     | 아이디 찾기 페이지로 이동                | GET         | `/auth/find-id`       | `/public/find-id.html`                 |
+| `toFindPw`     | 비밀번호 찾기 페이지로 이동              | GET         | `/auth/find-pw`       | `/public/find-pw.html`                 |
+
+---
+### Data.Auth
+#### 회원 생성 함수 (`createUser`)
+
+`createUser`는 사용자가 회원가입할 때, 사용자 정보를 데이터베이스의 `users` 테이블에 저장하고  
+생성된 사용자의 고유 식별자(`insertId`)를 반환하는 함수입니다.
+
+---
+#### _매개변수_
+| 인자 이름      | 타입     | 설명                   |
+| ---------- | ------ | -------------------- |
+| `userId`   | string | 사용자 아이디 (고유)         |
+| `hashedPw` | string | 해시된 비밀번호 (bcrypt 사용) |
+| `name`     | string | 사용자 이름               |
+| `email`    | string | 사용자 이메일              |
+| `phone`    | string | 전화번호 (숫자형 문자열)       |
+
+#### _실행 쿼리_
+```sql
+| 인자 이름      | 타입     | 설명                   |
+| ---------- | ------ | -------------------- |
+| `userId`   | string | 사용자 아이디 (고유)         |
+| `hashedPw` | string | 해시된 비밀번호 (bcrypt 사용) |
+| `name`     | string | 사용자 이름               |
+| `email`    | string | 사용자 이메일              |
+| `phone`    | string | 전화번호 (숫자형 문자열)       |
+```
+실제 전달되는 값은 매개변수 배열 [userId, hashedPw, name, email, phone]
+
+#### 처리 흐름
+- 1.사용자 입력 정보는 서버에서 bcrypt.hash()로 비밀번호를 암호화
+
+- 2.위 정보를 기반으로 INSERT INTO users SQL 실행
+
+- 3.쿼리 성공 시 insertId (사용자 고유번호) 반환
+
+- 4.이후 이 ID는 JWT 생성, 세션 식별 등 다양한 용도로 사용됨
+
+#### 사용자 로그인 처리 함수 (`logIn`)
+
+입력된 사용자 아이디와 비밀번호를 검증하여,  
+일치할 경우 해당 사용자의 정보를 반환하는 로그인 인증 함수입니다.
+
+#### 실행 쿼리
+```sql
+SELECT * FROM users WHERE userId = ?
+```
+---
+### UserRoutes
+#### 회원 기능 라우터 정리
+
+| HTTP 메서드 | 경로                | 연결된 함수         | 설명 |
+|--------------|---------------------|----------------------|------|
+| `POST`       | `/signUp`           | `signUp`             | 회원가입 처리 (유효성 검증 후 DB 저장 및 토큰 발급) |
+| `GET`        | `/signUp`           | `toSignUp`           | 회원가입 페이지 HTML 반환 |
+| `POST`       | `/duplicateCheck`   | `duplicateIdCheck`   | 아이디 중복 체크 처리 |
+| `POST`       | `/logIn`            | `logIn`              | 로그인 처리 (아이디/비밀번호 검증 후 토큰 발급) |
+| `GET`        | `/logIn`            | `toLogin`            | 로그인 페이지 HTML 반환 |
+| `GET`        | `/logout`           | `logOut`             | 로그아웃 후 메인 페이지로 리디렉션 (토큰 삭제는 클라이언트가 수행) |
+| `POST`       | `/find-id`          | `findUserId`         | 이름+이메일로 아이디 찾기 처리 |
+| `GET`        | `/find-id.html`     | `toFindId`           | 아이디 찾기 HTML 페이지 반환 |
+| `GET`        | `/find-pw.html`     | `toFindPw`           | 비밀번호 찾기 HTML 페이지 반환 |
+
+#### 인증번호 문자 전송 API
+
+회원의 아이디(`userId`)와 전화번호(`phone`)를 입력받아  
+해당 사용자가 존재하면 인증번호를 생성하여 문자로 전송하는 API입니다.  
+CoolSMS API를 사용하며, 인증번호는 5분 동안 유효합니다.
+
+
+####  요청 개요
+
+- **Method**: `POST`
+- **Endpoint**: `/sendSms`
+- **Content-Type**: `application/json`
+
+---
+
+####  요청 바디 예시
+
+```json
+{
+  "pwId": "user123",
+  "pwPhone": "01012345678"
+}
+```
+| 필드명       | 타입     | 필수 | 설명                |
+| --------- | ------ | -- | ----------------- |
+| `pwId`    | string | ✅  | 사용자 아이디           |
+| `pwPhone` | string | ✅  | 사용자 전화번호 (숫자 문자열) |
+
+#### _응답 성공(200)_
+```json
+{
+  "message": "인증번호 전송 완료"
+}
+```
+#### _응답 실패(400)_
+```json
+{
+  "message": "아이디 또는 전화번호가 누락되었습니다."
+}
+```
+#### _응답 실패(404)_
+```json
+{
+  "message": "사용자를 찾을 수 없습니다."
+}
+```
+#### _응답 실패(402)_
+```json
+{
+  "message": "📛 잔액이 부족하여 문자 발송에 실패했습니다."
+}
+```
+#### 🔐비밀번호 재설정 흐름 API
+---
+####  인증번호 검증 API
+
+#### 개요
+
+- **Method**: `POST`
+- **Endpoint**: `/verifyCode`
+- **설명**: 사용자가 입력한 인증번호가 서버에서 발급한 값과 일치하는지 검증합니다.
+
+---
+
+####  요청 바디
+
+```json
+{
+  "pwPhone": "01012345678",
+  "code": "123456"
+}
+```
+#### _인증 성공(200)_
+```json
+{ "message": "인증 성공" }
+```
+#### _인증 실패(410)_
+```json
+{ "message": "인증번호가 만료되었거나 없습니다." }
+```
+#### _인증 실패(400)_
+```json
+{ "message": "인증번호가 일치하지 않습니다." }
+```
+---
+#### 비밀번호 재설정 API
+
+#### 개요
+
+- **Method**: `POST`
+- **Endpoint**: `/resetPassword`
+- **설명**: 사용자가 새 비밀번호를 입력하면, 해당 사용자의 비밀번호를 암호화하여 DB에 갱신합니다.
+
+#### 요청 바디
+```json
+{
+  "userId": "user123",
+  "newPassword": "newSecure123!"
+}
+```
+| 필드명           | 타입     | 필수 | 설명                   |
+| ------------- | ------ | -- | -------------------- |
+| `userId`      | string | ✅  | 비밀번호를 재설정할 사용자 ID    |
+| `newPassword` | string | ✅  | 새 비밀번호 (평문, 서버에서 해싱) |
+
+#### _응답 성공(200)_
+```json
+{
+  "message": "비밀번호가 성공적으로 재설정되었습니다."
+}
+```
+#### _응답 실패(400)_
+```json
+{
+  "message": "필수 항목이 누락되었습니다."
+}
+```
+#### _응답 실패(500)_
+```json
+{
+  "message": "서버 오류"
+}
+```
+---
+---
 ## 🌤 추천 상품 API
+---
 
 ### RecommendController
 
-- **URL**: `/api/recommend`
+#### 날씨 기반 옷 추천 API
+기상청 단기예보 API를 통해 날씨 데이터를 받아와  
+기온/풍속/강수확률을 분석하고, 이를 기반으로 체감온도를 계산하여  
+추천 알고리즘에 따라 **옷 조합을 추천**하는 API입니다.
+
+#### 개요
+- **URL**: `/recommend`
 - **Method**: `POST`
 - **Headers**:  
   `Content-Type: application/json`
 
-### Request Body
+#### 요청 바디
 
 ```json
 {
@@ -300,19 +638,224 @@ HighFiveCoordi 프로젝트는 기온에 따른 스타일 코디 추천 서비�
 | baseDate  | string  | ✅   | 기준 날짜 (yyyymmdd)  |
 | baseTime  | string  | ✅   | 기준 시간 (hhmm)      |
 
-### Success Response (200)
+#### 구조
+| 필드명                 | 타입     | 설명                    |
+| ------------------- | ------ | --------------------- |
+| `recommendedResult` | array  | 카테고리별 옷 추천 결과         |
+| `temperature`       | number | 실제 기온                 |
+| `windSpeed`         | number | 풍속 (m/s)              |
+| `rainPercent`       | number | 강수확률 (%)              |
+| `feltTemperature`   | number | 체감온도                  |
+| `level`             | number | 체감온도에 따른 추천 레벨 (1\~3) |
+
+#### _요청 성공(200)_
 
 ```json
 {
   "recommendations": ["id", "1 (temp_level)","url", "category"]
 }
 ```
+#### _요청 실패_
+| 상황                  | 상태코드  | 메시지                        |
+| ------------------- | ----- | -------------------------- |
+| 날씨 데이터 일부 없음        | `404` | `"예보 데이터를 충분히 찾을 수 없습니다."` |
+| API 호출 실패 / 네트워크 오류 | `500` | `"날씨 데이터를 불러오는 중 오류 발생"`   |
+---
+#### 색상 적용하기 API
+사용자가 색상을 직접 선택한 후,
+해당 색상에 조화를 이루는 추천 옷들을 받아오는 기능입니다.
+
+- **URL**: `/recommend/reloadByColor`
+- **Method**: `POST`
+- **Headers**:  
+  `Content-Type: application/json`
+
+#### 요청 바디
+```json
+{
+  "topColor": 120,
+  "level": 2
+}
+```
+| 필드명        | 타입     | 설명                                   |
+| ---------- | ------ | ------------------------------------ |
+| `topColor` | number | 사용자가 선택한 색상(Hue, 0\~360)             |
+| `level`    | number | 날씨에 따른 추천 등급 (1: 추움, 2: 보통, 3: 더움 등) |
+
+#### _응답 성공(200)_
+```json
+{
+  "recommendedResult": [
+    {
+      "category": "pants",
+      "image_url": "http://localhost:8080/product_images/pants_01.jpg"
+    },
+    {
+      "category": "outer",
+      "image_url": "http://localhost:8080/product_images/outer_02.jpg"
+    },
+    ...
+  ]
+}
+```
+#### _응답 실패(500)_
+```json
+"날씨 데이터를 불러오는 중 오류 발생"
+```
+
+---
 ### Data.Recommend
+
+#### `rgbToHSL(hex)` 함수
+
+#### 개요
+
+HEX 형식의 RGB 문자열 (`"#rrggbb"`)을 입력받아 **HSL 색상 모델**로 변환합니다.  
+또한, 특수 입력값 `0`이 들어오면 **무작위 랜덤 HSL 색상**을 반환합니다.  
+올바르지 않은 입력값에 대해서는 **예외 처리**를 수행합니다.
 
 ---
 
-### RecommendRoutes
+#### 파라미터
 
+| 이름 | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `hex` | string 또는 number | ✅ | HEX 색상 문자열 (`"#rrggbb"`), 또는 `0`(랜덤 색상 요청 시) |
+
+---
+
+#### 반환값
+
+```js
+{ h: number, s: number, l: number }
+```
+| 키   | 설명              | 범위       |
+| --- | --------------- | -------- |
+| `h` | Hue (색상각)       | 0 \~ 360 |
+| `s` | Saturation (채도) | 0 \~ 100 |
+| `l` | Lightness (명도)  | 0 \~ 100 |
+
+- 1.숫자 0일 경우 -> 랜덤
+
+```js
+if (hex === 0)
+```
+- 2.유효하지 않은 hex입력
+```js
+if (typeof hex !== "string" || !hex.startsWith("#") || hex.length !== 7)
+```
+```js
+console.warn("❌ 유효하지 않은 hex 입력값:", hex);
+return { h: NaN, s: 0, l: 0 };
+```
+#### 반환
+
+| 입력          | 출력 (예시)                             |
+| ----------- | ----------------------------------- |
+| `"#ffcc00"` | `{ h: 48, s: 100, l: 60 }`          |
+| `0`         | `{ h: 271, s: 42, l: 78 }` *(랜덤)*   |
+| `"123456"`  | `{ h: NaN, s: 0, l: 0 }` *(잘못된 입력)* |
+---
+#### 체감온도 계산 및 온도 레벨 분류 함수
+
+---
+
+#### calculateWindChill
+
+주어진 기온(`temp`)과 풍속(`windSpeed`)을 이용하여 **체감온도**를 계산합니다.  
+체감온도는 사람이 실제로 느끼는 온도를 나타내며, 날씨 기반 옷 추천 로직에서 핵심 기준값입니다.
+
+---
+
+| 파라미터 | 타입 | 설명 |
+|----------|------|------|
+| `temp` | number / string | 실제 기온 (℃) |
+| `windSpeed` | number / string | 풍속 (m/s) |
+
+---
+
+#### getTempLevel
+체감온도를 기반으로 추천 레벨을 분류합니다.
+이 레벨은 옷 추천 알고리즘에서 계절감 또는 두께에 따른 필터링 기준으로 사용됩니다.
+
+| 파라미터        | 타입     | 설명           |
+| ----------- | ------ | ------------ |
+| `windChill` | number | 계산된 체감온도 (℃) |
+---
+| 값   | 의미                    |
+| --- | --------------------- |
+| `3` | 더운 날씨 (23℃ 이상)        |
+| `2` | 보통 날씨 (10℃ 이상 23℃ 미만) |
+| `1` | 추운 날씨 (10℃ 미만)        |
+---
+### Data.ColorHarmony
+
+---
+
+---
+### productCotroller (핫픽 상품 TOP 3 조회 API)
+사용자들이 선호하는 `hot_pick` 점수를 기준으로 상위 3개의 상품을 조회합니다.  
+만약 `hot_pick > 0`인 상품이 없을 경우, 전체 상품 중 무작위 3개를 반환합니다.
+
+---
+
+#### 요청 개요
+
+- **Method**: `GET`
+- **Endpoint**: `/products/top-picks` _(http://localhost:8080/product_images/201_pants-long_black.webp)_
+- **Query Params**: 없음
+
+---
+#### 구조
+
+| 필드명         | 타입     | 설명                  |
+| ----------- | ------ | ------------------- |
+| `idx`       | int    | 상품 고유 ID            |
+| `name`      | string | 상품명                 |
+| `category`  | enum   | top, pants, outer 등 |
+| `price`     | int    | 가격                  |
+| `hot_pick`  | int    | 핫픽 점수               |
+| `image_url` | string | 이미지 URL             |
+| ...         | ...    | 기타 상품 정보            |
+
+
+#### 1. _`hot_pick` 기준 상위 3개 응답_
+
+```json
+[
+  {
+    "idx": 7,
+    "name": "썸머 시어서커 밴딩 팬츠",
+    "category": "pants",
+    "hot_pick": 98,
+    "price": 32000,
+    "image_url": "...",
+    ...
+  },
+  ...
+]
+```
+#### 2. _`hot_pick>0`인 상품이 없을 때 랜덤 3개_
+```json
+[
+  {
+    "idx": 12,
+    "name": "퓨어코튼 펀칭 카라 니트",
+    "category": "top",
+    "hot_pick": 0,
+    ...
+  },
+  ...
+]
+```
+#### _응답 오류(500)_
+```json
+{
+  "message": "핫픽 상위 3개 조회 실패",
+  "error": "에러 메시지 내용"
+}
+```
+---
 ---
 
 ## 💖 위시리스트 페이지 요청 API
@@ -482,13 +1025,13 @@ JWT(Json Web Token)를 이용한 사용자 인증 미들웨어입니다.
 ---
 ### 📥 요청 형식
 
-#### Request Headers
+#### 요청 헤더
 
 | Header         | 필수 | 설명                                      | 예시                                               |
 |----------------|------|-------------------------------------------|----------------------------------------------------|
 | Authorization  | ✅   | Bearer 토큰 형식의 JWT (`Bearer <token>`) | 
 
-#### Payload
+#### 실제 전달하고자 하는 내용
 
 ```json
 {
