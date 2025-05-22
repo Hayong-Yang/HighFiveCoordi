@@ -1,314 +1,314 @@
 /* 기본 세팅 */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-  font-family: "Noto Sans KR", sans-serif;
-  background-color: #f5f5f5;
-  color: #222;
-  line-height: 1.6;
-  max-width: 1440px;
-  margin: 0 auto;
+    font-family: "Noto Sans KR", sans-serif;
+    background-color: #f5f5f5;
+    color: #222;
+    line-height: 1.6;
+    max-width: 1440px;
+    margin: 0 auto;
 }
 
 /* 헤더 */
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 24px;
-  background-color: #000;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1000;
-  max-width: 1440px;
-  margin: 0 auto;
-  left: 0;
-  right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background-color: #000;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    max-width: 1440px;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
 }
 
 .name a {
-  font-size: 20px;
-  font-weight: bold;
-  color: white;
-  text-decoration: none;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
 }
 
 .header__menu {
-  display: flex;
-  list-style: none;
-  gap: 24px;
+    display: flex;
+    list-style: none;
+    gap: 24px;
 }
 
 .header__menu li a {
-  color: white;
-  font-size: 15px;
-  position: relative;
-  padding: 4px 0;
-  text-decoration: none;
+    color: white;
+    font-size: 15px;
+    position: relative;
+    padding: 4px 0;
+    text-decoration: none;
 }
 
 .header__menu li a::after {
-  content: "";
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0%;
-  height: 1px;
-  background-color: white;
-  transition: width 0.3s;
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0%;
+    height: 1px;
+    background-color: white;
+    transition: width 0.3s;
 }
 
 .header__menu li a:hover::after {
-  width: 100%;
+    width: 100%;
 }
 
 /*본문*/
 main {
-  padding: 80px 24px 100px;
+    padding: 80px 24px 100px;
 }
 
 .login-btn {
-  padding: 5px 10px;
-  background-color: black;
-  color: white;
-  border: none;
-  cursor: pointer;
+    padding: 5px 10px;
+    background-color: black;
+    color: white;
+    border: none;
+    cursor: pointer;
 }
 
 /* 아이디 찾기 메인 컨테이너 */
 .login-container {
-  text-align: center;
-  margin-top: 100px;
-  padding: 24px;
-  box-sizing: border-box;
+    text-align: center;
+    margin-top: 100px;
+    padding: 24px;
+    box-sizing: border-box;
 }
 
 /* 제목 스타일 */
 .login-container h3 {
-  font-size: 24px;
-  margin-bottom: 24px;
-  font-weight: bold;
+    font-size: 24px;
+    margin-bottom: 24px;
+    font-weight: bold;
 }
 
 /* 폼 정렬 및 구성 */
 #findId {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px; /* 입력 항목 간 간격 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px; /* 입력 항목 간 간격 */
 }
 
 /* 입력창 공통 스타일 */
 #findId input {
-  width: 100%;
-  max-width: 320px; /* 반응형 제한 */
-  padding: 12px;
-  border: 1px solid #ccc;
-  font-size: 15px;
-  border-radius: 4px;
-  box-sizing: border-box;
+    width: 100%;
+    max-width: 320px; /* 반응형 제한 */
+    padding: 12px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+    border-radius: 4px;
+    box-sizing: border-box;
 }
 
 /* 버튼 스타일 */
 #findId button {
-  width: 100%;
-  max-width: 320px;
-  padding: 12px;
-  background-color: black;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s;
+    width: 100%;
+    max-width: 320px;
+    padding: 12px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
 }
 
 #findId button:hover {
-  background-color: #333;
+    background-color: #333;
 }
 
 /* 결과 메시지 */
 .Idresult-message {
-  margin-top: 20px;
-  font-size: 18px;
-  color: #007bff;
-  word-break: keep-all;
-  max-width: 320px;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
+    margin-top: 20px;
+    font-size: 18px;
+    color: #007bff;
+    word-break: keep-all;
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
 }
 
 /* 비번 찾기 컨테이너 */
 .pwlogin-container {
-  text-align: center;
-  margin-top: 100px;
-  padding: 24px;
-  box-sizing: border-box;
+    text-align: center;
+    margin-top: 100px;
+    padding: 24px;
+    box-sizing: border-box;
 }
 
 /* 제목 */
 .pwlogin-container h3 {
-  font-size: 24px;
-  margin-bottom: 24px;
-  font-weight: bold;
+    font-size: 24px;
+    margin-bottom: 24px;
+    font-weight: bold;
 }
 
 /* 공통 input, button 스타일 */
 .pwlogin-container input {
-  width: 100%;
-  max-width: 320px;
-  padding: 12px;
-  border: 1px solid #ccc;
-  font-size: 15px;
-  border-radius: 4px;
-  box-sizing: border-box;
+    width: 100%;
+    max-width: 320px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+    border-radius: 4px;
+    box-sizing: border-box;
 }
 
 .pwlogin-container button {
-  width: 100%;
-  max-width: 320px;
-  padding: 12px;
-  background-color: black;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s;
-  margin-top: 8px;
+    width: 100%;
+    max-width: 320px;
+    padding: 12px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    margin-top: 8px;
 }
 
 .pwlogin-container button:hover {
-  background-color: #333;
+    background-color: #333;
 }
 
 /* 초기 인증요청 폼 */
 #findPassword {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
 }
 
 /* 인증번호 입력 섹션 */
 #verifySection {
-  margin-top: 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
 }
 
 /* 비밀번호 재설정 섹션 */
 #resetPasswordSection {
-  margin-top: 24px;
+    margin-top: 24px;
 }
 
 #resetPasswordForm {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
 }
 
 /* 결과 메시지 */
 .pwresult-message {
-  margin-top: 24px;
-  font-size: 14px;
-  color: #007bff;
-  word-break: keep-all;
-  max-width: 320px;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
+    margin-top: 24px;
+    font-size: 14px;
+    color: #007bff;
+    word-break: keep-all;
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
 }
 
 form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 form input {
-  width: 300px;
-  padding: 10px;
-  margin: 8px 0;
-  border: 1px solid #ccc;
-  font-size: 14px;
+    width: 300px;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    font-size: 14px;
 }
 
 .submit-btn {
-  width: 300px;
-  padding: 10px;
-  background-color: black;
-  color: white;
-  border: none;
-  cursor: pointer;
-  margin-top: 30px;
+    width: 300px;
+    padding: 10px;
+    background-color: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 30px;
 }
 
 .find-info {
-  margin-top: 10px;
-  font-size: 12px;
+    margin-top: 10px;
+    font-size: 12px;
 }
 
 #already {
-  margin-top: 10px;
-  font-size: 13px;
-  color: #555;
-  text-align: center;
+    margin-top: 10px;
+    font-size: 13px;
+    color: #555;
+    text-align: center;
 }
 
 #already a#GoToSignUp {
-  color: #007bff;
-  text-decoration: none;
-  font-weight: bold;
-  margin-left: 5px;
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 5px;
 }
 
 #already a#GoToSignUp:hover {
-  text-decoration: underline;
-  color: #0056b3;
+    text-decoration: underline;
+    color: #0056b3;
 }
 
 /* 푸터 */
 footer {
-  background-color: #000;
-  color: white;
-  padding: 40px 24px;
+    background-color: #000;
+    color: white;
+    padding: 40px 24px;
 }
 
 footer h3 {
-  font-size: 20px;
-  margin-bottom: 12px;
+    font-size: 20px;
+    margin-bottom: 12px;
 }
 
 footer hr {
-  border: 0;
-  height: 1px;
-  background-color: #777777;
-  margin: 16px 0;
+    border: 0;
+    height: 1px;
+    background-color: #777777;
+    margin: 16px 0;
 }
 
 .contact__info {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 16px;
 }
 
 .copy {
-  margin: 16px 0;
-  color: white;
+    margin: 16px 0;
+    color: white;
 }
 .icons {
-  width: 200px;
-  height: 50px;
-  margin: 25px 0;
+    width: 200px;
+    height: 50px;
+    margin: 25px 0;
 }

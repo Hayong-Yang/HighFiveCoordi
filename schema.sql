@@ -7,8 +7,8 @@ use highfiveDB;
 
 CREATE TABLE users (
     idx INT AUTO_INCREMENT PRIMARY KEY,
-    userid VARCHAR(50) NOT NULL UNIQUE,
-    userpw VARCHAR(255) NOT NULL,
+    userId VARCHAR(50) NOT NULL UNIQUE,
+    userPw VARCHAR(255) NOT NULL,
     name VARCHAR(30) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     phone VARCHAR(20) NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE products (
     category ENUM('top', 'pants', 'outer', 'shoes', 'etc') NOT NULL,
     price INT UNSIGNED NOT NULL,
     description TEXT,
-    color VARCHAR(50) NOT NULL,          -- 사람이 인지하는 색상 이름
+    color VARCHAR(50),          -- 사람이 인지하는 색상 이름
     temp_level TINYINT UNSIGNED DEFAULT 1,  -- 온도에 따른 추천 등급 (예: 1~5)
     hot_pick INT DEFAULT 0,
     regdate DATETIME DEFAULT CURRENT_TIMESTAMP,

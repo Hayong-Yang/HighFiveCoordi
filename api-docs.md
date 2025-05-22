@@ -124,7 +124,7 @@
 
 ```json
 {
-  "recommendations": ["반팔티", "얇은 가디건"]
+  "recommendations": ["id", "1 (temp_level)","url", "category"]
 }
 ```
 
@@ -209,30 +209,4 @@
 
 ---
 
-## ➕ 상품 등록 API
-
-- **URL**: `/api/products`
-- **Method**: `POST`
-- **Headers**: `Content-Type: application/json`
-
-### Request Body
-
-```json
-{
-  "name": "예시 상품",
-  "category": "상의",
-  "price": 12000,
-  "description": "간단한 설명",
-  "level": 3,
-  "hotPick": true
-}
-```
-
-### Success Response (201)
-
-```json
-{
-  "message": "상품 등록 성공",
-  "id": 7
-}
-```
+# 목차 만들기
