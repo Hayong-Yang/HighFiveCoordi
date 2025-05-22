@@ -49,7 +49,7 @@ export const isManager = async (request, response, next) => {
             console.log("관리자 아님");
             return response.status(401).json(AUTH_ERROR);
         }
-
+           
         request.userIdx = user.idx;
         next();
     } catch (error) {
