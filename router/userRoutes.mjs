@@ -145,6 +145,9 @@ router.post("/resetPassword", async (req, res) => {
   if (!tmpToken) {
     return res.status(400).json({ message: "임시 토큰이 누락되었습니다." });
   }
+  if (!jwt.verify(tmpToken, process.env.JWT_SECRET)) {
+    return res.status(400).json({ message: "임시 토큰이 유효하지 않습니다." });
+  }
 
   try {
     const saltRounds = config.bcrypt.saltRounds || 10;
