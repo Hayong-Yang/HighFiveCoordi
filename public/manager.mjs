@@ -32,20 +32,32 @@ function rgbToHsl(r, g, b) {
 }
 
 function getColorNameByHSL(h, s, l) {
-    if (s < 15 && l < 20) return "Black";
-    if (s < 15 && l > 80) return "White";
+    // 완전 어두운 색
+    if (l < 10) return "Black";
+
+    // 거의 흰색에 가까운 색
+    if (s < 10 && l > 90) return "White";
+
+    // 명도 높고 채도 낮은 색 → 흐린 회색
+    if (s < 15 && l >= 60) return "Light Gray";
+
+    // 중간 밝기의 무채색
     if (s < 15) return "Gray";
+
+    // 살구색 느낌
     if (h >= 20 && h <= 50 && s < 50 && l > 65) return "Beige";
-    if (h < 30) return "Red";
-    if (h < 60) return "Orange";
-    if (h < 90) return "Yellow";
-    if (h < 150) return "Green";
-    if (h < 180) return "Turquoise";
-    if (h < 210) return "Cyan";
+
+    // 일반 색상
+    if (h < 15 || h >= 330) return "Red";
+    if (h < 45) return "Orange";
+    if (h < 70) return "Yellow";
+    if (h < 160) return "Green";
+    if (h < 190) return "Turquoise";
+    if (h < 220) return "Cyan";
     if (h < 270) return "Blue";
     if (h < 330) return "Purple";
-    return "Red";
 
+    return "Unknown";
 }
 
 const imageInput = document.getElementById("imageInput");

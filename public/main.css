@@ -25,7 +25,7 @@ a {
   justify-content: space-between;
   align-items: center;
   padding: 16px 24px;
-  background-color: #000;
+  background-color: #111;
   position: fixed;
   top: 0;
   width: 100%;
@@ -34,6 +34,7 @@ a {
   margin: 0 auto;
   left: 0;
   right: 0;
+  border-bottom: 20px solid #111;
 }
 
 .name a {
@@ -126,19 +127,44 @@ a {
 /* 본문 */
 main {
   padding-top: 80px;
-  padding: 80px 24px 40px;
+  padding: 80px 0px 40px;
 }
 
 /* 검은 배경 섹션 */
 #todayweather {
-  background-color: #111;
+  /* background-color: #111; */
+  background: url("/greenBack.jpg");
+  background-size: cover;
   color: black;
   padding: 40px 24px;
   margin-bottom: 24px;
+  overflow: hidden; /* 오버레이 넘침 방지 */
+  position: relative;
   /*border-radius: 8px;*/
+}
+#todayweather .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.2); /* 반투명 검정 */
+  z-index: 1;
 }
 
 /* 날씨 섹션 */
+#weather {
+  border-top: 1px solid var(--clr-border);
+  border-bottom: 1px solid var(--clr-border);
+}
+
+.title_desc_box {
+  background-color: #111;
+  border: 1px solid #111;
+  color: white;
+  padding: 20px 20px 0px;
+}
+
 .weather__title {
   font-size: 24px;
   margin-bottom: 8px;
@@ -159,6 +185,8 @@ main {
   padding: 1rem;
   box-sizing: border-box;
   min-height: 380px; /* 좌우 박스 높이 확보 */
+  position: relative;
+  z-index: 2;
 }
 
 /* 결과 박스 (왼쪽) */
@@ -172,7 +200,7 @@ main {
     #e6f2ff
   ); /* 밝은 하늘톤 그라디언트 */
   padding: 2rem;
-  border-radius: 1rem;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -196,7 +224,7 @@ main {
   min-width: 280px;
   background: linear-gradient(to bottom, #f0f8ff, #e6f2ff);
   padding: 2rem;
-  border-radius: 1rem;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -455,13 +483,16 @@ main {
 
 /* 옷 추천 섹션 */
 #recommend {
-  background-color: #111;
+  /* background-color: #111; */
+  background-color: #fff;
   padding: 40px 24px;
   margin-bottom: 24px;
   /*border-radius: 8px;*/
   display: flex;
   flex-direction: row;
   height: 800px;
+  border-top: 1px solid var(--clr-border);
+  border-bottom: 1px solid var(--clr-border);
 }
 #recommendations {
   flex: 7;
@@ -470,7 +501,7 @@ main {
   gap: 10px;
   padding: 10px;
   box-sizing: border-box;
-  border-right: 1px solid #ccc;
+  /* border-right: 1px solid #ccc; */
   background-color: #f9f9f9;
 }
 
@@ -494,8 +525,8 @@ main {
 }
 
 .category {
-  background-color: #f0f0f0;
-  border: 1px solid #999;
+  background-color: #e7e7e7;
+  /* border: 1px solid #999; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -503,6 +534,8 @@ main {
   /* overflow: hidden; */ /* 삭제 또는 아래처럼 변경 */
   overflow: visible;
   position: relative;
+  border-radius: 12px;
+  box-shadow: 0rem 0rem 0.5rem rgba(0, 0, 0, 0.15);
 }
 
 .category img {
@@ -510,23 +543,45 @@ main {
   max-height: 100%;
   object-fit: contain; /* contain or cover */
   display: block;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.category img:hover {
+  transform: scale(1.05);
+}
+
+.heart {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.heart:hover {
+  transform: scale(1.1);
 }
 
 /* 크기 비율 설정 */
 .etc {
   height: 25%;
+  background: url("/category4.png") no-repeat center center / cover;
 }
 .outer {
   height: 45%;
+  background: url("/category5.png") no-repeat center center / cover;
 }
 .shoes {
   height: 25%;
+  background: url("/category2.png") no-repeat center center / cover;
 }
 .top {
   height: 48.5%;
+  background: url("/category3.png") no-repeat center center / cover;
 }
 .pants {
   height: 48%;
+  background: url("/category1.png") no-repeat center center / cover;
 }
 
 .heart {
@@ -558,6 +613,7 @@ main {
   position: absolute; /* 텍스트와 겹치지 않도록 */
   top: 0;
   left: 0;
+  border-radius: 12px;
 }
 
 .product-link::after {
@@ -575,6 +631,8 @@ main {
   transition: all 0.3s ease;
   z-index: 2;
   pointer-events: none;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
 }
 .product-link:hover::after {
   bottom: 0;
@@ -585,19 +643,17 @@ main {
 #personalColor,
 #custom {
   flex: 1;
-  background-color: #e0e0e0;
-  border: 1px solid #aaa;
+  background-color: #e7e7e7;
+  /* border: 1px solid #aaa; */
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
+  border-radius: 12px;
+  box-shadow: 0rem 0rem 0.5rem rgba(0, 0, 0, 0.15);
 }
 #personalColor {
-  flex: 4;
-}
-
-#custom {
-  flex: 6;
+  flex: 4.5;
   margin-bottom: 15px;
   padding: 5px;
   max-width: 600px; /* 이거 제한하고 싶으면 유지 */
@@ -605,6 +661,29 @@ main {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  box-shadow: 0rem 0rem 0.5rem rgba(0, 0, 0, 0.15);
+}
+#re_recommend {
+  background-color: #999999;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 10px;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#custom {
+  flex: 5.5;
+  margin-bottom: 15px;
+  padding: 5px;
+  max-width: 600px; /* 이거 제한하고 싶으면 유지 */
+  width: 100%; /* 추가 */
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  box-shadow: 0rem 0rem 0.5rem rgba(0, 0, 0, 0.15);
 }
 
 /* 공통 버튼 스타일 */
@@ -612,8 +691,8 @@ main {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  border: 1px solid #ccc;
-  background-color: #f5f5f5;
+  border: 1px solid #e7e7e7;
+  background-color: #e7e7e7;
   font-size: 32px;
   font-weight: bold;
   display: flex;
@@ -623,9 +702,11 @@ main {
   margin: auto 10px;
   padding: 0; /* 내부 간격 제거 */
   line-height: 1; /* 줄간격 조절 */
+  box-shadow: 0rem 0rem 0.5rem rgba(0, 0, 0, 0.15);
 }
 .arrow-button:hover {
   background-color: #f9f9f9;
+  box-shadow: 0rem 0rem 0.5rem rgba(0, 0, 0, 0.15);
 }
 
 /* 왼쪽/오른쪽 버튼 위치 지정 */
@@ -638,10 +719,37 @@ main {
 
 /* 옷 색상 선택 섹션 */
 .custom-container {
-  background: #f0f0f0;
+  background: #e7e7e7;
   border-radius: 5px;
   padding: 40px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* #custom-textbox {
+  margin-bottom: 20px;
+  padding: 10px 40px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+} */
+
+#custom-textbox {
+  margin-bottom: 20px;
+  padding: 16px 40px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.6;
+  text-align: center;
+  font-family: "Noto Sans KR", "Pretendard", "Spoqa Han Sans", sans-serif;
+  color: #333;
+  box-shadow: 0rem 0rem 0.5rem rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
 }
 
 .top-row {
@@ -652,10 +760,10 @@ main {
   border: 1px solid #ddd;
   background: white;
   border-radius: 8px;
-
+  box-shadow: 0rem 0rem 1rem rgba(0, 0, 0, 0.1);
   padding: 10px 40px;
 }
-.pants-row {
+/* .pants-row {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
@@ -665,7 +773,7 @@ main {
   border-radius: 8px;
 
   padding: 10px 40px;
-}
+} */
 
 .color-label {
   min-width: 70px;

@@ -7,8 +7,8 @@ use highfiveDB;
 
 CREATE TABLE users (
     idx INT AUTO_INCREMENT PRIMARY KEY,
-    userid VARCHAR(50) NOT NULL UNIQUE,
-    userpw VARCHAR(255) NOT NULL,
+    userId VARCHAR(50) NOT NULL UNIQUE,
+    userPw VARCHAR(255) NOT NULL,
     name VARCHAR(30) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     phone VARCHAR(20) NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE products (
     category ENUM('top', 'pants', 'outer', 'shoes', 'etc') NOT NULL,
     price INT UNSIGNED NOT NULL,
     description TEXT,
-    color VARCHAR(50) NOT NULL,          -- 사람이 인지하는 색상 이름
+    color VARCHAR(50),          -- 사람이 인지하는 색상 이름
     temp_level TINYINT UNSIGNED DEFAULT 1,  -- 온도에 따른 추천 등급 (예: 1~5)
     hot_pick INT DEFAULT 0,
     regdate DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -68,14 +68,7 @@ values  (101, "HS STRIPE KNIT COLLAR SHIRT_NAVY", "top", 52200, "부드러운 �
         (501, "TCM coldice cap", "etc", 34990, "부시시한 요즘 날씨 얹기만 해도 힙해지는 패션 아이템.", "green", 2, 60, 7, 17, "http://localhost:8080/product_images/501_etc_green.webp","https://www.musinsa.com/products/5037017"),
         (502, "RC OWEN SUNGLASS MATTE BLACK", "etc", 32900, "요즘 같이 햇살이 따가운 날 패션과 건강을 모두 챙기는 픽.", "black", 3, 216, 8, 12, "http://localhost:8080/product_images/502_etc_black.webp","https://www.musinsa.com/products/5018547"),
         (503, "940UNST BASIC OUTLINE NEYYAN CHO", "etc", 35700, "내 부시시함은 스타일이야, 힙한 야구 모자.", "black", 2, 20, 16, 18, "http://localhost:8080/product_images/503_etc_black.webp","https://www.musinsa.com/products/4827820"),
-        (504, "RC B019 BLACK GLASS", "etc", 22710, "흰눈이 내리는 날 소원은 이런 지적인 안경을 쓰고 나타나는 왕자님.", "black", 1, 180, 4, 14, "http://localhost:8080/product_images/504_etc_black.webp","https://www.musinsa.com/products/1515680"),
-		(600, "여기서 시작", "etc", 22710, "흰눈이 내리는 날 소박한 나의 소원은 이런 지적인 안경을 쓰고 나타나는 왕자님.", "black", 1, 180, 4, 14, "http://localhost:8080/product_images/5204_etc_black.webp","https://www.musinsa.com/products/1535680"),
-        (601,"코튼 브이넥 니트 워시드 네이비","top",64000,"일교차가 심한 요즘 날씨에 깔끔하고 입기 좋은 니트","Black",2	, 220, 28, 17,"http://localhost:8080/product_images/601_navy_knitwear.webp","https://www.musinsa.com/products/4309845"),
-		(602,"TATTOO T-SHIRTS RED","top",68000,"앞판과 소매, 뒷판에 존재하는 타투 그래픽 디테일들이 있습니다.","Brown",3,356,49,47,"http://localhost:8080/product_images/602_deepredT.webp","https://www.musinsa.com/products/4936781"),
-		(603,"NARAKA SWEATSHIRT BLACK","top",53900,"깔끔한 스타일의 맨투맨","Black",2,0,0,11,"http://localhost:8080/product_images/603_blackmantoman.webp","https://www.musinsa.com/products/3907394"),
-		(604,"HERITAGE SWEAT MTM_32YC5A52","top",99000,"축구 헤리티지 컨셉의 맨투맨","White",2,210,16,93,"http://localhost:8080/product_images/604_hegitage_sweat.webp","https://www.musinsa.com/products/4809240");
-
-
+        (504, "RC B019 BLACK GLASS", "etc", 22710, "흰눈이 내리는 날 소박한 나의 소원은 이런 지적인 안경을 쓰고 나타나는 왕자님.", "black", 1, 180, 4, 14, "http://localhost:8080/product_images/504_etc_black.webp","https://www.musinsa.com/products/1515680");
 
 select * from products;
 select * from users;
