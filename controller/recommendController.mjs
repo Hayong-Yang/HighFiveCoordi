@@ -31,7 +31,9 @@ export async function recommendClothes(request, response, next) {
 
     const res = await fetch(url);
     const data = await res.json();
+    // console.log("data", data);
     const items = data.response.body.items.item;
+    console.log("items", items);
     const tmpItem = items.find(
       (item) => item.category === "TMP" && item.baseTime === baseTime
     );
