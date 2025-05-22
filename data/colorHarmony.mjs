@@ -138,6 +138,7 @@ export async function getClothesfromDB(hueTargets, level) {
 //*********************************************
 // 최종적 옷 추천 함수
 export async function getRecommendations(pickedColor, level) {
+
   const baseColor = getBaseColor(pickedColor);
 
   // 추천 알고리즘 목록 중 랜덤 선택
@@ -167,3 +168,4 @@ export async function getRecommendations(pickedColor, level) {
   //     strategy: randomStrategy.name,
   //   };
 }
+
