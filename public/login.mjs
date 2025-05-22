@@ -174,8 +174,10 @@ if (verifyBtn) {
             });
 
             const data = await response.json();
+            console.log("data", data);
 
             if (response.ok) {
+                localStorage.setItem("tmpToken", data.tmpToken);
                 resultDiv.textContent = `✅ 인증 성공. 새 비밀번호를 입력하세요.`;
                 document.getElementById("resetPasswordSection").style.display =
                     "block";
@@ -204,7 +206,7 @@ if (resetPasswordForm) {
         const userId = document.getElementById("pwId").value.trim();
         const newPassword = document.getElementById("newPassword").value.trim();
         const resultDiv = document.getElementById("resultMessage");
-
+        const tmpToken = localStorage.getItem("tmpToken");
         // 비밀번호 강도 검사
         const pwRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).{8,}$/;
         if (!pwRegex.test(newPassword)) {
@@ -217,7 +219,7 @@ if (resetPasswordForm) {
             const response = await fetch("/auth/resetPassword", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ userId, newPassword }),
+                body: JSON.stringify({ userId, newPassword, tmpToken }),
             });
 
             const data = await response.json();
