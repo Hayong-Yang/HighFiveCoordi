@@ -565,23 +565,23 @@ main {
 /* 크기 비율 설정 */
 .etc {
   height: 25%;
-  /* background: url("/category4.png") no-repeat center center / cover; */
+  background: url("/category4.png") no-repeat center center / cover;
 }
 .outer {
   height: 45%;
-  /* background: url("/category5.png") no-repeat center center / cover; */
+  background: url("/category5.png") no-repeat center center / cover;
 }
 .shoes {
   height: 25%;
-  /* background: url("/category2.png") no-repeat center center / cover; */
+  background: url("/category2.png") no-repeat center center / cover;
 }
 .top {
   height: 48.5%;
-  /* background: url("/category3.png") no-repeat center center / cover; */
+  background: url("/category3.png") no-repeat center center / cover;
 }
 .pants {
   height: 48%;
-  /* background: url("/category1.png") no-repeat center center / cover; */
+  background: url("/category1.png") no-repeat center center / cover;
 }
 
 .heart {
