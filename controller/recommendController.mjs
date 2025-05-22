@@ -28,18 +28,20 @@ export async function recommendClothes(request, response, next) {
             `&base_date=${baseDate}&base_time=${baseTime}` +
             `&nx=${nx}&ny=${ny}&numOfRows=10&dataType=JSON`;
 
-        const res = await fetch(url);
-        const data = await res.json();
-        const items = data.response.body.items.item;
-        const tmpItem = items.find(
-            (item) => item.category === "TMP" && item.baseTime === baseTime
-        );
-        const windItem = items.find(
-            (item) => item.category === "WSD" && item.baseTime === baseTime
-        );
-        const rainPercentItem = items.find(
-            (item) => item.category === "POP" && item.baseTime === baseTime
-        );
+    const res = await fetch(url);
+    const data = await res.json();
+    // console.log("data", data);
+    const items = data.response.body.items.item;
+    console.log("items", items);
+    const tmpItem = items.find(
+      (item) => item.category === "TMP" && item.baseTime === baseTime
+    );
+    const windItem = items.find(
+      (item) => item.category === "WSD" && item.baseTime === baseTime
+    );
+    const rainPercentItem = items.find(
+      (item) => item.category === "POP" && item.baseTime === baseTime
+    );
 
         if (!tmpItem || !windItem || !rainPercentItem) {
             return response
