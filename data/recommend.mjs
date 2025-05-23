@@ -103,7 +103,7 @@ export function calculateWindChill(temp, windSpeed) {
 
 // 레벨 만드는 함수
 export function getTempLevel(windChill) {
-  if (windChill >= 23) return 3; // 더운 날씨
+  if (windChill >= 18) return 3; // 더운 날씨
   if (windChill >= 10) return 2; // 보통 날씨
   return 1;
 }
