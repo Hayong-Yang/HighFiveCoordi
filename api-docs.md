@@ -3,8 +3,8 @@
 
 ## 🧭 개요 (Overview)
 
-HighFiveCoordi 프로젝트는 날씨 맞춤형 스타일 코디 추천 서비스를 제공하는 플랫폼입니다.  
-본 문서는 해당 프로젝트의 API 명세를 설명하며, 개발자 및 사용자 시스템 연동을 위한 주요 가이드를 제공합니다.
+#### HighFiveCoordi 프로젝트는 날씨 맞춤형 스타일 코디 추천 서비스를 제공하는 플랫폼입니다.  
+#### 본 문서는 해당 프로젝트의 API 명세를 설명하며, 개발자 및 사용자 시스템 연동을 위한 주요 가이드를 제공합니다.
 
 
 ### 문서 요약
@@ -32,11 +32,15 @@ HighFiveCoordi 프로젝트는 기온에 따른 스타일 코디 추천 서비�
 ---
 
 ### 2. 🛒 추천 상품 API
-| 구성 요소              | 설명                           |
-|-------------------------|--------------------------------|
-| **RecommendRoutes**     | 추천 API 라우터 경로          |
-| **RecommendController** | 추천 로직 처리                |
-| **Data.Recommend**      | 추천 알고리즘 데이터 접근     |
+
+| 구성 요소                | 설명                                                                |
+|-------------------------|---------------------------------------------------------------------|
+| **RecommendRoutes**      | 추천 관련 요청을 처리하는 라우터 (예: `/recommend`)                    |
+| **RecommendController**  | 날씨 기반 추천, 색상 기반 추천 요청을 처리하는 컨트롤러                   |
+| **Data.Recommend**       | 날씨 및 체감온도 기반으로 추천 레벨(level)을 산출하는 알고리즘 모듈        |
+| **Data.colorHarmony**    | 유사색, 보색, 삼조합 등의 색상 조화 알고리즘을 제공하는 모듈              |
+| **ProductController**    | `hot_pick` 상위 3개 상품을 조회하여 추천하는 핫픽 추천 API를 담당함         |
+
 
 ---
 
@@ -49,10 +53,10 @@ HighFiveCoordi 프로젝트는 기온에 따른 스타일 코디 추천 서비�
 ---
 
 ### 4. 🛠 관리자 전용 API
-| 구성 요소       | 설명                         |
-|------------------|------------------------------|
-| **ManagerRoutes** | 관리자 상품 등록, 수정 등 API |
-
+| 구성 요소         | 설명                                                              |
+|--------------------|-------------------------------------------------------------------|
+| **ManagerRoutes**   | 관리자용 페이지 라우터 (`/manager`) – 상품 등록을 담당함         |
+| **ProductController** | 실제 상품 등록 상품 관련 로직을 처리하는 컨트롤러 모듈 |
 ---
 
 ### 5. 🗄 DB 연결 / 쿼리 처리
@@ -79,18 +83,18 @@ HighFiveCoordi 프로젝트는 기온에 따른 스타일 코디 추천 서비�
 
 ---
 
-### 8. 📦 설정 및 환경 구성
+### 8. 🚀 애플리케이션 진입점
+| 구성 요소       | 설명                     |
+|------------------|--------------------------|
+| **app**           | Express 서버 초기화 및 라우터 연결 |
+---
+
+### 9. 📦 설정 및 환경 구성
 | 구성 요소       | 설명                                 |
 |------------------|--------------------------------------|
 | **Config**        | 포트, DB 등 `.env` 기반 환경 설정   |
 
 
----
-
-### 9. 🚀 애플리케이션 진입점
-| 구성 요소       | 설명                     |
-|------------------|--------------------------|
-| **app**           | Express 서버 초기화 및 라우터 연결 |
 ---
 ---
 
@@ -100,9 +104,9 @@ HighFiveCoordi 프로젝트는 기온에 따른 스타일 코디 추천 서비�
 
 #### 회원가입 API
 
-- **URL**: `/api/auth/signup`
+- **URL**: `/auth/signup`
 - **Method**: `POST`
-- **Headers**:  
+- **Headers**:  `Content-Type: application/json`
 
 ##### 요청 바디
 
@@ -159,7 +163,7 @@ HighFiveCoordi 프로젝트는 기온에 따른 스타일 코디 추천 서비�
 
 ##### 아이디 중복 확인 API
 
-- **URL**: `/api/auth/check-id`
+- **URL**: `/auth/duplicateCheck`
 - **Method**: `POST`
 - **Headers**:  
   `Content-Type: application/json`
@@ -406,17 +410,6 @@ await sendSMS("01012345678");
 | API Key 오류 | 없음 (예외 발생) | `Unauthorized. Invalid API key or secret` | 환경변수의 `apiKey_pw`, `apiSecret_pw`가 잘못됨 |
 | 서버 연결 실패 | 없음 (예외 발생) | `connect ETIMEDOUT sms.coolsms.co.kr:443` | CoolSMS 서버와 연결 실패 (네트워크 문제, 방화벽 등) |
 ---
-#### 라우팅 함수
-
-| 함수 이름       | 역할 설명                              | HTTP 메서드 | 엔드포인트            | 반환 위치 (HTML 파일 or 경로)        |
-|----------------|------------------------------------------|-------------|------------------------|----------------------------------------|
-| `toLogin`      | 로그인 페이지로 이동                     | GET         | `/auth/login`         | `/public/login.html`                   |
-| `toSignUp`     | 회원가입 페이지로 이동                   | GET         | `/auth/signup`        | `/public/signup.html`                  |
-| `logOut`       | 로그아웃 처리 후 메인 페이지로 리디렉션 | GET         | `/auth/logout`        | `/` (메인 페이지, 클라이언트가 토큰 삭제) |
-| `toFindId`     | 아이디 찾기 페이지로 이동                | GET         | `/auth/find-id`       | `/public/find-id.html`                 |
-| `toFindPw`     | 비밀번호 찾기 페이지로 이동              | GET         | `/auth/find-pw`       | `/public/find-pw.html`                 |
-
----
 ### Data.Auth
 #### 회원 생성 함수 (`createUser`)
 
@@ -604,12 +597,11 @@ CoolSMS API를 사용하며, 인증번호는 5분 동안 유효합니다.
 ```
 ---
 ---
-## 🌤 추천 상품 API
----
+## 2. 🛒추천 상품 API
 
 ### RecommendController
 
-#### 날씨 기반 옷 추천 API
+#### 날씨 기반 옷 추천 API(`recommendClothes`)
 기상청 단기예보 API를 통해 날씨 데이터를 받아와  
 기온/풍속/강수확률을 분석하고, 이를 기반으로 체감온도를 계산하여  
 추천 알고리즘에 따라 **옷 조합을 추천**하는 API입니다.
@@ -661,7 +653,7 @@ CoolSMS API를 사용하며, 인증번호는 5분 동안 유효합니다.
 | 날씨 데이터 일부 없음        | `404` | `"예보 데이터를 충분히 찾을 수 없습니다."` |
 | API 호출 실패 / 네트워크 오류 | `500` | `"날씨 데이터를 불러오는 중 오류 발생"`   |
 ---
-#### 색상 적용하기 API
+#### 색상 적용하기 API(`reloadClothes`)
 사용자가 색상을 직접 선택한 후,
 해당 색상에 조화를 이루는 추천 옷들을 받아오는 기능입니다.
 
@@ -702,6 +694,67 @@ CoolSMS API를 사용하며, 인증번호는 5분 동안 유효합니다.
 ```json
 "날씨 데이터를 불러오는 중 오류 발생"
 ```
+
+#### 추천 다시 받기 API(`recommendAgain`)
+사용자가 기온에 맞춰 추천을 **다시 요청**할 수 있는 API입니다.  
+기존 색상 선택 없이 **랜덤 색상 기반**으로 추천이 제공됩니다.
+
+---
+
+#### 엔드포인트
+
+| 메서드 | URL                            | 설명                            |
+|--------|--------------------------------|---------------------------------|
+| POST   | `/recommend/again`    | 랜덤 색상 기반으로 추천 다시 받기 |
+
+---
+
+#### 요청 헤더
+
+| 헤더 키        | 필수 | 설명               |
+|----------------|------|--------------------|
+| `Content-Type` | ✅   | `application/json` |
+| `Authorization`| ❌   | (옵션) JWT 토큰     |
+
+---
+
+#### 요청 바디
+
+| 필드명  | 타입   | 필수 | 설명                          |
+|---------|--------|------|-------------------------------|
+| level   | number | ✅   | 추천 기준 온도 레벨 (1~3)     |
+
+#### 예시
+
+```json
+{
+  "level": 2
+}
+```
+```json
+{
+  "recommendedResult": [
+    {
+      "idx": 101,
+      "category": "top",
+      "image_url": "http://localhost:8080/product_images/101.webp",
+      "url": "https://www.example.com/products/101"
+    },
+    {
+      "idx": 201,
+      "category": "pants",
+      "image_url": "http://localhost:8080/product_images/201.webp",
+      "url": "https://www.example.com/products/201"
+    }
+    // ...
+  ]
+}
+```
+| 코드  | 설명                  |
+| --- | ------------------- |
+| 200 | 추천 성공               |
+| 500 | 서버 오류 (날씨 데이터 문제 등) |
+
 
 ---
 ### Data.Recommend
@@ -789,7 +842,212 @@ return { h: NaN, s: 0, l: 0 };
 | `1` | 추운 날씨 (10℃ 미만)        |
 ---
 ### Data.ColorHarmony
+#### getBaseColor(pickedColor) 함수
+`getBaseColor(pickedColor)` 함수는 사용자가 선택한 색상(HEX)에서 **Hue(색상각)** 값을 추출한 뒤,  
+그 주변 ±15도 범위 내에서 무작위로 하나를 선택하여 **기준 색상(Hue)**을 반환합니다.
 
+> 만약 사용자가 색상을 선택하지 않았을 경우(`pickedColor === 0`), 내부에서 **랜덤 HSL 색상**을 생성하여 처리합니다.
+
+---
+
+#### 입력
+
+| 이름           | 타입     | 필수 | 설명 |
+|----------------|----------|------|------|
+| `pickedColor`  | `string` (`"#rrggbb"`) 또는 `0` | ✅ | 사용자가 선택한 HEX 색상 (또는 0 → 랜덤 생성) |
+
+---
+
+#### 반환
+
+| 반환값         | 타입    | 설명 |
+|----------------|---------|------|
+| `baseHue`      | `number` | 기준 색상(Hue), 정수값, 0~359 범위 |
+
+---
+
+#### 처리 흐름
+
+| 단계 | 설명 |
+|------|------|
+| 1️ | `pickedColor`가 `0`이면 → `rgbToHSL(0)` 호출하여 랜덤 HSL 생성 |
+| 2️ | `pickedColor`가 HEX 형식이면 → `rgbToHSL(pickedColor)` 호출로 HSL 변환 |
+| 3️ | `pickedHue = hsl.h` → 색상의 Hue 값만 추출 |
+| 4️ | `pickedHue ± 15도` 범위 설정 |
+| 5️ | 범위 내에서 무작위 정수(`rand`) 생성 |
+| 6️ | `(min + rand) % 360` → 최종 baseHue 반환 |
+---
+#### 예시
+```js
+getBaseColor("#ffcc00");  
+// → pickedHue = 48
+// → baseHue ∈ [33 ~ 63]
+// → 결과 예: 59
+```
+
+#### 예외처리
+| 상황                             | 처리                                                              |
+| ------------------------------ | --------------------------------------------------------------- |
+| `pickedColor === 0`            | 랜덤 색상 생성                                                        |
+| HEX 형식이 잘못된 경우 (예: `"abc123"`) | `rgbToHSL()` 내부에서 경고 출력 후 fallback `{ h: NaN, s: 0, l: 0 }` 처리됨 |
+
+#### `similarHarmony(baseColor)`
+기준 색상 `baseColor`를 중심으로 ±10~30도 범위의 유사 색상들을 생성하여 각 카테고리에 할당합니다.
+
+
+| 이름 | 타입 | 설명 |
+|------|------|------|
+| `baseColor` | number (0~359) | 기준 Hue 값 |
+#### 출력
+
+- 반환 타입: `Array<Object>`
+- 총 5개의 카테고리(top, pants, outer, shoes, etc)에 유사한 hue 배정
+
+```js
+[
+  { category: "top", hue: 230 },
+  { category: "pants", hue: 212 },
+  ...
+]
+```
+#### 처리 흐름
+| 단계 | 설명                                       |
+| -- | ---------------------------------------- |
+| 1  | 입력된 baseColor 기준으로 ±10\~30도 랜덤 offset 결정 |
+| 2  | offset을 양/음 방향 중 랜덤으로 적용                 |
+| 3  | 각 카테고리에 위 hue를 랜덤하게 배정                   |
+
+---
+#### `complementaryHarmony(baseColor)`
+입력된 baseColor의 보색(180도 반대)과 기준색을 기반으로 조합한 색상들을 랜덤으로 섞어 배정합니다.
+
+#### 출력
+```js
+[
+  { category: "top", hue: 240 },
+  { category: "pants", hue: 60 },
+  ...
+]
+```
+#### 처리 흐름
+| 단계 | 설명                                           |
+| -- | -------------------------------------------- |
+| 1  | baseColor의 보색 = `(baseColor + 180) % 360` 계산 |
+| 2  | 각 색상 기준으로 ±15도 범위의 hue를 랜덤 생성                |
+| 3  | 기준색 기반 2~~3개, 보색 기반 2~~3개로 총 5개 섞음           |
+| 4  | 5개 색을 top, pants, outer, shoes, etc에 매핑      |
+
+---
+#### `triadicHarmony(baseColor)`
+기준 색상을 기준으로 120도 간격을 둔 삼각 조화(triadic) 색상 세 개를 생성하고, 이 중 랜덤하게 선택하여 5개의 hue를 구성합니다.
+
+```js
+[
+  { category: "top", hue: 40 },
+  { category: "pants", hue: 160 },
+  ...
+]
+```
+#### 처리 흐름
+| 단계 | 설명                                            |
+| -- | --------------------------------------------- |
+| 1  | 기준색과 (base + 120), (base + 240) → 3색 Triad 구성 |
+| 2  | 각 색상에서 ±15도 범위의 랜덤 hue 생성                     |
+| 3  | 이 중 5개를 뽑아 각 카테고리에 배정                         |
+---
+
+#### `getRecommendations(pickedColor, level)`
+
+#### 설명
+
+입력된 색상(pickedColor)으로부터 기준 Hue(baseHue)를 계산하고,  
+랜덤하게 선택된 색상 조화 알고리즘(유사/보색/삼조합)을 통해  
+**각 카테고리별 옷 색상(hue)**을 설정한 뒤, 해당 조건에 맞는 옷을 DB에서 추천합니다.
+
+---
+
+#### 입력
+
+| 파라미터명 | 타입 | 필수 | 설명 |
+|------------|------|------|------|
+| `pickedColor` | `string` (`"#rrggbb"`) 또는 `0` | ✅ | 사용자가 선택한 색상. `0`이면 랜덤 |
+| `level` | `number` (1~3) | ✅ | 체감온도 기반 추천 난이도 (1: 추움, 2: 보통, 3: 더움) |
+
+---
+
+#### 처리 흐름
+
+| 단계 | 설명 |
+|------|------|
+| 1 | `getBaseColor(pickedColor)` 호출 → 기준 색상 Hue 추출 |
+| 2 | 세 가지 전략 중 랜덤으로 하나 선택: `similar`, `complementary`, `triadic` |
+| 3 | 선택된 전략에 따라 카테고리별 추천 Hue 목록 생성 |
+| 4 | `getClothesfromDB(hueTargets, level)` 호출하여 DB에서 옷 조회 |
+| 5 | 추천된 옷 리스트 반환
+
+---
+
+#### 반환
+
+```js
+[
+  {
+    idx: 203,
+    category: "pants",
+    image_url: "http://localhost:8080/product_images/203_pants.webp",
+    url: "https://www.musinsa.com/products/123456"
+  },
+  ...
+]
+```
+#### `getClothesfromDB(hueTargets, level)`
+카테고리별 목표 `Hue(hueTargets)`와 추천 `level(온도 기준)`을 기준으로
+MySQL products 테이블에서 조건에 맞는 상품 1개를 랜덤 조회합니다.
+
+| 파라미터명        | 타입                                         | 설명                     |
+| ------------ | ------------------------------------------ | ---------------------- |
+| `hueTargets` | `Array<{ category: string, hue: number }>` | 색상 조화 알고리즘에서 생성된 대상 목록 |
+| `level`      | number (1\~3)                              | 추천 난이도(온도 등급)          |
+---
+
+```sql
+SELECT idx, category, image_url, url
+FROM products
+WHERE category = ?
+  AND temp_level = ?
+  AND LEAST(ABS(hue - ?), 360 - ABS(hue - ?)) < 20
+ORDER BY RAND()
+LIMIT 1;
+```
+| 조건 항목            | 설명                   |
+| ---------------- | -------------------- |
+| `category = ?`   | 상의, 하의, 신발 등 카테고리 일치 |---
+| `temp_level = ?` | 온도 기반 등급 필터          |
+| `hue` 근접 조건      | Hue 값이 목표 색상과 20도 이내 |
+---
+```js
+{
+  recommendations: [
+    {
+      idx: 204,
+      category: "pants",
+      image_url: "...",
+      url: "..."
+    },
+    ...
+  ]
+}
+```
+#### 예시
+```js
+const results = await getRecommendations("#ffcc00", 2);
+```
+#### 함수 요약
+| 함수                                                         | 설명              |
+| ---------------------------------------------------------- | --------------- |
+| `getBaseColor(pickedColor)`                                | 기준 Hue 생성       |
+| `similarHarmony`, `complementaryHarmony`, `triadicHarmony` | 조화 알고리즘         |
+| `getClothesfromDB()`                                       | 최종적으로 DB에서 옷 추천 |
 ---
 
 ---
@@ -802,7 +1060,7 @@ return { h: NaN, s: 0, l: 0 };
 #### 요청 개요
 
 - **Method**: `GET`
-- **Endpoint**: `/products/top-picks` _(http://localhost:8080/product_images/201_pants-long_black.webp)_
+- **Endpoint**: `/products/hotpicks` _(http://localhost:8080/product_images/201_pants-long_black.webp)_
 - **Query Params**: 없음
 
 ---
@@ -858,25 +1116,255 @@ return { h: NaN, s: 0, l: 0 };
 ---
 ---
 
-## 💖 위시리스트 페이지 요청 API
-
+## 3. 💖 위시리스트 페이지 요청 API
+사용자가 찜한 상품을 저장/조회/삭제하는 기능을 제공합니다.
 ### WishlistController
 
 - **URL**: `/wishlist`
 - **Method**: `GET`
 - **Response**: HTML 페이지 (`wishlist.html` 전송)
+- **파일 경로(toWishlist)**:`public/wishlist.html`
+#### 찜목록 조회 `getWishlistByUser`
 
+```js
+router.get("/", toWishlist);                 // 브라우저 접속용: HTML 반환
+router.get("/mine", getWishlistByUser);      // 로그인된 유저의 찜 목록 조회
+router.post("/", addToWishlist);             // 찜 추가
+router.delete("/", removeFromWishlist);      // 찜 삭제
+```
+#### 현재 로그인한 사용자의 찜 목록
+| 항목          | 내용                            |
+| ----------- | ----------------------------- |
+| **URL**     | `/wishlist/mine`              |
+| **Method**  | `GET`                         |
+| **Headers** | `Authorization: Bearer <JWT>` |
+| **Query**   | 없음 (토큰에서 user\_idx 추출)        |
+---
+#### SQL처리
+```sql
+SELECT
+  w.idx AS wishlist_idx,
+  w.product_idx,
+  p.name,
+  p.price,
+  p.category,
+  p.image_url
+FROM wishlists w
+JOIN products p ON w.product_idx = p.idx
+WHERE w.user_idx = ?
+```
 
-### WishlistRoutes
+#### _응답 성공(200)_
+```json
+[
+  {
+    "wishlist_idx": 12,
+    "product_idx": 203,
+    "name": "트랙 팬츠",
+    "price": 89900,
+    "category": "pants",
+    "image_url": "http://localhost:8080/product_images/203.webp"
+  },
+  ...
+]
+```
+#### _응답 실패_
+| 코드  | 메시지               |
+| --- | ----------------- |
+| 400 | user\_idx가 필요합니다. |
+| 500 | 찜 목록 조회 실패        |
+---
+#### 찜 추가 `addToWishlist`
+사용자가 특정 상품을 찜(wishlist)할 수 있도록 합니다.  
+찜 성공 시 해당 상품의 `hot_pick` 값이 1 증가합니다.
+
+또한, 트랜잭션을 통해 **찜 추가와 hot_pick 증가를 하나의 작업으로 처리**합니다.
 
 ---
 
-## 관리자 API
+#### 요청 정보
 
-### ManagerRoutes
+| 항목 | 설명 |
+|------|------|
+| **URL** | `/wishlist` |
+| **Method** | `POST` |
+| **Content-Type** | `application/json` |
+| **Auth Header** | `Authorization: Bearer <JWT>` |
 
 ---
-## 🗄️ Database 연결 설정 (`db.mjs`)
+
+#### 요청 바디
+
+```json
+{
+  "user_idx": 1,
+  "product_idx": 204
+}
+```
+| 필드            | 타입       | 필수 | 설명       |
+| ------------- | -------- | -- | -------- |
+| `user_idx`    | `number` | ✅  | 사용자 식별자  |
+| `product_idx` | `number` | ✅  | 찜할 상품 ID |
+---
+#### _응답 성공(200)_
+```json
+{
+  "message": "찜 추가 및 hot_pick 증가 완료",
+  "idx": 12
+}
+```
+#### _응답 실패(400)_
+```json
+{ "message": "user_idx와 product_idx가 필요합니다." }
+{ "message": "이미 찜한 상품입니다." }
+```
+#### _응답 실패(500)_
+```json
+{
+  "message": "찜 추가 실패",
+  "error": "Duplicate entry '1-204' for key 'PRIMARY'"
+}
+```
+#### 내부 SQL쿼리
+```sql
+-- 1. 찜 추가
+INSERT INTO wishlists (user_idx, product_idx)
+VALUES (?, ?);
+
+-- 2. hot_pick 증가
+UPDATE products
+SET hot_pick = hot_pick + 1
+WHERE idx = ?;
+```
+#### 찜 삭제`removeFroWishlist`
+
+#### 설명
+
+사용자가 이전에 찜한 상품을 **찜 목록에서 제거**하는 기능입니다.  
+필요한 값은 `user_idx`와 `product_idx`입니다.
+
+---
+
+#### 요청 정보
+
+| 항목 | 내용 |
+|------|------|
+| **URL** | `/wishlist` |
+| **Method** | `DELETE` |
+| **Content-Type** | `application/json` 또는 `x-www-form-urlencoded` |
+| **Headers** | `Authorization: Bearer <JWT>` (필요시) |
+
+---
+
+#### 요청 바디 OR 쿼리
+
+**Body 또는 Query Parameter 둘 중 하나만 제공해도 동작합니다.**
+
+```json
+{
+  "user_idx": 1,
+  "product_idx": 204
+}
+```
+| 필드            | 타입       | 필수 | 설명        |
+| ------------- | -------- | -- | --------- |
+| `user_idx`    | `number` | ✅  | 사용자 ID    |
+| `product_idx` | `number` | ✅  | 삭제할 상품 ID |
+
+#### _응답 성공(200)_
+```json
+{
+  "message": "찜 삭제 완료"
+}
+```
+#### _응답 실패(400)_
+```json
+{
+  "message": "user_idx와 product_idx가 필요합니다."
+}
+```
+#### _응답 실패(500)_
+```json
+{
+  "message": "찜 삭제 실패",
+  "error": "SQL 에러 메시지"
+}
+```
+
+#### SQL내부 쿼리
+```sql
+DELETE FROM wishlists
+WHERE user_idx = ? AND product_idx = ?;
+```
+---
+---
+## 4. 🛠관리자 API
+### productController
+#### 관리자 상품 등록 페이지
+관리자만 접속을 할 수 있으며 계속해서 상품을 등록할 수 있는 페이지
+**관리자 접근 조건**_은 JWT의 payload 안에 있는 userid가 "admin"일 경우만 관리자 권한으로 통과되도록 처리 (isManager 미들웨어 필요 시 사용)_
+
+#### 개요
+| 항목               | 내용                            |
+| ---------------- | ----------------------------- |
+| **URL**          | `/product/createProduct`      |
+| **Method**       | `POST`                        |
+| **Headers**      | `Authorization: Bearer <JWT>` |
+| **Content-Type** | `application/json`            |
+| **인증 여부**        | ✅ 필요 (`isAuth` 또는 관리자 권한)     |
+---
+#### 요청 바디
+```json
+{
+  "name": "코튼 니트",
+  "category": "top",
+  "price": 64000,
+  "description": "일교차가 심한 요즘 입기 좋은 니트",
+  "temp_level": 2,
+  "hue": 220,
+  "saturation": 28,
+  "lightness": 17,
+  "color": "Navy",
+  "image_url": "http://localhost:8080/product_images/601_navy_knitwear.webp",
+  "url": "https://www.musinsa.com/products/4309845"
+}
+```
+| 필드          | 타입     | 필수 | 설명                                  |
+| ----------- | ------ | -- | ----------------------------------- |
+| name        | string | ✅  | 상품명                                 |
+| category    | enum   | ✅  | top, pants, outer, shoes, etc 중 택 1 |
+| price       | number | ✅  | 가격 (정수)                             |
+| description | string | ✅  | 상품 설명                               |
+| temp\_level | number | ❌  | 온도 등급 (1\~3 권장, 기본 1)               |
+| hue         | number | ✅  | 색상 Hue (0\~360)                     |
+| saturation  | number | ✅  | 색상 채도 (0\~100)                      |
+| lightness   | number | ✅  | 색상 명도 (0\~100)                      |
+| color       | string | ✅  | 대표 색상명 (예: Black, Blue 등)           |
+| image\_url  | string | ✅  | 이미지 주소                              |
+| url         | string | ✅  | 외부 상품 링크 (ex. 무신사)                  |
+#### _응답 성공(200)_
+```json
+{
+  "message": "상품 등록 성공",
+  "id": 605
+}
+```
+#### _응답 실패(500)_
+```json
+{
+  "message": "상품 등록 실패",
+  "error": "Field 'category' doesn't have a default value"
+}
+```
+#### SQL쿼리
+```sql
+INSERT INTO products 
+(name, category, price, description, temp_level, image_url, hue, saturation, lightness, color, url)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+```
+---
+---
+## 5. 🗄️ Database 연결 설정 (`db.mjs`)
 
 이 모듈은 `mysql2` 라이브러리를 사용하여 MySQL 데이터베이스와의 **비동기 커넥션 풀**을 설정하고  
 `Promise 기반 쿼리 인터페이스`를 제공하는 공통 데이터베이스 접근 객체입니다.
@@ -916,7 +1404,7 @@ console.log(rows);
 | 커넥션 풀 관리 자동화        | 다중 연결 환경에서 성능 및 안정성 향상      |
 | 오류 및 예외 처리 간결화      | `try/catch` 기반 예외 핸들링 가능    |
 ---
-## 🧪 에러 발생 시 예시
+### 에러 발생 시 예시
 
 ```bash
 Error: ER_ACCESS_DENIED_ERROR: Access denied for user 'wronguser'@'localhost'
@@ -929,20 +1417,10 @@ Error: ER_ACCESS_DENIED_ERROR: Access denied for user 'wronguser'@'localhost'
 | 해당 계정이 `localhost`에서 접속 불가           | `@'localhost'`가 맞는지, `%`로 허용했는지 확인 |
 ---
 
-## 🗄️ DataBase 설계 명세서 (highfiveDB)
+## 6. 🧬 DataBase 설계 명세서 (highfiveDB)
 
-### 이 문서는 서비스에 사용되는 MySQL 기반 데이터베이스 `highfiveDB`의 테이블 구조와 관계를 정리한 문서입니다.  
-### 주요 기능은 사용자 인증, 상품 추천, 위시리스트 저장 등이며, 각 테이블은 외래키(FK)로 연결되어 있습니다.
----
-### 📦 데이터베이스 정보
-
-| 항목       | 값               |
-|------------|------------------|
-| DB 이름     | `highfiveDB`     |
-| 사용자 계정 | `highfive_dev`   |
-| 비밀번호    | `1111`           |
-| 호스트      | `localhost`      |
-| 포트        | `3306`     |
+- 이 문서는 서비스에 사용되는 MySQL 기반 데이터베이스 `highfiveDB`의 테이블 구조와 관계를 정리한 문서입니다.  
+- 주요 기능은 사용자 인증, 상품 추천, 위시리스트 저장 등이며, 각 테이블은 외래키(FK)로 연결되어 있습니다.
 ---
 ### 🧑Users (회원 테이블)
 | 컬럼명     | 타입           | 제약조건                | 설명        |
@@ -975,38 +1453,40 @@ Error: ER_ACCESS_DENIED_ERROR: Access denied for user 'wronguser'@'localhost'
 
 ---
 ### ❤️wishlists (위시리스트 테이블)
-| 컬럼명          | 타입                        | 제약조건                        | 설명                  |
-| ------------ | ------------------------- | --------------------------- | ------------------- |
-| idx          | INT                       | PK, AUTO\_INCREMENT         | 위시리스트 고유 ID         |
-| user\_idx    | INT                       | NOT NULL, FK → users.idx    | 사용자 ID              |
-| product\_idx | INT                       | NOT NULL, FK → products.idx | 상품 ID               |
-| created\_at  | DATETIME                  | DEFAULT CURRENT\_TIMESTAMP  | 생성 일시               |
-| UNIQUE KEY   | (user\_idx, product\_idx) | 중복 저장 방지                    | 같은 상품을 중복으로 찜할 수 없음 |
+
+| 컬럼명        | 타입     | 제약 조건                                 | 설명                         |
+|---------------|----------|-------------------------------------------|------------------------------|
+| `idx`         | INT      | PRIMARY KEY, AUTO_INCREMENT               | 고유 식별자 (찜 ID)          |
+| `user_idx`    | INT      | NOT NULL, FOREIGN KEY → `users(idx)`     | 찜한 사용자 ID               |
+| `product_idx` | INT      | NOT NULL, FOREIGN KEY → `products(idx)`  | 찜한 상품 ID                 |
+| `created_at`  | DATETIME | DEFAULT CURRENT_TIMESTAMP                 | 찜한 시각 (자동 등록)        |
+|               |          | UNIQUE(`user_idx`, `product_idx`)         | 사용자-상품 중복 찜 방지     
+
 
 ### 🛒샘플 데이터 (products 일부)
-| idx | name                              | category | price  | color | temp\_level | hue | sat | light | image\_url |
-| --- | --------------------------------- | -------- | ------ | ----- | ----------- | --- | --- | ----- | ---------- |
-| 101 | HS STRIPE KNIT COLLAR SHIRT\_NAVY | top      | 52200  | navy  | 2           | 218 | 39  | 12    | ...        |
-| 201 | 썸머 시어서커 밴딩 팬츠                     | pants    | 24900  | black | 2           | 60  | 10  | 10    | ...        |
-| 301 | 바르텔 자켓\_BLACK                     | outer    | 125300 | black | 2           | 270 | 5   | 16    | ...        |
-| 401 | 푸마 클럽 2 에라                        | shoes    | 34990  | navy  | 2           | 240 | 6   | 20    | ...        |
+| idx | name                              | category | price | description                                      | color | temp\_level | hue | saturation | lightness | image\_url                                                                                                                            | url                                                                                  |
+| --- | --------------------------------- | -------- | ----- | ------------------------------------------------ | ----- | ----------- | --- | ---------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| 101 | HS STRIPE KNIT COLLAR SHIRT\_NAVY | top      | 52200 | 부드러운 이미지를 주는 니트 티셔츠로 많은 남성들의 남친룩을 담당합니다.         | navy  | 2           | 218 | 39         | 12        | [http://localhost:8080/product\_images/101shirtshort\_navy.webp](http://localhost:8080/product_images/101shirtshort_navy.webp)        | [https://www.musinsa.com/products/3998728](https://www.musinsa.com/products/3998728) |
+| 102 | ASI 에센셜 코튼 헨리넥 티셔츠\_피그먼트 올리브      | top      | 33900 | 봄, 가을에 부드러운 이미지와 빈티지한 느낌을 동시에 줄 수 있는 다용도 티셔츠입니다. | olive | 1           | 70  | 15         | 32        | [http://localhost:8080/product\_images/102\_shirtlong\_olive.webp](http://localhost:8080/product_images/102_shirtlong_olive.webp)     | [https://www.musinsa.com/products/4852646](https://www.musinsa.com/products/4852646) |
+| 103 | 오버핏 1:1 스트라이프 반팔티                 | top      | 19900 | 캐주얼한 스트라이프로 더운 날 포인트로 입기 좋은 티셔츠입니다.              | grey  | 3           | 330 | 4          | 10        | [http://localhost:8080/product\_images/103\_shirt-short\_grey.webp](http://localhost:8080/product_images/103_shirt-short_grey.webp)   | [https://www.musinsa.com/products/5033156](https://www.musinsa.com/products/5033156) |
+| 104 | 퓨어코튼 펀칭 카라 니트                     | top      | 45000 | 캐주얼한 색상과 단정한 카라 니트의 조합으로 인기가 많은 상품입니다.           | green | 2           | 144 | 56         | 22        | [http://localhost:8080/product\_images/104\_shirt-short\_green.webp](http://localhost:8080/product_images/104_shirt-short_green.webp) | [https://www.musinsa.com/products/2775687](https://www.musinsa.com/products/2775687) |
 
 ---
 ### 테이블 관계도
 users ───< wishlists >─── products
-#### 위시리스트는 사용자와 상품 간의 N:M 중간 테이블 역할
+##### 위시리스트는 사용자와 상품 간의 N:M 중간 테이블 역할
 ---
 
-## 에러처리 API
+## 7. ⚠️에러처리 API
 
-### 🔐 Middleware: `isAuth` - JWT 인증 미들웨어
+###  Middleware: `isAuth` - JWT 인증 미들웨어
 
 JWT(Json Web Token)를 이용한 사용자 인증 미들웨어입니다.  
 클라이언트 요청의 `Authorization` 헤더에 포함된 JWT를 검증하고, 유효한 경우 사용자 정보를 요청에 추가한 뒤 다음 단계로 넘깁니다.
 
 ---
 
-### ✅ 사용 목적
+#### 사용 목적
 
 - `Authorization` 헤더에서 JWT 추출 및 형식 검증
 - JWT 토큰의 유효성 검증 (서명 및 만료 여부)
@@ -1015,7 +1495,7 @@ JWT(Json Web Token)를 이용한 사용자 인증 미들웨어입니다.
 - 성공 시 `request.userIdx`에 사용자 인덱스를 추가하고 다음 미들웨어로 진행
 
 ---
-### 구성요소
+#### 구성요소
 | 구성 요소                     | 설명                              |
 | ------------------------- | ------------------------------- |
 | `jsonwebtoken`            | JWT 토큰 생성 및 검증 라이브러리 (`verify`) |
@@ -1023,9 +1503,7 @@ JWT(Json Web Token)를 이용한 사용자 인증 미들웨어입니다.
 | `authRepository.findByid` | 토큰에서 추출된 `idx`로 사용자 DB 조회 함수    |
 
 ---
-### 📥 요청 형식
-
-#### 요청 헤더
+####  요청 형식
 
 | Header         | 필수 | 설명                                      | 예시                                               |
 |----------------|------|-------------------------------------------|----------------------------------------------------|
@@ -1043,13 +1521,13 @@ JWT(Json Web Token)를 이용한 사용자 인증 미들웨어입니다.
 ```
 ---
 
-### 인증 성공 시
+#### _인증 성공 시_
 - request.userIdx에 사용자 ID가 할당되어 다음 라우터에서 접근 가능
 
 - 응답은 없음 (next() 호출로 다음 미들웨어 또는 컨트롤러로 이동)
 ---
 
-### ❗️ 에러 코드 정리 - `isAuth` 미들웨어
+#### _에러 코드 정리 - `isAuth` 미들웨어_
 
 | 에러 상황               | HTTP 상태 코드 | 응답 메시지                 | 설명                                                      | 로그 출력 예시        |
 |--------------------------|----------------|------------------------------|-----------------------------------------------------------|------------------------|
@@ -1060,31 +1538,58 @@ JWT(Json Web Token)를 이용한 사용자 인증 미들웨어입니다.
 
 ---
 
-### ✅ 공통 에러 응답 형식
+#### 공통 에러 응답 형식
 
 ```json
 {
   "message": "인증에러"
 }
 ```
+### 관리자 인증 미들웨어: `isManager`
+관리자 전용 API 접근을 제어하는 **Express 미들웨어 함수**입니다.  
+JWT 토큰을 검증하고, 사용자 ID가 `"admin"`인 경우에만 다음 단계로 진행할 수 있도록 합니다.
+
+#### 인증 흐름
+| 단계  | 설명                                            |
+| --- | --------------------------------------------- |
+| 1️ | `Authorization` 헤더에서 Bearer 토큰 추출             |
+| 2️ | `jwt.verify()`로 토큰 유효성 검사                     |
+| 3️ | 토큰 payload의 `idx`를 이용해 DB에서 사용자 정보 조회         |
+| 4️ | 사용자 존재 여부와 `userid === "admin"` 확인            |
+| 5️ | 관리자일 경우 → `request.userIdx`에 저장 후 `next()` 호출 |
+| 6️ | 관리자 아닐 경우 → 401 Unauthorized 응답               |
+#### 서버 응답 조건
+- JWT가 유효함
+
+- payload에 해당하는 사용자가 존재함
+
+- userid가 정확히 "admin"
+
+→ 이 경우 next() 실행되어 요청 계속 진행 가능
+#### 실패 응답
+| 상황                         | 응답 상태 | 설명                           |
+| -------------------------- | ----- | ---------------------------- |
+| Authorization 헤더 없음        | 401   | `AUTH_ERROR`                 |
+| 토큰 서명 유효하지 않음              | 401   | `AUTH_ERROR`, "토큰 에러" 로그 출력  |
+| 사용자 정보 없음                  | 401   | `AUTH_ERROR`, "관리자 아님" 로그 출력 |
+| 일반 사용자 (`user`, `guest` 등) | 401   | `AUTH_ERROR`, "관리자 아님" 로그 출력 |
 
 ---
-
-### ✅ API 입력 유효성 검사 명세 (Validation)
+### API 입력 유효성 검사 명세 (Validation)
 
 본 문서는 사용자 로그인 및 회원가입 요청에 대한 **입력 필드 유효성 검사 조건**을 정의합니다.  
 해당 유효성 검사는 `express-validator`와 커스텀 `validate` 미들웨어를 통해 처리됩니다.
 
-### 🔐 1. 로그인 (`POST /auth/login`)
+#### 1. 로그인 (`POST /auth/login`)
 
-### 📥 요청 바디 (Request Body)
+#### 요청 바디
 
 | 필드명   | 필수 | 타입     | 유효성 조건                                                 | 에러 메시지 예시                          |
 |----------|------|----------|--------------------------------------------------------------|--------------------------------------------|
 | inputId  | ✅   | string   | - 최소 4자 이상<br>- 영문/숫자만 허용<br>- 특수문자 금지       | `아이디는 최소 4자 이상 입력해야 합니다.`<br>`특수문자는 사용할 수 없습니다.` |
 | inputPw  | ✅   | string   | - 최소 8자 이상                                              | `비밀번호는 최소 8자 이상 입력해야 합니다.` |
 ---
-#### ❌ 실패 응답 예시
+#### _실패 응답_
 
 ```json
 {
@@ -1092,7 +1597,7 @@ JWT(Json Web Token)를 이용한 사용자 인증 미들웨어입니다.
 }
 ```
 ---
-### 2. 회원가입 (POST /auth/signup)
+#### 2. 회원가입 (POST /auth/signup)
 
 | 필드명     | 필수 | 타입     | 유효성 조건                                                             | 에러 메시지 예시                                            |
 | ------- | -- | ------ | ------------------------------------------------------------------ | ---------------------------------------------------- |
@@ -1102,7 +1607,7 @@ JWT(Json Web Token)를 이용한 사용자 인증 미들웨어입니다.
 | email   | ✅  | string | - 유효한 이메일 형식                                                       | `이메일 형식을 확인하세요.`                                     |
 | phone   | ✅  | string | - 비어 있을 수 없음<br>- `000-0000-0000` 또는 `000-000-0000` 형식<br>- 하이픈 필수 | `전화번호를 입력하세요.`<br>`휴대폰번호 형식이 올바르지 않습니다. '-'를 포함하세요.` |
 ---
-### 실패 응답 예시
+#### _실패 응답_
 ```json
 {
   "message": "이름을 입력하세요."
@@ -1117,9 +1622,9 @@ JWT(Json Web Token)를 이용한 사용자 인증 미들웨어입니다.
 
 ---
 
-## 🚀 앱 진입점 (`app.mjs`)
+## 8. 🚀앱 진입점 (`app.mjs`)
 
-`app.mjs`는 전체 애플리케이션의 **서버 실행**, **라우터 등록**, **정적 파일 처리**, **미들웨어 연결** 등을 담당하는 진입 파일입니다.
+- `app.mjs`는 전체 애플리케이션의 **서버 실행**, **라우터 등록**, **정적 파일 처리**, **미들웨어 연결** 등을 담당하는 진입 파일입니다.
 ---
 
 ### 정적 파일 제공
@@ -1150,7 +1655,7 @@ JWT(Json Web Token)를 이용한 사용자 인증 미들웨어입니다.
 ---
 
 ### 🏠 기본 라우터
-**루트 URL(/)** 로 접속 시 **public/main.html** 파일을 반환합니다.
+- **루트 URL(/)** 로 접속 시 **public/main.html** 파일을 반환합니다.
 ---
 
 ### 🖥 서버 실행
@@ -1169,7 +1674,7 @@ app.listen(config.host.port, () => {
 
 ---
 
-## ⚙️ 환경 설정 (`config.mjs`) 문서
+## 9. ⚙️ 환경 설정 (`config.mjs`) 문서
 
 이 파일은 `.env`에 정의된 환경 변수들을 로드하고, 서버/보안/DB/API 설정값으로 변환해 제공합니다.  
 `dotenv`와 `required()` 유틸 함수를 통해, **필수 키가 누락되었을 경우 즉시 오류를 발생시켜** 실행을 중단시킵니다.
@@ -1209,7 +1714,7 @@ console.log(config.host.port);     // 서버 포트
 Error: 키 JWT_SECRET는 undefined!!
 ```
 
-### 🔑 `.env`에서 요구하는 변수 목록
+### `.env`에서 요구하는 변수 목록
 
 | 키                         | 필수 | 설명                              | 기본값 (옵션) |
 |----------------------------|------|-----------------------------------|----------------|
