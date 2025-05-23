@@ -319,12 +319,12 @@ document
               categoryDiv.appendChild(link); // <a><img></a> 구조로 삽입
               // 카테고리를 저장해두기 위해 data-category 속성 추가
               image.dataset.category = recommendation.category;
-            }
-            // // forEach문 돌면서 하트 추가.
-            const heart = categoryDiv.querySelector(".heart");
-            if (heart) {
-              heart.dataset.productIdx = recommendation.idx;
-              heart.textContent = "♡";
+              // // forEach문 돌면서 하트 추가.
+              const heart = categoryDiv.querySelector(".heart");
+              if (heart) {
+                heart.dataset.productIdx = recommendation.idx;
+                heart.textContent = "♡";
+              }
             }
           });
         });
@@ -427,12 +427,12 @@ document
               categoryDiv.appendChild(link); // <a><img></a> 구조로 삽입
               // 카테고리를 저장해두기 위해 data-category 속성 추가
               image.dataset.category = recommendation.category;
-            }
-            // // forEach문 돌면서 하트 추가.
-            const heart = categoryDiv.querySelector(".heart");
-            if (heart) {
-              heart.dataset.productIdx = recommendation.idx;
-              heart.textContent = "♡";
+              // // forEach문 돌면서 하트 추가.
+              const heart = categoryDiv.querySelector(".heart");
+              if (heart) {
+                heart.dataset.productIdx = recommendation.idx;
+                heart.textContent = "♡";
+              }
             }
           });
         });
