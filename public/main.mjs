@@ -1,7 +1,7 @@
 let savedFeltTemperature; // 전역 변수 선언
 let weatherLevel;
 const serverHost = "http://192.168.162.220:8080";
-
+// http://192.168.162.220:8080
 // Base64URL → Base64 디코딩
 function b64UrlDecode(str) {
   str = str.replace(/-/g, "+").replace(/_/g, "/");
