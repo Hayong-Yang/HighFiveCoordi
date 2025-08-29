@@ -44,7 +44,7 @@ npm run dev
 ---
 
 📑 자료
-- 📂 발표 자료 (PPT)
+- [📂 발표 자료 (PDF)](./HighFiveCoordi_ppt.pdf)
 
 
 
