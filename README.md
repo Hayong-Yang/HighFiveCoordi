@@ -1,6 +1,8 @@
 # 👕 HighFive_Coordi
 > 날씨 기반 의류 추천 웹 서비스
 
+[📂 발표 자료 (PDF)](./HighFiveCoordi_ppt.pdf)
+
 ## 📖 소개
 HighFive_Coordi는 **실시간 날씨 데이터**와 **Color Harmony 알고리즘**을 활용해 사용자의 위치·날씨·선호 색상에 맞는 옷차림을 추천하는 웹 서비스입니다.
 
@@ -42,9 +44,6 @@ npm run dev
 - 김혜진 – Figma / 개발
 
 ---
-
-📑 자료
-- [📂 발표 자료 (PDF)](./HighFiveCoordi_ppt.pdf)
 
 
 
