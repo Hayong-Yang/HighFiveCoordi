@@ -9,7 +9,7 @@ HighFive_Coordi는 **실시간 날씨 데이터**와 **Color Harmony 알고리�
 **주요 기능**
 - 🌦 기상청 API 연동 (기온, 강수량, 풍속, 습도)
 - 👔 날씨 + 색상 기반 의류 추천
-- 🛒 의류 상세 페이지 및 판매자 페이지 연결
+- 🛒 의류 상세 페이지 및 관리자 페이지
 - 📱 광고 및 상품 등록, 계정 관리 기능 제공
 
 ---
@@ -20,20 +20,6 @@ HighFive_Coordi는 **실시간 날씨 데이터**와 **Color Harmony 알고리�
 - **Database**: MySQL  
 - **Collaboration**: JIRA (Scrum), GitHub, Figma  
 
----
-
-## 🚀 실행 방법
-```
-# 레포지토리 클론
-git clone https://github.com/username/HighFive_Coordi.git
-cd HighFive_Coordi
-
-# 패키지 설치
-npm install
-
-# 서버 실행
-npm run dev
-```
 ---
 
 ## 👨‍👩‍👧‍👦 팀원
